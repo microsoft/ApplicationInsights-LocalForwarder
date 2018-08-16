@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Google.Protobuf" Version="3.6.0" />
+    <PackageReference Include="Google.Protobuf.Tools" Version="3.6.0" />
+    <PackageReference Include="Grpc" Version="1.13.1" />
+    <PackageReference Include="Grpc.Tools" Version="1.13.1" />
+    <PackageReference Include="Microsoft.ApplicationInsights" Version="2.8.0-beta1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj" />
+  </ItemGroup>
+  
+  <PropertyGroup>
+    <DebugType>Full</DebugType>
+    <AssemblyName>Microsoft.LocalForwarder.Library</AssemblyName>
+    <RootNamespace>Microsoft.LocalForwarder.Library</RootNamespace>
+  </PropertyGroup>
+
+</Project>

@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+
+    <IsPackable>false</IsPackable>
+
+    <SignAssembly>false</SignAssembly>
+
+    <AssemblyOriginatorKeyFile>LocalServer.pfx</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="..\ConsoleHost\LocalForwarder.config" Link="LocalForwarder.config" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.7.0" />
+    <PackageReference Include="MSTest.TestAdapter" Version="1.2.1" />
+    <PackageReference Include="MSTest.TestFramework" Version="1.2.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Library\Library.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <DebugType>Full</DebugType>
+    <AssemblyName>Microsoft.LocalForwarder.Test</AssemblyName>
+    <RootNamespace>Microsoft.LocalForwarder.Test</RootNamespace>
+  </PropertyGroup>
+
+</Project>
