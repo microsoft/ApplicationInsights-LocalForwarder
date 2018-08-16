@@ -194,6 +194,9 @@
 
                     try
                     {
+                        //!!!
+                        Diagnostics.LogTrace($"AI message received: {batch.Items.Count} items, first item: {batch.Items.First().InstrumentationKey}");
+
                         switch (telemetry.DataCase)
                         {
                             case Telemetry.DataOneofCase.Event:
