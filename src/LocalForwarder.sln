@@ -15,6 +15,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsServiceHost", "Windo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleHost", "ConsoleHost\ConsoleHost.csproj", "{A6D75834-2B59-45F2-B87E-BACCEEB64D53}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{20169545-2463-4F13-9E19-852617C56537}"
+	ProjectSection(SolutionItems) = preProject
+		NuGet.config = NuGet.config
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
