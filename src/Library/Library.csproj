@@ -34,4 +34,6 @@
     <AssemblyOriginatorKeyFile>LocalForwarderStrongNameKey.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
+  <Import Project="..\Signing.targets" />
+  
 </Project>
