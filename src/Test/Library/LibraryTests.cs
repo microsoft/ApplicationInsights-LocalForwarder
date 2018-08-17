@@ -43,6 +43,9 @@ namespace Microsoft.LocalForwarder.Test.Library
   <OpenCensusToApplicationInsights>
     <InstrumentationKey>[SPECIFY INSTRUMENTATION KEY HERE]</InstrumentationKey>
   </OpenCensusToApplicationInsights>
+  <ApplicationInsights>
+    <LiveMetricsStreamInstrumentationKey>[SPECIFY LIVE METRICS STREAM INSTRUMENTATION KEY HERE]</LiveMetricsStreamInstrumentationKey>
+  </ApplicationInsights>
 </LocalForwarderConfiguration>
 ";
             var lib = new Library(config);
@@ -89,6 +92,9 @@ namespace Microsoft.LocalForwarder.Test.Library
   <OpenCensusToApplicationInsights>
     <InstrumentationKey>[SPECIFY INSTRUMENTATION KEY HERE]</InstrumentationKey>
   </OpenCensusToApplicationInsights>
+  <ApplicationInsights>
+    <LiveMetricsStreamInstrumentationKey>[SPECIFY LIVE METRICS STREAM INSTRUMENTATION KEY HERE]</LiveMetricsStreamInstrumentationKey>
+  </ApplicationInsights>
 </LocalForwarderConfiguration>
 ";
 
@@ -120,6 +126,9 @@ namespace Microsoft.LocalForwarder.Test.Library
   <OpenCensusToApplicationInsights>
     <InstrumentationKey>[SPECIFY INSTRUMENTATION KEY HERE]</InstrumentationKey>
   </OpenCensusToApplicationInsights>
+  <ApplicationInsights>
+    <LiveMetricsStreamInstrumentationKey>[SPECIFY LIVE METRICS STREAM INSTRUMENTATION KEY HERE]</LiveMetricsStreamInstrumentationKey>
+  </ApplicationInsights>
 </LocalForwarderConfiguration>
 ";
 
@@ -152,6 +161,9 @@ namespace Microsoft.LocalForwarder.Test.Library
   <OpenCensusToApplicationInsights>
     <InstrumentationKey>[SPECIFY INSTRUMENTATION KEY HERE]</InstrumentationKey>
   </OpenCensusToApplicationInsights>
+  <ApplicationInsights>
+    <LiveMetricsStreamInstrumentationKey>[SPECIFY LIVE METRICS STREAM INSTRUMENTATION KEY HERE]</LiveMetricsStreamInstrumentationKey>
+  </ApplicationInsights>
 </LocalForwarderConfiguration>
 ";
 
@@ -184,6 +196,9 @@ namespace Microsoft.LocalForwarder.Test.Library
   <OpenCensusToApplicationInsights>
     <InstrumentationKey>[SPECIFY INSTRUMENTATION KEY HERE]</InstrumentationKey>
   </OpenCensusToApplicationInsights>
+  <ApplicationInsights>
+    <LiveMetricsStreamInstrumentationKey>[SPECIFY LIVE METRICS STREAM INSTRUMENTATION KEY HERE]</LiveMetricsStreamInstrumentationKey>
+  </ApplicationInsights>
 </LocalForwarderConfiguration>
 ";
 
@@ -228,6 +243,9 @@ namespace Microsoft.LocalForwarder.Test.Library
   <OpenCensusToApplicationInsights>
     <InstrumentationKey>[SPECIFY INSTRUMENTATION KEY HERE]</InstrumentationKey>
   </OpenCensusToApplicationInsights>
+  <ApplicationInsights>
+    <LiveMetricsStreamInstrumentationKey>[SPECIFY LIVE METRICS STREAM INSTRUMENTATION KEY HERE]</LiveMetricsStreamInstrumentationKey>
+  </ApplicationInsights>
 </LocalForwarderConfiguration>
 ";
 
@@ -273,6 +291,9 @@ namespace Microsoft.LocalForwarder.Test.Library
   <OpenCensusToApplicationInsights>
     <InstrumentationKey>[SPECIFY INSTRUMENTATION KEY HERE]</InstrumentationKey>
   </OpenCensusToApplicationInsights>
+  <ApplicationInsights>
+    <LiveMetricsStreamInstrumentationKey>[SPECIFY LIVE METRICS STREAM INSTRUMENTATION KEY HERE]</LiveMetricsStreamInstrumentationKey>
+  </ApplicationInsights>
 </LocalForwarderConfiguration>
 ";
 
@@ -316,6 +337,9 @@ namespace Microsoft.LocalForwarder.Test.Library
   <OpenCensusToApplicationInsights>
     <InstrumentationKey>[SPECIFY INSTRUMENTATION KEY HERE]</InstrumentationKey>
   </OpenCensusToApplicationInsights>
+  <ApplicationInsights>
+    <LiveMetricsStreamInstrumentationKey>[SPECIFY LIVE METRICS STREAM INSTRUMENTATION KEY HERE]</LiveMetricsStreamInstrumentationKey>
+  </ApplicationInsights>
 </LocalForwarderConfiguration>
 ";
 
@@ -347,6 +371,9 @@ namespace Microsoft.LocalForwarder.Test.Library
   <OpenCensusToApplicationInsights>
     <InstrumentationKey>[SPECIFY INSTRUMENTATION KEY HERE]</InstrumentationKey>
   </OpenCensusToApplicationInsights>
+  <ApplicationInsights>
+    <LiveMetricsStreamInstrumentationKey>[SPECIFY LIVE METRICS STREAM INSTRUMENTATION KEY HERE]</LiveMetricsStreamInstrumentationKey>
+  </ApplicationInsights>
 </LocalForwarderConfiguration>
 ";
 
@@ -388,6 +415,9 @@ namespace Microsoft.LocalForwarder.Test.Library
   <OpenCensusToApplicationInsights>
     <InstrumentationKey>[SPECIFY INSTRUMENTATION KEY HERE]</InstrumentationKey>
   </OpenCensusToApplicationInsights>
+  <ApplicationInsights>
+    <LiveMetricsStreamInstrumentationKey>[SPECIFY LIVE METRICS STREAM INSTRUMENTATION KEY HERE]</LiveMetricsStreamInstrumentationKey>
+  </ApplicationInsights>
 </LocalForwarderConfiguration>
 ";
 
@@ -438,6 +468,9 @@ namespace Microsoft.LocalForwarder.Test.Library
   <OpenCensusToApplicationInsights>
     <InstrumentationKey>[SPECIFY INSTRUMENTATION KEY HERE]</InstrumentationKey>
   </OpenCensusToApplicationInsights>
+  <ApplicationInsights>
+    <LiveMetricsStreamInstrumentationKey>[SPECIFY LIVE METRICS STREAM INSTRUMENTATION KEY HERE]</LiveMetricsStreamInstrumentationKey>
+  </ApplicationInsights>
 </LocalForwarderConfiguration>
 ";
 
@@ -488,6 +521,9 @@ namespace Microsoft.LocalForwarder.Test.Library
   <OpenCensusToApplicationInsights>
     <InstrumentationKey>[SPECIFY INSTRUMENTATION KEY HERE]</InstrumentationKey>
   </OpenCensusToApplicationInsights>
+  <ApplicationInsights>
+    <LiveMetricsStreamInstrumentationKey>[SPECIFY LIVE METRICS STREAM INSTRUMENTATION KEY HERE]</LiveMetricsStreamInstrumentationKey>
+  </ApplicationInsights>
 </LocalForwarderConfiguration>
 ";
 
@@ -546,6 +582,9 @@ namespace Microsoft.LocalForwarder.Test.Library
   <OpenCensusToApplicationInsights>
     <InstrumentationKey>[SPECIFY INSTRUMENTATION KEY HERE]</InstrumentationKey>
   </OpenCensusToApplicationInsights>
+  <ApplicationInsights>
+    <LiveMetricsStreamInstrumentationKey>[SPECIFY LIVE METRICS STREAM INSTRUMENTATION KEY HERE]</LiveMetricsStreamInstrumentationKey>
+  </ApplicationInsights>
 </LocalForwarderConfiguration>
 ";
 
@@ -611,6 +650,9 @@ namespace Microsoft.LocalForwarder.Test.Library
   <OpenCensusToApplicationInsights>
     <InstrumentationKey>ikey1</InstrumentationKey>
   </OpenCensusToApplicationInsights>
+  <ApplicationInsights>
+    <LiveMetricsStreamInstrumentationKey>[SPECIFY LIVE METRICS STREAM INSTRUMENTATION KEY HERE]</LiveMetricsStreamInstrumentationKey>
+  </ApplicationInsights>
 </LocalForwarderConfiguration>
 ";
 
@@ -672,6 +714,9 @@ namespace Microsoft.LocalForwarder.Test.Library
   <OpenCensusToApplicationInsights>
     <InstrumentationKey>ikey1</InstrumentationKey>
   </OpenCensusToApplicationInsights>
+  <ApplicationInsights>
+    <LiveMetricsStreamInstrumentationKey>[SPECIFY LIVE METRICS STREAM INSTRUMENTATION KEY HERE]</LiveMetricsStreamInstrumentationKey>
+  </ApplicationInsights>
 </LocalForwarderConfiguration>
 ";
 

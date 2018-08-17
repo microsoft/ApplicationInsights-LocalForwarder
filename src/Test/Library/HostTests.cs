@@ -45,6 +45,9 @@ namespace Microsoft.LocalForwarder.Test.Library
   <OpenCensusToApplicationInsights>
     <InstrumentationKey>ikey1</InstrumentationKey>
   </OpenCensusToApplicationInsights>
+  <ApplicationInsights>
+    <LiveMetricsStreamInstrumentationKey>ikey1</LiveMetricsStreamInstrumentationKey>
+  </ApplicationInsights>
 </LocalForwarderConfiguration>
 ";
 
@@ -139,6 +142,9 @@ namespace Microsoft.LocalForwarder.Test.Library
   <OpenCensusToApplicationInsights>
     <InstrumentationKey>ikey1</InstrumentationKey>
   </OpenCensusToApplicationInsights>
+  <ApplicationInsights>
+    <LiveMetricsStreamInstrumentationKey>ikey1</LiveMetricsStreamInstrumentationKey>
+  </ApplicationInsights>
 </LocalForwarderConfiguration>
 ";
 
