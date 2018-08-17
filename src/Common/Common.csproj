@@ -28,6 +28,6 @@
     <PackageReference Include="NLog.Extensions.Logging" Version="1.2.0" />
   </ItemGroup>
 
-  <Import Project="..\Signing.targets" />
+  <!--<Import Project="..\Signing.targets" />-->
 
 </Project>
