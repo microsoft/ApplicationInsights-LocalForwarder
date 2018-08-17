@@ -9,6 +9,8 @@
     <DebugType>Full</DebugType>
     <AssemblyName>Microsoft.LocalForwarder.ConsoleHost</AssemblyName>
     <RootNamespace>Microsoft.LocalForwarder.ConsoleHost</RootNamespace>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>LocalForwarderStrongNameKey.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,7 +18,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.LocalForwarder.Library" Version="1.0.33-alpha" />
+    <PackageReference Include="Microsoft.LocalForwarder.Library" Version="1.0.34-alpha" />
   </ItemGroup>
 
   <ItemGroup>

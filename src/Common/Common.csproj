@@ -8,10 +8,17 @@
     <DebugType>Full</DebugType>
     <AssemblyName>Microsoft.LocalForwarder.Common</AssemblyName>
     <RootNamespace>Microsoft.LocalForwarder.Common</RootNamespace>
+    <SignAssembly>true</SignAssembly>
+    <DelaySign>false</DelaySign>
+    <AssemblyOriginatorKeyFile>LocalForwarderStrongNameKey.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="NLog.config" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\InternalsVisibleToAssemblyInfo.cs" Link="InternalsVisibleToAssemblyInfo.cs" />
   </ItemGroup>
 
   <ItemGroup>

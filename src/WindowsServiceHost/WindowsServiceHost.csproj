@@ -63,6 +63,15 @@
   <PropertyGroup>
     <SignManifests>false</SignManifests>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <DelaySign>false</DelaySign>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>LocalForwarderStrongNameKey.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Google.Protobuf, Version=3.6.0.0, Culture=neutral, PublicKeyToken=a7d26565bac4d604, processorArchitecture=MSIL">
       <HintPath>..\packages\Google.Protobuf.3.6.0\lib\net45\Google.Protobuf.dll</HintPath>
@@ -91,11 +100,11 @@
     <Reference Include="Microsoft.Extensions.Primitives, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\..\..\NuGet.Packages\Microsoft.Extensions.Primitives.2.0.0\lib\netstandard2.0\Microsoft.Extensions.Primitives.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.LocalForwarder.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.LocalForwarder.Library.1.0.33-alpha\lib\netstandard\Microsoft.LocalForwarder.Common.dll</HintPath>
+    <Reference Include="Microsoft.LocalForwarder.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=19fdd7284a676c0d, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.LocalForwarder.Library.1.0.34-alpha\lib\netstandard\Microsoft.LocalForwarder.Common.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.LocalForwarder.Library, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.LocalForwarder.Library.1.0.33-alpha\lib\netstandard\Microsoft.LocalForwarder.Library.dll</HintPath>
+    <Reference Include="Microsoft.LocalForwarder.Library, Version=1.0.0.0, Culture=neutral, PublicKeyToken=19fdd7284a676c0d, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.LocalForwarder.Library.1.0.34-alpha\lib\netstandard\Microsoft.LocalForwarder.Library.dll</HintPath>
     </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\..\..\NuGet.Packages\NLog.4.5.7\lib\net45\NLog.dll</HintPath>
@@ -143,6 +152,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="App.config" />
+    <None Include="LocalForwarderStrongNameKey.snk" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
