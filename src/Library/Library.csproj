@@ -9,7 +9,12 @@
     <PackageReference Include="Google.Protobuf.Tools" Version="3.6.0" />
     <PackageReference Include="Grpc" Version="1.13.1" />
     <PackageReference Include="Grpc.Tools" Version="1.13.1" />
+    <PackageReference Include="MicroBuild.Core" Version="0.3.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.ApplicationInsights" Version="2.8.0-beta1" />
+    <PackageReference Include="Microsoft.ApplicationInsights.PerfCounterCollector" Version="2.8.0-beta1" />
   </ItemGroup>
 
   <ItemGroup>

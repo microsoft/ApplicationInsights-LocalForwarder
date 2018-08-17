@@ -21,7 +21,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="MicroBuild.Core" Version="0.3.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="NLog.Extensions.Logging" Version="1.2.0" />
   </ItemGroup>
+
+  <Import Project="..\Signing.targets" />
 
 </Project>
