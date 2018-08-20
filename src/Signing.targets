@@ -5,7 +5,7 @@
       <!-- Microsoft authenticode certificate for all file types -->
       <Authenticode>Microsoft</Authenticode>
       <!-- Microsoft strong-name key for managed assemblies -->
-      <StrongName>StrongName</StrongName>
+      <!-- <StrongName>StrongName</StrongName> -->
     </FilesToSign>
   </ItemGroup>
 </Project>
