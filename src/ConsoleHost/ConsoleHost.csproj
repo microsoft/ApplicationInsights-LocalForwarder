@@ -11,6 +11,7 @@
     <RootNamespace>Microsoft.LocalForwarder.ConsoleHost</RootNamespace>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>LocalForwarderStrongNameKey.snk</AssemblyOriginatorKeyFile>
+    <DelaySign>false</DelaySign>
   </PropertyGroup>
 
   <ItemGroup>

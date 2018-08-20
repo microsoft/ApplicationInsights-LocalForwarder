@@ -8,7 +8,7 @@
     <DebugType>Full</DebugType>
     <AssemblyName>Microsoft.LocalForwarder.Common</AssemblyName>
     <RootNamespace>Microsoft.LocalForwarder.Common</RootNamespace>
-    <SignAssembly>false</SignAssembly>
+    <SignAssembly>true</SignAssembly>
     <DelaySign>false</DelaySign>
     <AssemblyOriginatorKeyFile>LocalForwarderStrongNameKey.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
