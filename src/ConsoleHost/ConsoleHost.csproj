@@ -30,4 +30,8 @@
 
   <Import Project="..\Signing.targets" />
 
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="dotnet publish $(ProjectPath) -c $(ConfigurationName) --no-build" />
+  </Target>
+
 </Project>
