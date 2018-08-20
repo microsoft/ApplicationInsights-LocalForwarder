@@ -57,7 +57,7 @@
   <PropertyGroup>
     <GenerateManifests>true</GenerateManifests>
     <SignManifests>false</SignManifests>
-    <SignAssembly>false</SignAssembly>
+    <SignAssembly>true</SignAssembly>
     <DelaySign>false</DelaySign>
     <AssemblyOriginatorKeyFile>LocalForwarderStrongNameKey.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
