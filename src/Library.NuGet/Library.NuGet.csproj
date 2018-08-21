@@ -20,4 +20,13 @@
     <ProjectReference Include="..\Library\Library.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <FilesToSign Include="$(OutDir)\..\*.nupkg">
+      <!-- Microsoft authenticode certificate for all file types -->
+      <Authenticode>Microsoft</Authenticode>
+      <!-- Microsoft strong-name key for managed assemblies -->
+      <!-- <StrongName>StrongName</StrongName> -->
+    </FilesToSign>
+  </ItemGroup>
+
 </Project>
