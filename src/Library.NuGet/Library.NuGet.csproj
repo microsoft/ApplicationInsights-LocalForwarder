@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <FilesToSign Include="$(OutDir)\..\Microsoft.LocalForwarder.Library.1.0.34-alpha.nupkg">
+    <FilesToSign Include="$(OutDir)\..\*.nupkg">
       <!-- Microsoft authenticode certificate for all file types -->
       <Authenticode>NuGet</Authenticode>
       <!-- Microsoft strong-name key for managed assemblies -->
