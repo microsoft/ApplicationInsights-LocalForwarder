@@ -13,7 +13,7 @@
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Message Text="Packing $(ConfigurationName)" Importance="high"></Message>
-    <Exec Command="&quot;$(MSBuildBinPath)\msbuild.exe&quot; /p:Configuration=$(ConfigurationName) /t:pack /p:NuspecProperties=&quot;configuration=$(ConfigurationName);key2=value2&quot;" />
+    <Exec Command="&quot;$(MSBuildBinPath)\msbuild.exe&quot; $(ProjectPath) /p:Configuration=$(ConfigurationName) /t:pack /p:NuspecProperties=&quot;configuration=$(ConfigurationName);key2=value2&quot;" />
   </Target>
 
   <ItemGroup>
