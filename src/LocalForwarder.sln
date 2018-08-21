@@ -17,6 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleHost", "ConsoleHost\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{20169545-2463-4F13-9E19-852617C56537}"
 	ProjectSection(SolutionItems) = preProject
+		AuthenticodeWhitelist.txt = AuthenticodeWhitelist.txt
 		NuGet.config = NuGet.config
 	EndProjectSection
 EndProject
