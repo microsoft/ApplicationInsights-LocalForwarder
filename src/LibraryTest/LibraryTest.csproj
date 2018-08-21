@@ -26,8 +26,8 @@
 
   <PropertyGroup>
     <DebugType>Full</DebugType>
-    <AssemblyName>Microsoft.LocalForwarder.Test</AssemblyName>
-    <RootNamespace>Microsoft.LocalForwarder.Test</RootNamespace>
+    <AssemblyName>Microsoft.LocalForwarder.LibraryTest</AssemblyName>
+    <RootNamespace>Microsoft.LocalForwarder.LibraryTest</RootNamespace>
     <DelaySign>false</DelaySign>
   </PropertyGroup>
 

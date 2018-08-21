@@ -15,7 +15,7 @@ namespace Microsoft.LocalForwarder.Test.Library
             // ARRANGE
             string defaultConfig;
             var assembly = Assembly.GetExecutingAssembly();
-            var resourceName = "Microsoft.LocalForwarder.Test.LocalForwarder.config";
+            var resourceName = "Microsoft.LocalForwarder.LibraryTest.LocalForwarder.config";
 
             using (Stream stream = assembly.GetManifestResourceStream(resourceName))
             {
