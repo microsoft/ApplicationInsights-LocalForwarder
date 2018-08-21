@@ -21,15 +21,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <FilesToSign Include="$(OutDir)..\Microsoft.LocalForwarder.Library.1.0.34-alpha.nupkg">
-      <!-- Microsoft authenticode certificate for all file types -->
-      <Authenticode>NuGet</Authenticode>
-      <!-- Microsoft strong-name key for managed assemblies -->
-      <!-- <StrongName>StrongName</StrongName> -->
-    </FilesToSign>
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="MicroBuild.Core" Version="0.3.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
