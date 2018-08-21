@@ -152,10 +152,17 @@
 
                 if (isHttp)
                 {
-                    if (url != null)
+                    if (url != null && Uri.TryCreate(url, UriKind.RelativeOrAbsolute, out var requestUrl))
                     {
-                        request.Url = new Uri(url);
-                        request.Name = GetHttpTelemetryName(method, request.Url.AbsolutePath, route);
+                        if (requestUrl.IsAbsoluteUri)
+                        {
+                            request.Url = requestUrl;
+                            request.Name = GetHttpTelemetryName(method, requestUrl.AbsolutePath, route);
+                        }
+                        else
+                        {
+                            request.Name = GetHttpTelemetryName(method, requestUrl.OriginalString, route);
+                        }
                     }
                     else
                     {
@@ -239,7 +246,10 @@
                         dependency.Data = url;
                         if (Uri.TryCreate(url, UriKind.RelativeOrAbsolute, out var uri))
                         {
-                            dependency.Name = GetHttpTelemetryName(method, uri.AbsolutePath, null);
+                            dependency.Name = GetHttpTelemetryName(
+                                method, 
+                                uri.IsAbsoluteUri ? uri.AbsolutePath : uri.OriginalString, 
+                                null);
                         }
                     }
                     else
@@ -328,14 +338,23 @@
         {
             string traceId = BytesStringToHexString(span.TraceId);
             telemetry.Context.Operation.Id = BytesStringToHexString(span.TraceId);
-            telemetry.Context.Operation.ParentId = BytesStringToHexString(span.ParentSpanId);
-            telemetry.Id = $"|{traceId}.{BytesStringToHexString(span.SpanId)}.";
+            if (span.ParentSpanId != null && !span.ParentSpanId.IsEmpty)
+            {
+                telemetry.Context.Operation.ParentId = FormatId(traceId, BytesStringToHexString(span.ParentSpanId));
+            }
+
+            telemetry.Id = FormatId(traceId, BytesStringToHexString(span.SpanId));
         }
 
         private static void SetParentOperationContext(Span span, OperationContext context)
         {
             context.Id = BytesStringToHexString(span.TraceId);
-            context.ParentId = $"|{context.Id}.{BytesStringToHexString(span.SpanId)}.";
+            context.ParentId = FormatId(context.Id, BytesStringToHexString(span.SpanId));
+        }
+
+        private static string FormatId(string traceId, string spanId)
+        {
+            return String.Concat('|', traceId, '.', spanId, '.');
         }
 
         private static Uri GetUrl(String host, int port, String path)
