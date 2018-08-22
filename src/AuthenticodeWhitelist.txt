@@ -1,1 +1,2 @@
 **\*.nupkg,package is not signed
+!*LocalForwarder*,3rd party assemblies
