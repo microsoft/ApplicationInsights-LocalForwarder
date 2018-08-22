@@ -812,6 +812,7 @@ namespace Microsoft.LocalForwarder.Test.Library
             this.client.TrackSpan(span, string.Empty);
 
             var dependency = this.sentItems.OfType<DependencyTelemetry>().Single();
+            Assert.AreEqual("spanName", dependency.Name);
             Assert.AreEqual(3, dependency.Properties.Count);
             Assert.IsTrue(dependency.Properties.ContainsKey("custom.stringAttribute"));
             Assert.AreEqual("string", dependency.Properties["custom.stringAttribute"]);
@@ -840,6 +841,7 @@ namespace Microsoft.LocalForwarder.Test.Library
             this.client.TrackSpan(span, string.Empty);
 
             var request = this.sentItems.OfType<RequestTelemetry>().Single();
+            Assert.AreEqual("spanName", request.Name);
             Assert.AreEqual(3, request.Properties.Count);
             Assert.IsTrue(request.Properties.ContainsKey("custom.stringAttribute"));
             Assert.AreEqual("string", request.Properties["custom.stringAttribute"]);
@@ -931,7 +933,14 @@ namespace Microsoft.LocalForwarder.Test.Library
                         SpanId = ByteString.CopyFrom(GenerateRandomId(16).Item2),
                         TraceId = ByteString.CopyFrom(GenerateRandomId(8).Item2),
                         Type = Span.Types.Link.Types.Type.ChildLinkedSpan,
-                        Attributes = new Span.Types.Attributes { AttributeMap = { ["some.attribute"] = this.CreateAttributeValue("foo")} }
+                        Attributes = new Span.Types.Attributes {
+                            AttributeMap =
+                            {
+                                ["some.str.attribute"] = this.CreateAttributeValue("foo"),
+                                ["some.int.attribute"] = this.CreateAttributeValue(1),
+                                ["some.bool.attribute"] = this.CreateAttributeValue(true)
+                            }
+                        }
                     }
                 }
             };
@@ -939,10 +948,16 @@ namespace Microsoft.LocalForwarder.Test.Library
             this.client.TrackSpan(span, string.Empty);
 
             var dependency = this.sentItems.OfType<DependencyTelemetry>().Single();
-            Assert.AreEqual(4, dependency.Properties.Count);
+            Assert.AreEqual(6, dependency.Properties.Count);
 
-            Assert.IsTrue(dependency.Properties.ContainsKey("link0_some.attribute"));
-            Assert.AreEqual("foo", dependency.Properties["link0_some.attribute"]);
+            Assert.IsTrue(dependency.Properties.ContainsKey("link0_some.str.attribute"));
+            Assert.AreEqual("foo", dependency.Properties["link0_some.str.attribute"]);
+
+            Assert.IsTrue(dependency.Properties.ContainsKey("link0_some.int.attribute"));
+            Assert.AreEqual("1", dependency.Properties["link0_some.int.attribute"]);
+
+            Assert.IsTrue(dependency.Properties.ContainsKey("link0_some.bool.attribute"));
+            Assert.AreEqual(bool.TrueString, dependency.Properties["link0_some.bool.attribute"]);
         }
 
         [TestMethod]
@@ -1025,7 +1040,14 @@ namespace Microsoft.LocalForwarder.Test.Library
                         SpanId = ByteString.CopyFrom(GenerateRandomId(16).Item2),
                         TraceId = ByteString.CopyFrom(GenerateRandomId(8).Item2),
                         Type = Span.Types.Link.Types.Type.ChildLinkedSpan,
-                        Attributes = new Span.Types.Attributes { AttributeMap = { ["some.attribute"] = this.CreateAttributeValue("foo")} }
+                        Attributes = new Span.Types.Attributes {
+                            AttributeMap =
+                            {
+                                ["some.str.attribute"] = this.CreateAttributeValue("foo"),
+                                ["some.int.attribute"] = this.CreateAttributeValue(1),
+                                ["some.bool.attribute"] = this.CreateAttributeValue(true)
+                            }
+                        }
                     }
                 }
             };
@@ -1033,10 +1055,16 @@ namespace Microsoft.LocalForwarder.Test.Library
             this.client.TrackSpan(span, string.Empty);
 
             var request = this.sentItems.OfType<RequestTelemetry>().Single();
-            Assert.AreEqual(4, request.Properties.Count);
+            Assert.AreEqual(6, request.Properties.Count);
 
-            Assert.IsTrue(request.Properties.ContainsKey("link0_some.attribute"));
-            Assert.AreEqual("foo", request.Properties["link0_some.attribute"]);
+            Assert.IsTrue(request.Properties.ContainsKey("link0_some.str.attribute"));
+            Assert.AreEqual("foo", request.Properties["link0_some.str.attribute"]);
+
+            Assert.IsTrue(request.Properties.ContainsKey("link0_some.int.attribute"));
+            Assert.AreEqual("1", request.Properties["link0_some.int.attribute"]);
+
+            Assert.IsTrue(request.Properties.ContainsKey("link0_some.bool.attribute"));
+            Assert.AreEqual(bool.TrueString, request.Properties["link0_some.bool.attribute"]);
         }
 
         [TestMethod]

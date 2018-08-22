@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Globalization;
     using ApplicationInsights;
     using ApplicationInsights.Channel;
@@ -96,6 +97,7 @@
 
             string host = null, method = null, path = null, route = null, url = null;
             int port = -1;
+            bool isHttp = false;
 
             if (span.Attributes?.AttributeMap != null)
             {
@@ -105,27 +107,35 @@
                     {
                         case SpanAttributeConstants.HttpUrlKey:
                             url = attribute.Value.StringValue?.Value;
+                            isHttp = true;
                             break;
                         case SpanAttributeConstants.HttpStatusCodeKey:
                             request.ResponseCode = attribute.Value.IntValue.ToString();
+                            isHttp = true;
                             break;
                         case SpanAttributeConstants.HttpUserAgentKey:
                             request.Context.User.UserAgent = attribute.Value.StringValue?.Value;
+                            isHttp = true;
                             break;
                         case SpanAttributeConstants.HttpRouteKey:
                             route = attribute.Value.StringValue?.Value;
+                            isHttp = true;
                             break;
                         case SpanAttributeConstants.HttpPathKey:
                             path = attribute.Value.StringValue?.Value;
+                            isHttp = true;
                             break;
                         case SpanAttributeConstants.HttpMethodKey:
                             method = attribute.Value.StringValue?.Value;
+                            isHttp = true;
                             break;
                         case SpanAttributeConstants.HttpHostKey:
                             host = attribute.Value.StringValue?.Value;
+                            isHttp = true;
                             break;
                         case SpanAttributeConstants.HttpPortKey:
                             port = (int) attribute.Value?.IntValue;
+                            isHttp = true;
                             break;
                         case SpanAttributeConstants.ErrorKey:
                             if (attribute.Value != null && attribute.Value.BoolValue)
@@ -134,21 +144,24 @@
                             }
                             break;
                         default:
-                            SetCustomProperty(request, attribute);
+                            SetCustomProperty(request.Properties, attribute);
 
                             break;
                     }
                 }
 
-                if (url != null)
+                if (isHttp)
                 {
-                    request.Url = new Uri(url);
-                    request.Name = GetHttpTelemetryName(method, request.Url.AbsolutePath, route);
-                }
-                else
-                {
-                    request.Url = GetUrl(host, port, path);
-                    request.Name = GetHttpTelemetryName(method, path, route);
+                    if (url != null)
+                    {
+                        request.Url = new Uri(url);
+                        request.Name = GetHttpTelemetryName(method, request.Url.AbsolutePath, route);
+                    }
+                    else
+                    {
+                        request.Url = GetUrl(host, port, path);
+                        request.Name = GetHttpTelemetryName(method, path, route);
+                    }
                 }
             }
 
@@ -211,7 +224,7 @@
 
                             break;
                         default:
-                            SetCustomProperty(dependency, attribute);
+                            SetCustomProperty(dependency.Properties, attribute);
                             break;
                     }
                 }
@@ -220,20 +233,20 @@
                 if (isHttp)
                 {
                     dependency.Type = "Http";
-                }
 
-                if (url != null)
-                {
-                    dependency.Data = url;
-                    if (Uri.TryCreate(url, UriKind.RelativeOrAbsolute, out var uri))
+                    if (url != null)
                     {
-                        dependency.Name = GetHttpTelemetryName(method, uri.AbsolutePath, null);
+                        dependency.Data = url;
+                        if (Uri.TryCreate(url, UriKind.RelativeOrAbsolute, out var uri))
+                        {
+                            dependency.Name = GetHttpTelemetryName(method, uri.AbsolutePath, null);
+                        }
                     }
-                }
-                else
-                {
-                    dependency.Data = GetUrl(host, port, path)?.ToString();
-                    dependency.Name = GetHttpTelemetryName(method, path, null);
+                    else
+                    {
+                        dependency.Data = GetUrl(host, port, path)?.ToString();
+                        dependency.Name = GetHttpTelemetryName(method, path, null);
+                    }
                 }
             }
 
@@ -279,7 +292,7 @@
             {
                 foreach (var attribute in attributes)
                 {
-                    SetCustomProperty(trace, attribute);
+                    SetCustomProperty(trace.Properties, attribute);
                 }
             }
 
@@ -363,7 +376,7 @@
 
         private static void SetLinks(Span.Types.Links spanLinks, IDictionary<string, string> telemetryProperties)
         {
-            if (spanLinks == null)
+            if (spanLinks?.Link == null)
             {
                 return;
             }
@@ -383,12 +396,11 @@
                 telemetryProperties[prefix + LinkSpanIdPropertyName] = BytesStringToHexString(link.SpanId);
                 telemetryProperties[prefix + LinkTraceIdPropertyName] = BytesStringToHexString(link.TraceId);
                 telemetryProperties[prefix + LinkTypePropertyName] = link.Type.ToString();
-
                 if (link.Attributes?.AttributeMap != null)
                 {
                     foreach (var attribute in link.Attributes.AttributeMap)
                     {
-                        telemetryProperties[prefix + attribute.Key] = attribute.Value.StringValue.Value;
+                        SetCustomProperty(telemetryProperties, attribute, prefix);
                     }
                 }
             }
@@ -421,9 +433,12 @@
             return null;
         }
 
-        private static void SetCustomProperty(ISupportProperties telemetry, KeyValuePair<string, AttributeValue> attribute)
+        private static void SetCustomProperty(IDictionary<string ,string> telemetryProperties, KeyValuePair<string, AttributeValue> attribute, string prefix = null)
         {
-            if (telemetry.Properties.ContainsKey(attribute.Key))
+            Debug.Assert(telemetryProperties != null);
+            Debug.Assert(attribute.Value != null);
+
+            if (telemetryProperties.ContainsKey(attribute.Key))
             {
                 return;
             }
@@ -431,13 +446,13 @@
             switch (attribute.Value.ValueCase)
             {
                 case AttributeValue.ValueOneofCase.StringValue:
-                    telemetry.Properties[attribute.Key] = attribute.Value.StringValue?.Value;
+                    telemetryProperties[prefix + attribute.Key] = attribute.Value.StringValue?.Value;
                     break;
                 case AttributeValue.ValueOneofCase.BoolValue:
-                    telemetry.Properties[attribute.Key] = attribute.Value.BoolValue.ToString();
+                    telemetryProperties[prefix + attribute.Key] = attribute.Value.BoolValue.ToString();
                     break;
                 case AttributeValue.ValueOneofCase.IntValue:
-                    telemetry.Properties[attribute.Key] = attribute.Value.IntValue.ToString();
+                    telemetryProperties[prefix + attribute.Key] = attribute.Value.IntValue.ToString();
                     break;
             }
         }
