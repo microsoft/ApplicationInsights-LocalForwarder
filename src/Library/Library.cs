@@ -5,6 +5,8 @@
     using Common;
     using Inputs.Contracts;
     using Inputs.GrpcInput;
+    using Microsoft.ApplicationInsights.Extensibility;
+    using Microsoft.ApplicationInsights.Extensibility.PerfCounterCollector.QuickPulse;
     using Opencensus.Proto.Exporter;
     using Opencensus.Proto.Trace;
     using System;
@@ -20,6 +22,7 @@
 
         private readonly Configuration config;
         private readonly string ocToAiInstrumentationKey;
+        private readonly string liveMetricsStreamInstrumentationKey;
 
         /// <summary>
         /// For unit tests only.
@@ -36,12 +39,30 @@
             this.config = new Configuration(configuration);
 
             this.ocToAiInstrumentationKey = config.OpenCensusToApplicationInsights_InstrumentationKey;
+            this.liveMetricsStreamInstrumentationKey = config.ApplicationInsights_LiveMetricsStreamInstrumentationKey;
 
             Diagnostics.LogInfo(
                 FormattableString.Invariant($"Loaded configuration. {Environment.NewLine}{configuration}"));
 
             try
             {
+                var activeConfiguration = TelemetryConfiguration.Active;
+                activeConfiguration.InstrumentationKey = this.liveMetricsStreamInstrumentationKey;
+
+                QuickPulseTelemetryProcessor processor = null;
+
+                activeConfiguration.TelemetryProcessorChainBuilder
+                    .Use((next) =>
+                    {
+                        processor = new QuickPulseTelemetryProcessor(next);
+                        return processor;
+                    })
+                    .Build();
+
+                var QuickPulse = new QuickPulseTelemetryModule();
+                QuickPulse.Initialize(activeConfiguration);
+                QuickPulse.RegisterTelemetryProcessor(processor);
+
                 this.telemetryClient = new TelemetryClient();
             }
             catch (Exception e)
@@ -194,6 +215,9 @@
 
                     try
                     {
+                        //!!!
+                        Diagnostics.LogTrace($"AI message received: {batch.Items.Count} items, first item: {batch.Items.First().InstrumentationKey}");
+
                         switch (telemetry.DataCase)
                         {
                             case Telemetry.DataOneofCase.Event:

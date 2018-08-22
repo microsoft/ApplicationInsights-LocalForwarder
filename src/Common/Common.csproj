@@ -8,10 +8,17 @@
     <DebugType>Full</DebugType>
     <AssemblyName>Microsoft.LocalForwarder.Common</AssemblyName>
     <RootNamespace>Microsoft.LocalForwarder.Common</RootNamespace>
+    <SignAssembly>true</SignAssembly>
+    <DelaySign>false</DelaySign>
+    <AssemblyOriginatorKeyFile>LocalForwarderStrongNameKey.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="NLog.config" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\InternalsVisibleToAssemblyInfo.cs" Link="InternalsVisibleToAssemblyInfo.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -21,7 +28,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="MicroBuild.Core" Version="0.3.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="NLog.Extensions.Logging" Version="1.2.0" />
   </ItemGroup>
+
+  <Import Project="..\Signing.targets" />
 
 </Project>

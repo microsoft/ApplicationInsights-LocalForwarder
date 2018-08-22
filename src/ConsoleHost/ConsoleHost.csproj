@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -9,10 +9,17 @@
     <DebugType>Full</DebugType>
     <AssemblyName>Microsoft.LocalForwarder.ConsoleHost</AssemblyName>
     <RootNamespace>Microsoft.LocalForwarder.ConsoleHost</RootNamespace>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>LocalForwarderStrongNameKey.snk</AssemblyOriginatorKeyFile>
+    <DelaySign>false</DelaySign>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.LocalForwarder.Library" Version="1.0.28-alpha" />
+    <PackageReference Include="MicroBuild.Core" Version="0.3.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.LocalForwarder.Library" Version="1.0.36-alpha" />
   </ItemGroup>
 
   <ItemGroup>
@@ -20,5 +27,11 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+
+  <Import Project="..\Signing.targets" />
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="dotnet publish $(ProjectPath) -c $(ConfigurationName) --no-build" />
+  </Target>
 
 </Project>

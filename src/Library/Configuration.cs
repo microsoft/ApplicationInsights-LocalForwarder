@@ -151,6 +151,22 @@
             }
         }
 
+        public string ApplicationInsights_LiveMetricsStreamInstrumentationKey
+        {
+            get
+            {
+                try
+                {
+                    return this.localForwarderConfiguration.Element("ApplicationInsights").Element("LiveMetricsStreamInstrumentationKey").Value;
+                }
+                catch (Exception e)
+                {
+                    throw new ArgumentException(
+                        FormattableString.Invariant($"Could not find or convert the data field {MethodBase.GetCurrentMethod().Name} in configuration. {this.localForwarderConfiguration.Value}"), e);
+                }
+            }
+        }
+
         public Configuration(string configuration)
         {
             try
