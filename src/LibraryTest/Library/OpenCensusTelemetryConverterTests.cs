@@ -86,7 +86,7 @@ namespace Microsoft.LocalForwarder.Test.Library
             this.client.TrackSpan(span, string.Empty);
 
             // ASSERT
-            Assert.AreEqual(TestParentSpanId, ((RequestTelemetry)this.sentItems.Single()).Context.Operation.ParentId);
+            Assert.AreEqual($"|{TestTraceId}.{TestParentSpanId}.", ((RequestTelemetry)this.sentItems.Single()).Context.Operation.ParentId);
         }
 
         [TestMethod]
@@ -205,7 +205,7 @@ namespace Microsoft.LocalForwarder.Test.Library
 
             // ASSERT
             var dependency = this.sentItems.OfType<DependencyTelemetry>().Single();
-            Assert.AreEqual(TestParentSpanId, dependency.Context.Operation.ParentId);
+            Assert.AreEqual($"|{TestTraceId}.{TestParentSpanId}.", dependency.Context.Operation.ParentId);
         }
 
         [TestMethod]
@@ -438,6 +438,29 @@ namespace Microsoft.LocalForwarder.Test.Library
         }
 
         [TestMethod]
+        public void OpenCensusTelemetryConverterTests_TracksHttpRequestWithRelativeUrl()
+        {
+            var url = new Uri("https://host:123/path?query");
+            var span = this.CreateBasicSpan(Span.Types.SpanKind.Server, "HttpIn");
+            span.Attributes = new Span.Types.Attributes
+            {
+                AttributeMap =
+                {
+                    ["http.url"] = this.CreateAttributeValue(url.LocalPath),
+                    ["http.method"] = this.CreateAttributeValue("POST"),
+                    ["http.status_code"] = this.CreateAttributeValue(409),
+                }
+            };
+
+            this.client.TrackSpan(span, string.Empty);
+
+            var request = this.sentItems.OfType<RequestTelemetry>().Single();
+            Assert.IsNull(request.Url);
+            Assert.AreEqual("POST /path", request.Name);
+            Assert.AreEqual("409", request.ResponseCode);
+        }
+
+        [TestMethod]
         public void OpenCensusTelemetryConverterTests_TracksHttpRequestWithUrlAndRoute()
         {
             var url = new Uri("https://host:123/path?query");
@@ -642,6 +665,31 @@ namespace Microsoft.LocalForwarder.Test.Library
             Assert.AreEqual("POST /path", dependency.Name);
             Assert.AreEqual("200", dependency.ResultCode);
             Assert.AreEqual("host", dependency.Target);
+            Assert.AreEqual("Http", dependency.Type);
+        }
+
+        [TestMethod]
+        public void OpenCensusTelemetryConverterTests_TracksHttpDependencyWithRelativeUrl()
+        {
+            var url = new Uri("https://host:123/path?query");
+            var span = this.CreateBasicSpan(Span.Types.SpanKind.Client, "HttpOut");
+            span.Attributes = new Span.Types.Attributes
+            {
+                AttributeMap =
+                {
+                    ["http.url"] = this.CreateAttributeValue(url.LocalPath),
+                    ["http.method"] = this.CreateAttributeValue("POST"),
+                    ["http.status_code"] = this.CreateAttributeValue(200)
+                }
+            };
+
+            this.client.TrackSpan(span, string.Empty);
+
+            var dependency = this.sentItems.OfType<DependencyTelemetry>().Single();
+            Assert.AreEqual(url.LocalPath, dependency.Data);
+            Assert.AreEqual("POST /path", dependency.Name);
+            Assert.AreEqual("200", dependency.ResultCode);
+            Assert.IsNull(dependency.Target);
             Assert.AreEqual("Http", dependency.Type);
         }
 
