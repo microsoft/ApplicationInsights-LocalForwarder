@@ -533,6 +533,28 @@ namespace Microsoft.LocalForwarder.Test.Library
         }
 
         [TestMethod]
+        public void OpenCensusTelemetryConverterTests_TracksRequestWithStringStatusCode()
+        {
+            // ARRANGE
+            var span = this.CreateBasicSpan(Span.Types.SpanKind.Server, "spanName");
+            span.Attributes = new Span.Types.Attributes
+            {
+                AttributeMap =
+                {
+                    ["http.status_code"] = this.CreateAttributeValue("201"),
+                }
+            };
+
+            // ACT
+            this.client.TrackSpan(span, string.Empty);
+
+            // ASSERT
+            var request = (RequestTelemetry)this.sentItems.Single();
+
+            Assert.AreEqual("201", request.ResponseCode);
+        }
+
+        [TestMethod]
         public void OpenCensusTelemetryConverterTests_TracksHttpRequestHostPortPathAttributes()
         {
             var span = this.CreateBasicSpan(Span.Types.SpanKind.Server, "HttpIn");
@@ -620,6 +642,28 @@ namespace Microsoft.LocalForwarder.Test.Library
             Assert.IsNull(request.Url);
             Assert.AreEqual("POST", request.Name);
             Assert.AreEqual("200", request.ResponseCode);
+        }
+
+        [TestMethod]
+        public void OpenCensusTelemetryConverterTests_TracksDependencyWithStringStatusCode()
+        {
+            // ARRANGE
+            var span = this.CreateBasicSpan(Span.Types.SpanKind.Client, "spanName");
+            span.Attributes = new Span.Types.Attributes
+            {
+                AttributeMap =
+                {
+                    ["http.status_code"] = this.CreateAttributeValue("201"),
+                }
+            };
+
+            // ACT
+            this.client.TrackSpan(span, string.Empty);
+
+            // ASSERT
+            var dependency = (DependencyTelemetry)this.sentItems.Single();
+
+            Assert.AreEqual("201", dependency.ResultCode);
         }
 
         [TestMethod]
