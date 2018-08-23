@@ -103,6 +103,9 @@
             {
                 foreach (var attribute in span.Attributes.AttributeMap)
                 {
+                    if (attribute.Value == null)
+                        continue;
+                    
                     switch (attribute.Key)
                     {
                         case SpanAttributeConstants.HttpUrlKey:
@@ -110,7 +113,9 @@
                             isHttp = true;
                             break;
                         case SpanAttributeConstants.HttpStatusCodeKey:
-                            request.ResponseCode = attribute.Value.IntValue.ToString();
+                            request.ResponseCode = attribute.Value.StringValue != null ? 
+                                    attribute.Value.StringValue.Value :
+                                    attribute.Value.IntValue.ToString();
                             isHttp = true;
                             break;
                         case SpanAttributeConstants.HttpUserAgentKey:
@@ -134,11 +139,11 @@
                             isHttp = true;
                             break;
                         case SpanAttributeConstants.HttpPortKey:
-                            port = (int) attribute.Value?.IntValue;
+                            port = (int) attribute.Value.IntValue;
                             isHttp = true;
                             break;
                         case SpanAttributeConstants.ErrorKey:
-                            if (attribute.Value != null && attribute.Value.BoolValue)
+                            if (attribute.Value.BoolValue)
                             {
                                 request.Success = false;
                             }
@@ -201,13 +206,18 @@
                 bool isHttp = false;
                 foreach (var attribute in span.Attributes.AttributeMap)
                 {
+                    if (attribute.Value == null)
+                        continue;
+
                     switch (attribute.Key)
                     {
                         case SpanAttributeConstants.HttpUrlKey:
                             url = attribute.Value.StringValue?.Value;
                             break;
                         case SpanAttributeConstants.HttpStatusCodeKey:
-                            dependency.ResultCode = attribute.Value?.IntValue.ToString();
+                            dependency.ResultCode = attribute.Value.StringValue != null ?
+                                    attribute.Value.StringValue.Value : 
+                                    attribute.Value.IntValue.ToString(); 
                             isHttp = true;
                             break;
                         case SpanAttributeConstants.HttpPathKey:
