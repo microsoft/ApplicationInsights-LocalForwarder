@@ -1,4 +1,4 @@
-namespace Microsoft.LocalForwarder.Test.Library.Inputs.GrpcInput
+namespace Microsoft.LocalForwarder.LibraryTest.Library.Inputs.GrpcInput
 {
     using LocalForwarder.Library.Inputs.GrpcInput;
     using System;

@@ -63,18 +63,18 @@
                     result = new MetricTelemetry(firstMetric.Name, firstMetric.Value);
                     break;
                 case DataPointType.Aggregation:
-                    if (firstMetric.Count == null || firstMetric.Min == null || firstMetric.Max == null || firstMetric.StdDev == null)
-                    {
-                        //!!!
-                        //Diagnostics.LogError($"Count: {firstMetric.Count}, Min: {firstMetric.Min}, Max: {firstMetric.Max}, StdDev: {firstMetric.StdDev}");
-                        throw new ArgumentNullException(FormattableString.Invariant($"For an aggregation metric, all of the following must be specified: Count, Min, Max, StdDev."));
-                    }
+                    firstMetric.Count = firstMetric.Count ?? new Google.Protobuf.WellKnownTypes.Int32Value() { Value = 1 };
+                    firstMetric.Min = firstMetric.Min ?? new Google.Protobuf.WellKnownTypes.DoubleValue() { Value = firstMetric.Value };
+                    firstMetric.Max = firstMetric.Max ?? new Google.Protobuf.WellKnownTypes.DoubleValue() { Value = firstMetric.Value };
+                    firstMetric.StdDev = firstMetric.StdDev ?? new Google.Protobuf.WellKnownTypes.DoubleValue() { Value = 0 };
 
                     result = new MetricTelemetry(firstMetric.Name, firstMetric.Count.Value, firstMetric.Value, firstMetric.Min.Value, firstMetric.Max.Value, firstMetric.StdDev.Value);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(FormattableString.Invariant($"Unknown aggregation Kind: {firstMetric.Kind}"));
             }
+
+            result.MetricNamespace = firstMetric.Ns;
 
             result.Properties.PopulateFromProtobuf(inputTelemetry.Metric.Properties);
 
@@ -136,6 +136,7 @@
 
             Availability item = inputTelemetry.Availability;
 
+            result.Id = item.Id;
             result.Name = item.Name;
 
             if (DateTimeOffset.TryParseExact(inputTelemetry.DateTime, "o", CultureInfo.InvariantCulture, DateTimeStyles.None, out var timestamp))
@@ -190,6 +191,7 @@
 
             Request item = inputTelemetry.Request;
 
+            result.Id = item.Id;
             result.Name = item.Name;
 
             if (DateTimeOffset.TryParseExact(inputTelemetry.DateTime, "o", CultureInfo.InvariantCulture, DateTimeStyles.None, out var timestamp))
@@ -200,6 +202,12 @@
             result.Duration = item.Duration?.ToTimeSpan() ?? TimeSpan.Zero;
             result.ResponseCode = item.ResponseCode;
             result.Success = item.Success?.Value;
+            result.Source = item.Source;
+
+            if (Uri.TryCreate(item.Url, UriKind.RelativeOrAbsolute, out Uri url))
+            {
+                result.Url = url;
+            }
 
             result.Properties.PopulateFromProtobuf(item.Properties);
             result.Metrics.PopulateFromProtobuf(item.Measurements);

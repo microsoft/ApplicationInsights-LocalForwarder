@@ -1,4 +1,4 @@
-namespace Microsoft.LocalForwarder.Test
+namespace Microsoft.LocalForwarder.LibraryTest
 {
     using Grpc.Core;
     using LocalForwarder.Library.Inputs.Contracts;

@@ -1,4 +1,4 @@
-namespace Microsoft.LocalForwarder.Test.Library.Inputs.NamedPipeInput
+namespace Microsoft.LocalForwarder.LibraryTest.Library.Inputs.NamedPipeInput
 {
     using System;
     using System.IO;
