@@ -16,7 +16,7 @@ Register a service and configure it to start at system boot by running the follo
 sc create "Local Forwarder" binpath="<path>\Microsoft.LocalForwarder.WindowsServiceHost.exe" start=auto
 ```
 
-Configure service to restart automatically if it fails for any reason.
+Configure the service to restart automatically if it fails for any reason.
 ```
 sc failure "Local Forwarder" reset= 432000 actions= restart/1000/restart/1000/restart/1000
 ```
@@ -56,9 +56,8 @@ host.Stop();
 
 ## Configuring Local Forwarder
 //!!! TODO make sure this is updated
-* When running one of Local Forwarder's own hosts (Console Host or Windows Service Host), please ensure LocalForwarder.config is placed next to the binary.
-* When self-hosting the Local Forwarder NuGet, the configuration must be provided in code (see section on self-hosting).
-* For the configuration syntax, please see [LocalForwarder.config](https://github.com/Microsoft/ApplicationInsights-LocalForwarder/blob/master/src/ConsoleHost/LocalForwarder.config) in the GitHub repository. Note that configuration may change from release to release, so pay attention to which version you're using.
+* When running one of Local Forwarder's own hosts (Console Host or Windows Service Host), you will find LocalForwarder.config placed next to the binary.
+* When self-hosting the Local Forwarder NuGet, the configuration of the same format must be provided in code (see section on self-hosting). For the configuration syntax, please see [LocalForwarder.config](https://github.com/Microsoft/ApplicationInsights-LocalForwarder/blob/master/src/ConsoleHost/LocalForwarder.config) in the GitHub repository. Note that configuration may change from release to release, so pay attention to which version you're using.
 
-## Configuring tracing
-Troubleshooting traces are written out to the file system next to the executable that runs Local Forwarder (look for **.log* files). Local Forwarder uses a tracing library called [NLog](https://nlog-project.org/), and you can place a file with a name of *NLog.config* next to the executable to provide your own NLog configuration in place of the default one. See [NLog documentation](https://github.com/NLog/NLog/wiki/Configuration-file#configuration-file-format) for the description of the format.
+## Troubleshooting and configuring tracing
+Troubleshooting traces are written out to the file system next to the executable that runs Local Forwarder (look for **.log* files). Local Forwarder uses a tracing library called [NLog](https://nlog-project.org/), and you can place a file with a name of *NLog.config* next to the executable to provide your own NLog configuration in place of the default one. See [NLog documentation](https://github.com/NLog/NLog/wiki/Configuration-file#configuration-file-format) for the description of the format. If no configuration file is provided (which is the default), Local Forwarder will use the default NLog configuration which can be found [here](https://github.com/Microsoft/ApplicationInsights-LocalForwarder/blob/tokaplan/readme/src/Common/NLog.config).
