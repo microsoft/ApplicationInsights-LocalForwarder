@@ -10,21 +10,28 @@ Local Forwarder is a .NET Core application capable of running under Windows, Lin
 ### Windows
 #### Windows Service
 The most straightforward way to run Local Forwarder under Windows is by installing it as a Windows Service. The release comes with a Windows Service executable (*Microsoft.LocalForwarder.WindowsServiceHost.exe*) which can be easily registered with the OS by running a script similar to the following:
-```Batchfile
-Register a service and configure it to start at system boot
+
+Register a service and configure it to start at system boot by running the following command in Windows *cmd*.
+`
 sc create "Local Forwarder" binpath="<path>\Microsoft.LocalForwarder.WindowsServiceHost.exe" start=auto
-Configure service to restart automatically if it fails for any reason
+`
+
+Configure service to restart automatically if it fails for any reason.
+`
 sc failure "Local Forwarder" reset= 432000 actions= restart/1000/restart/1000/restart/1000
-```
-Once the service is registered, use standard Windows tools to manage it.
+`
+
+Once the service is registered, use Windows tools to manage it.
 #### Console application
 For certain use cases it might be beneficial to run Local Forwarder as a console application. The release comes with a .NET Core binary (*Microsoft.LocalForwarder.ConsoleHost.dll*) which can be invoked from a console.
 ```batchfile
 dotnet Microsoft.LocalForwarder.ConsoleHost.dll
 ```
 ### Linux
-Most users will want to run Local Forwarder as a daemon. Linux systems come with a variety of solutions for service management, like Upstart, sysv, or systemd. Whatever your particular version is, you can use it to run the .NET Core assembly *Microsoft.LocalForwarder.ConsoleHost.dll* in the way which is most appropriate for your scenario. Of course, you can also run the application in a console.
-
+Most users will want to run Local Forwarder as a daemon. Linux systems come with a variety of solutions for service management, like Upstart, sysv, or systemd. Whatever your particular version is, you can use it to run the .NET Core assembly *Microsoft.LocalForwarder.ConsoleHost.dll* in the way which is most appropriate for your scenario. Of course, you can also run the same executable in a console.
+```batchfile
+dotnet Microsoft.LocalForwarder.ConsoleHost.dll
+```
 //!!! TODO example for Ubuntu 16
 
 //!!! TODO include self-contained options that require no .NET Core installation
