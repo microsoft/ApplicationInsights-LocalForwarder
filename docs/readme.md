@@ -12,14 +12,14 @@ Local Forwarder is a .NET Core application capable of running under Windows, Lin
 The most straightforward way to run Local Forwarder under Windows is by installing it as a Windows Service. The release comes with a Windows Service executable (*Microsoft.LocalForwarder.WindowsServiceHost.exe*) which can be easily registered with the OS by running a script similar to the following:
 
 Register a service and configure it to start at system boot by running the following command in Windows *cmd*.
-`
+```
 sc create "Local Forwarder" binpath="<path>\Microsoft.LocalForwarder.WindowsServiceHost.exe" start=auto
-`
+```
 
 Configure service to restart automatically if it fails for any reason.
-`
+```
 sc failure "Local Forwarder" reset= 432000 actions= restart/1000/restart/1000/restart/1000
-`
+```
 
 Once the service is registered, use Windows tools to manage it.
 #### Console application
