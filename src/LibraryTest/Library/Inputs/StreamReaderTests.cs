@@ -1,4 +1,4 @@
-namespace Microsoft.LocalForwarder.Test.Library.Inputs
+namespace Microsoft.LocalForwarder.LibraryTest.Library.Inputs
 {
     using System.Reflection;
     using System.Threading.Tasks;

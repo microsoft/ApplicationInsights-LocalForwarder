@@ -1,4 +1,4 @@
-namespace Microsoft.LocalForwarder.Test.Library
+namespace Microsoft.LocalForwarder.LibraryTest.Library
 {
     using ApplicationInsights;
     using ApplicationInsights.Channel;

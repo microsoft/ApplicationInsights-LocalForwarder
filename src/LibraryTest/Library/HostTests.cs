@@ -1,22 +1,15 @@
-namespace Microsoft.LocalForwarder.Test.Library
+namespace Microsoft.LocalForwarder.LibraryTest.Library
 {
-    using ApplicationInsights;
-    using ApplicationInsights.Channel;
     using ApplicationInsights.DataContracts;
-    using ApplicationInsights.Extensibility;
     using LocalForwarder.Library;
-    using LocalForwarder.Library.Inputs.Contracts;
     using Opencensus.Proto.Exporter;
     using Opencensus.Proto.Trace;
     using System;
-    using System.Collections.Concurrent;
     using System.Linq;
-    using System.Net.Sockets;
     using System.Reflection;
     using System.Threading;
     using System.Threading.Tasks;
     using VisualStudio.TestTools.UnitTesting;
-    using Exception = System.Exception;
 
     [TestClass]
     public class HostTests
