@@ -36,7 +36,7 @@
   </Target>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="dotnet publish $(ProjectPath) -c $(ConfigurationName) --no-build&#xD;&#xA;dotnet publish $(ProjectPath) -c $(ConfigurationName) -r linux-x64 --no-build&#xD;&#xA;dotnet publish $(ProjectPath) -c $(ConfigurationName) -r win-x64 --no-build&#xD;&#xA;dotnet publish $(ProjectPath) -c $(ConfigurationName) -r win-x86 --no-build" />
+    <Exec Command="dotnet publish $(ProjectPath) -c $(ConfigurationName) --no-build&#xD;&#xA;dotnet publish $(ProjectPath) -c $(ConfigurationName) -r linux-x64 --no-restore" />
   </Target>
 
 </Project>
