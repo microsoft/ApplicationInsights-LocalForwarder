@@ -32,8 +32,8 @@ dotnet Microsoft.LocalForwarder.ConsoleHost.dll
 Most users will want to run Local Forwarder as a daemon. Linux systems come with a variety of solutions for service management, like Upstart, sysv, or systemd. Whatever your particular version is, you can use it to run the .NET Core assembly *Microsoft.LocalForwarder.ConsoleHost.dll* in the way which is most appropriate for your scenario.
 
 As an example, let's create a daemon service using systemd.
-* create the following service file named localforwarder.service and place it into /lib/systemd/system/
-This assumes your user name is SAMPLE_USER and you've copied Local Forwarder binaries into /home/SAMPLE_USER/LOCALFORWARDER_DIR
+* create the following service file named localforwarder.service and place it into /lib/systemd/system.
+This sample assumes your user name is SAMPLE_USER and you've copied Local Forwarder binaries to /home/SAMPLE_USER/LOCALFORWARDER_DIR.
 ```
 # localforwarder.service
 # Place this file into /lib/systemd/system/
@@ -62,7 +62,7 @@ WantedBy=multi-user.target
 systemctl enable localforwarder
 ```
 
-* Run the followign command to instruct systemd to start Local Forwarder immediately
+* Run the following command to instruct systemd to start Local Forwarder immediately
 ```
 systemctl start localforwarder
 ```
@@ -77,7 +77,7 @@ dotnet Microsoft.LocalForwarder.ConsoleHost.dll
 //!!! TODO include self-contained options that require no .NET Core installation
 
 ### Self-hosting
-Local Forwarder is also distributed as a .NET Standard NuGet package, allowing you to host it inside of your own .NET application.
+Local Forwarder is also distributed as a .NET Standard NuGet package, allowing you to host it inside your own .NET application.
 
 //!!! TODO include details for downloading NuGet
 
@@ -99,5 +99,5 @@ host.Stop();
 * When running one of Local Forwarder's own hosts (Console Host or Windows Service Host), you will find LocalForwarder.config placed next to the binary.
 * When self-hosting the Local Forwarder NuGet, the configuration of the same format must be provided in code (see section on self-hosting). For the configuration syntax, please see [LocalForwarder.config](https://github.com/Microsoft/ApplicationInsights-LocalForwarder/blob/master/src/ConsoleHost/LocalForwarder.config) in the GitHub repository. Note that configuration may change from release to release, so pay attention to which version you're using.
 
-## Troubleshooting and configuring tracing
-Troubleshooting traces are written out to the file system next to the executable that runs Local Forwarder (look for **.log* files). Local Forwarder uses a tracing library called [NLog](https://nlog-project.org/), and you can place a file with a name of *NLog.config* next to the executable to provide your own NLog configuration in place of the default one. See [NLog documentation](https://github.com/NLog/NLog/wiki/Configuration-file#configuration-file-format) for the description of the format. If no configuration file is provided (which is the default), Local Forwarder will use the default NLog configuration which can be found [here](https://github.com/Microsoft/ApplicationInsights-LocalForwarder/blob/master/src/Common/NLog.config).
+## Monitoring Local Forwarder
+Traces are written out to the file system next to the executable that runs Local Forwarder (look for **.log* files). Local Forwarder uses a tracing library called [NLog](https://nlog-project.org/), and you can place a file with a name of *NLog.config* next to the executable to provide your own NLog configuration in place of the default one. See [NLog documentation](https://github.com/NLog/NLog/wiki/Configuration-file#configuration-file-format) for the description of the format. If no configuration file is provided (which is the default), Local Forwarder will use the default NLog configuration which can be found [here](https://github.com/Microsoft/ApplicationInsights-LocalForwarder/blob/master/src/Common/NLog.config).
