@@ -27,12 +27,52 @@ For certain use cases it might be beneficial to run Local Forwarder as a console
 ```batchfile
 dotnet Microsoft.LocalForwarder.ConsoleHost.dll
 ```
+
 ### Linux
-Most users will want to run Local Forwarder as a daemon. Linux systems come with a variety of solutions for service management, like Upstart, sysv, or systemd. Whatever your particular version is, you can use it to run the .NET Core assembly *Microsoft.LocalForwarder.ConsoleHost.dll* in the way which is most appropriate for your scenario. Of course, you can also run the same executable in a console.
+Most users will want to run Local Forwarder as a daemon. Linux systems come with a variety of solutions for service management, like Upstart, sysv, or systemd. Whatever your particular version is, you can use it to run the .NET Core assembly *Microsoft.LocalForwarder.ConsoleHost.dll* in the way which is most appropriate for your scenario.
+
+As an example, let's create a daemon service using systemd.
+* create the following service file named localforwarder.service and place it into /lib/systemd/system/
+This assumes your user name is SAMPLE_USER and you've copied Local Forwarder binaries into /home/SAMPLE_USER/LOCALFORWARDER_DIR
+```
+# localforwarder.service
+# Place this file into /lib/systemd/system/
+# Use 'systemctl enable localforwarder' to start the service automatically on each boot
+# Use 'systemctl start localforwarder' to start immediately
+
+[Unit]
+Description=Local Forwarder service
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=SAMPLE_USER
+WorkingDirectory=/home/SAMPLE_USER/LOCALFORWARDER_DIR
+ExecStart=/usr/bin/env dotnet /home/SAMPLE_USER/LOCALFORWARDER_DIR/Microsoft.LocalForwarder.ConsoleHost.dll noninteractive
+
+[Install]
+WantedBy=multi-user.target
+```
+
+* Run the following command to instruct systemd to start Local Forwarder on every boot
+```
+systemctl enable localforwarder
+```
+
+* Run the followign command to instruct systemd to start Local Forwarder immediately
+```
+systemctl start localforwarder
+```
+
+* Monitor the service by inspecting **.log* files in the /home/SAMPLE_USER/LOCALFORWARDER_DIR directory.
+
+Of course, you can also run the same executable in a console.
 ```batchfile
 dotnet Microsoft.LocalForwarder.ConsoleHost.dll
 ```
-//!!! TODO example for Ubuntu 16
 
 //!!! TODO include self-contained options that require no .NET Core installation
 
