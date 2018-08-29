@@ -2,16 +2,16 @@
 
 ## Background
 Local Forwarder is an agent that collects Application Insights or OpenCensus telemetry from a variety of SDKs and routes it to the Application Insights backend.
-Local Forwarder is a .NET Core application capable of running under Windows, Linux and macOS.
+Local Forwarder is a .NET Core application capable of running under Windows and Linux. You may also be able to run it under macOS, but that is not officially supported at this time.
 
 ## Running Local Forwarder
-Local Forwarder is a .NET Core application capable of running under Windows, Linux, and macOS; it's an [open source project on GitHub](https://github.com/Microsoft/ApplicationInsights-LocalForwarder/releases). There is a variaty of ways to run Local Forwarder across multiple platforms.
+Local Forwarder is a .NET Core application; it's an [open source project on GitHub](https://github.com/Microsoft/ApplicationInsights-LocalForwarder/releases). There is a variaty of ways to run Local Forwarder across multiple platforms.
 
 ### Windows
 #### Windows Service
-The most straightforward way to run Local Forwarder under Windows is by installing it as a Windows Service. The release comes with a Windows Service executable (*Microsoft.LocalForwarder.WindowsServiceHost.exe*) which can be easily registered with the OS by running a script similar to the following:
+The most natural way of running Local Forwarder under Windows is by installing it as a Windows Service. The release comes with a Windows Service executable (*Microsoft.LocalForwarder.WindowsServiceHost.exe*) which can be easily registered with the OS by running a script similar to the following:
 
-Register a service and configure it to start at system boot by running the following command in Windows *cmd*.
+Register a service and configure it to start at system boot.
 ```
 sc create "Local Forwarder" binpath="<path>\Microsoft.LocalForwarder.WindowsServiceHost.exe" start=auto
 ```
@@ -22,6 +22,7 @@ sc failure "Local Forwarder" reset= 432000 actions= restart/1000/restart/1000/re
 ```
 
 Once the service is registered, use Windows tools to manage it.
+
 #### Console application
 For certain use cases it might be beneficial to run Local Forwarder as a console application. The release comes with a .NET Core binary (*Microsoft.LocalForwarder.ConsoleHost.dll*) which can be invoked from a console.
 ```batchfile
@@ -73,6 +74,9 @@ Of course, you can also run the same executable in a console.
 ```batchfile
 dotnet Microsoft.LocalForwarder.ConsoleHost.dll
 ```
+
+### Mac
+You may be able to run Local Forwarder under macOS, but that is not officially supported at this time.
 
 //!!! TODO include self-contained options that require no .NET Core installation
 
