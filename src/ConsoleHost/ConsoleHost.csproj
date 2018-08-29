@@ -35,8 +35,4 @@
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
   </Target>
 
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="dotnet publish $(ProjectPath) -c $(ConfigurationName) --no-build -v diag&#xD;&#xA;dotnet publish $(ProjectPath) -c $(ConfigurationName) -r linux-x64 --no-build -v diag&#xD;&#xA;dotnet publish $(ProjectPath) -c $(ConfigurationName) -r win-x64 --no-build -v diag&#xD;&#xA;dotnet publish $(ProjectPath) -c $(ConfigurationName) -r win-x86 --no-build -v diag" />
-  </Target>
-
 </Project>
