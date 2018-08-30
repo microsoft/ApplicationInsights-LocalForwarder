@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-	<Target Name="Build">
-		<!--<Message Text="Before defining $(SigningPath)"/>-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" InitialTargets="SigningTarget">
+	<Target Name="SigningTarget">
+		<Message Text="Before defining $(SigningPath)"/>
 		<PropertyGroup Condition="$(SigningPath) == ''">  	
 			<SigningPath>$(TargetPath)</SigningPath>  
 		</PropertyGroup> 
-		<!--<Message Text="After defining $(SigningPath)"/>-->
+		<Message Text="After defining $(SigningPath)"/>
 		
 		<ItemGroup Condition="'$(SkipSigning)' != 'True'"> 
 			<FilesToSign Include="$(SigningPath)">
