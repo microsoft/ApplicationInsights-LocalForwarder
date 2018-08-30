@@ -10,6 +10,7 @@
 **\*.pdb,pdb
 **\*.nupkg,nuget
 **\System.*.dll,System namespace assemblies
+**\system.dll
 **\mscorlib.dll
 **\api-ms-win-core-xstate-l2-1-0.dll
 **\microsoft.csharp.dll
