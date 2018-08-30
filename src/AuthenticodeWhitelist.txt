@@ -8,4 +8,4 @@
 **\*.xml,xml
 **\*.json,json
 **\*.pdb,pdb
-**\*.nuget,nuget
+**\*.nupkg,nuget
