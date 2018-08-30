@@ -9,3 +9,13 @@
 **\*.json,json
 **\*.pdb,pdb
 **\*.nupkg,nuget
+**\System.*.dll,System namespace assemblies
+**\mscorlib.dll
+**\api-ms-win-core-xstate-l2-1-0.dll
+**\microsoft.csharp.dll
+**\microsoft.visualbasic.dll
+**\microsoft.win32.primitives.dll
+**\microsoft.win32.registry.dll
+**\netstandard.dll
+**\sos.netcore.dll
+**\windowsbase.dll
