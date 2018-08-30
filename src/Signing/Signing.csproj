@@ -7,13 +7,13 @@
 	<StartupObject />
   </PropertyGroup>
 
+  <Import Project="..\Signing.targets" />
+
   <ItemGroup>
     <PackageReference Include="MicroBuild.Core" Version="0.3.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
   </ItemGroup>
-
-  <Import Project="..\Signing.targets" />
   
 </Project>
