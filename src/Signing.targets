@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" InitialTargets="SigningTarget">
-	<Target Name="SigningTarget">
+	<Target Name="SigningTarget" Condition="'$(SkipSigning)' != 'True'">
 		<Message Text="SigningPath is: $(SigningPath)"/>
 		<PropertyGroup Condition="$(SigningPath) == ''">  	
 			<SigningPath>$(TargetPath)</SigningPath>
 		</PropertyGroup> 
 		<Message Text="SigningPath adjusted to: $(SigningPath)"/>
 		
-		<ItemGroup Condition="'$(SkipSigning)' != 'True'"> 
+		<ItemGroup> 
 			<FilesToSign Include="$(SigningPath)">
 				<!-- Microsoft authenticode certificate for all file types -->
 				<Authenticode>Microsoft</Authenticode>
