@@ -8,13 +8,7 @@
 		<Message Text="SigningPath adjusted to: $(SigningPath)"/>
 		
 		<ItemGroup> 
-			<FilesToSign Include="$(SigningPath)\*.exe">
-				<!-- Microsoft authenticode certificate for all file types -->
-				<Authenticode>Microsoft</Authenticode>
-				<!-- Microsoft strong-name key for managed assemblies -->
-				<!-- <StrongName>StrongName</StrongName> -->
-			</FilesToSign>
-			<FilesToSign Include="$(SigningPath)\*.dll">
+			<FilesToSign Include="$(SigningPath)">
 				<!-- Microsoft authenticode certificate for all file types -->
 				<Authenticode>Microsoft</Authenticode>
 				<!-- Microsoft strong-name key for managed assemblies -->
