@@ -4,3 +4,7 @@
 **\nlog.extensions.logging.dll,3rd party assemblies
 **\grpc_csharp_ext.x64.dll,3rd party assemblies
 **\grpc_csharp_ext.x86.dll,3rd party assemblies
+**\*.config,config
+**\*.xml,xml
+**\*.json,json
+**\*.pdb,pdb
