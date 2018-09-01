@@ -12,7 +12,9 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
     using Opencensus.Proto.Trace.V1;
     using System;
     using System.Collections.Concurrent;
+    using System.Globalization;
     using System.Linq;
+    using System.Reflection;
     using VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
@@ -73,7 +75,32 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             Assert.IsFalse(request.Success.HasValue);
             Assert.IsTrue(string.IsNullOrEmpty(request.ResponseCode));
 
-            Assert.AreEqual("oclf", request.Context.GetInternalContext().SdkVersion);
+            Assert.AreEqual($"oclf0:{GetAssemblyVersionString()}", request.Context.GetInternalContext().SdkVersion);
+        }
+
+        [TestMethod]
+        public void OpenCensusTelemetryConverterTests_TracksRequestWithTracestate()
+        {
+            // ARRANGE
+
+            var span = this.CreateBasicSpan(Span.Types.SpanKind.Server, "spanName");
+            span.Tracestate = new Span.Types.Tracestate();
+            span.Tracestate.Entries.Add(new Span.Types.Tracestate.Types.Entry {Key = "k1", Value = "v1"});
+            span.Tracestate.Entries.Add(new Span.Types.Tracestate.Types.Entry { Key = "k2", Value = "v2" });
+
+            // ACT
+            this.client.TrackSpan(span, null, string.Empty);
+
+            // ASSERT
+            Assert.AreEqual(1, this.sentItems.Count);
+            Assert.IsInstanceOfType(this.sentItems.Single(), typeof(RequestTelemetry));
+
+            var request = this.sentItems.OfType<RequestTelemetry>().Single();
+
+            Assert.AreEqual(2, request.Properties.Count);
+            Assert.AreEqual("v1", request.Properties["k1"]);
+            Assert.AreEqual("v2", request.Properties["k2"]);
+            Assert.AreEqual($"oclf0:{GetAssemblyVersionString()}", request.Context.GetInternalContext().SdkVersion);
         }
 
         [TestMethod]
@@ -189,9 +216,34 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             Assert.IsTrue(string.IsNullOrEmpty(dependency.ResultCode));
             Assert.IsFalse(dependency.Success.HasValue);
 
-            Assert.AreEqual("oclf", dependency.Context.GetInternalContext().SdkVersion);
+            Assert.AreEqual($"oclf0:{GetAssemblyVersionString()}", dependency.Context.GetInternalContext().SdkVersion);
 
             Assert.IsTrue(string.IsNullOrEmpty(dependency.Type));
+        }
+
+        [TestMethod]
+        public void OpenCensusTelemetryConverterTests_TracksDependencyWithTracestate()
+        {
+            // ARRANGE
+
+            var span = this.CreateBasicSpan(Span.Types.SpanKind.Client, "spanName");
+            span.Tracestate = new Span.Types.Tracestate();
+            span.Tracestate.Entries.Add(new Span.Types.Tracestate.Types.Entry { Key = "k1", Value = "v1" });
+            span.Tracestate.Entries.Add(new Span.Types.Tracestate.Types.Entry { Key = "k2", Value = "v2" });
+
+            // ACT
+            this.client.TrackSpan(span, null, string.Empty);
+
+            // ASSERT
+            Assert.AreEqual(1, this.sentItems.Count);
+            Assert.IsInstanceOfType(this.sentItems.Single(), typeof(DependencyTelemetry));
+
+            var dependency = this.sentItems.OfType<DependencyTelemetry>().Single();
+
+            Assert.AreEqual(2, dependency.Properties.Count);
+            Assert.AreEqual("v1", dependency.Properties["k1"]);
+            Assert.AreEqual("v2", dependency.Properties["k2"]);
+            Assert.AreEqual($"oclf0:{GetAssemblyVersionString()}", dependency.Context.GetInternalContext().SdkVersion);
         }
 
         [TestMethod]
@@ -512,7 +564,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             {
                 AttributeMap =
                 {
-                    ["http.url"] = this.CreateAttributeValue(/*url.LocalPath*/"/trace_requests"),
+                    ["http.url"] = this.CreateAttributeValue(url.LocalPath),
                     ["http.method"] = this.CreateAttributeValue("POST"),
                     ["http.status_code"] = this.CreateAttributeValue(409),
                 }
@@ -1727,5 +1779,23 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
         }
 
         private static readonly Random Rand = new Random();
+
+        internal static string GetAssemblyVersionString()
+        {
+            // Since dependencySource is no longer set, sdk version is prepended with information which can identify whether RDD was collected by profiler/framework
+            // For directly using TrackDependency(), version will be simply what is set by core
+            System.Type converterType = typeof(OpenCensusTelemetryConverter);
+
+            object[] assemblyCustomAttributes = converterType.Assembly.GetCustomAttributes(false);
+            string versionStr = assemblyCustomAttributes
+                .OfType<AssemblyFileVersionAttribute>()
+                .First()
+                .Version;
+
+            Version version = new Version(versionStr);
+
+            string postfix = version.Revision.ToString(CultureInfo.InvariantCulture);
+            return version.ToString(3) + "-" + postfix;
+        }
     }
 }

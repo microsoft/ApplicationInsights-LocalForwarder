@@ -134,6 +134,8 @@
             RequestTelemetry request = new RequestTelemetry();
 
             InitializeOperationTelemetry(request, span, peerInfo);
+            SetTracestate(span.Tracestate, request);
+
             request.ResponseCode = span.Status?.Message;
 
             string host = null, method = null, path = null, route = null, url = null;
@@ -213,11 +215,7 @@
                     else
                     {
                         request.Url = GetUrl(host, port, path);
-
-                        if (path != null || route != null)
-                        {
-                            request.Name = GetHttpTelemetryName(method, path, route);
-                        }
+                        request.Name = GetHttpTelemetryName(method, path, route);
                     }
                 }
             }
@@ -240,6 +238,7 @@
             dependency.Success = null;
 
             InitializeOperationTelemetry(dependency, span, peerInfo);
+            SetTracestate(span.Tracestate, dependency);
 
             dependency.ResultCode = span.Status?.Code.ToString();
 
@@ -607,6 +606,20 @@
 
             string postfix = version.Revision.ToString(CultureInfo.InvariantCulture);
             return version.ToString(3) + "-" + postfix;
+        }
+
+        private static void SetTracestate(Span.Types.Tracestate tracestate, ISupportProperties telemetry)
+        {
+            if (tracestate?.Entries != null)
+            {
+                foreach (var entry in tracestate.Entries)
+                {
+                    if (!telemetry.Properties.ContainsKey(entry.Key))
+                    {
+                        telemetry.Properties[entry.Key] = entry.Value;
+                    }
+                }
+            }
         }
     }
 }
