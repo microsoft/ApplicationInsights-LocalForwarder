@@ -2,8 +2,9 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
 {
     using ApplicationInsights.DataContracts;
     using LocalForwarder.Library;
-    using Opencensus.Proto.Exporter;
-    using Opencensus.Proto.Trace;
+    using Opencensus.Proto.Agent.Common.V1;
+    using Opencensus.Proto.Agent.Trace.V1;
+    using Opencensus.Proto.Trace.V1;
     using System;
     using System.Linq;
     using System.Reflection;
@@ -50,18 +51,29 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
 
             Thread.Sleep(TimeSpan.FromMilliseconds(250));
 
-            var telemetryBatch = new ExportSpanRequest();
-            telemetryBatch.Spans.Add(new Span() { Name = new TruncatableString() { Value = "Span1" }, Kind = Span.Types.SpanKind.Server });
-            telemetryBatch.Spans.Add(new Span() { Name = new TruncatableString() { Value = "Span2" }, Kind = Span.Types.SpanKind.Client });
+            var telemetryBatch = new ExportTraceServiceRequest();
+            telemetryBatch.Spans.Add(new Span { Name = new TruncatableString { Value = "Span1" }, Kind = Span.Types.SpanKind.Server });
+            telemetryBatch.Spans.Add(new Span { Name = new TruncatableString { Value = "Span2" }, Kind = Span.Types.SpanKind.Client });
+            telemetryBatch.Node = new Node { ServiceInfo = new ServiceInfo { Name = "tests" } };
+
+            var configRequest = new ConfigTraceServiceRequest
+            {
+                Config = new TraceConfig
+                {
+                    RateLimitingSampler = new RateLimitingSampler { Qps = 1 }
+                }
+            };
 
             var writer = new GrpcWriter(false, portOC);
             await writer.Write(telemetryBatch).ConfigureAwait(false);
+            await writer.Write(configRequest).ConfigureAwait(false);
 
-            Common.AssertIsTrueEventually(() => sentItems.Count == 2);
-            
+            Common.AssertIsTrueEventually(() => sentItems.Count == 3);
+
             // ASSERT
-            Assert.AreEqual("Span1", (sentItems.Skip(0).First() as RequestTelemetry).Name);
-            Assert.AreEqual("Span2", (sentItems.Skip(1).First() as DependencyTelemetry).Name);
+            Assert.AreEqual("tests", (sentItems.Skip(0).First() as EventTelemetry).Context.Cloud.RoleName);
+            Assert.AreEqual("Span1", (sentItems.Skip(1).First() as RequestTelemetry).Name);
+            Assert.AreEqual("Span2", (sentItems.Skip(2).First() as DependencyTelemetry).Name);
         }
 
         [TestMethod]
@@ -100,7 +112,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             host.Stop();
             Thread.Sleep(TimeSpan.FromMilliseconds(250));
 
-            var telemetryBatch = new ExportSpanRequest();
+            var telemetryBatch = new ExportTraceServiceRequest();
             telemetryBatch.Spans.Add(new Span() { Name = new TruncatableString() { Value = "Span1" }, Kind = Span.Types.SpanKind.Server });
             telemetryBatch.Spans.Add(new Span() { Name = new TruncatableString() { Value = "Span2" }, Kind = Span.Types.SpanKind.Client });
 
@@ -160,7 +172,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             Common.AssertIsTrueEventually(() => libraryFieldInfo.GetValue(host) != null);
 
             // verify the new library works
-            var telemetryBatch = new ExportSpanRequest();
+            var telemetryBatch = new ExportTraceServiceRequest();
             telemetryBatch.Spans.Add(new Span() { Name = new TruncatableString() { Value = "Span1" }, Kind = Span.Types.SpanKind.Server });
             telemetryBatch.Spans.Add(new Span() { Name = new TruncatableString() { Value = "Span2" }, Kind = Span.Types.SpanKind.Client });
 

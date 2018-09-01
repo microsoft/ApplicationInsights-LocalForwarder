@@ -21,7 +21,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library.Inputs.GrpcInput
             var input = new GrpcAiInput("localhost", port);
 
             // ACT
-            input.Start(null);
+            input.Start(null, null);
 
             Assert.IsTrue(SpinWait.SpinUntil(() => input.IsRunning, GrpcAiInputTests.DefaultTimeout));
 
@@ -40,12 +40,12 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library.Inputs.GrpcInput
             int port = Common.GetPort();
             var input = new GrpcAiInput("localhost", port);
 
-            input.Start(null);
+            input.Start(null, null);
 
             Assert.IsTrue(SpinWait.SpinUntil(() => input.IsRunning, GrpcAiInputTests.DefaultTimeout));
 
             // ACT
-            input.Start(null);
+            input.Start(null, null);
 
             // ASSERT
         }
@@ -73,11 +73,13 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library.Inputs.GrpcInput
 
             int port = Common.GetPort();
             var input = new GrpcAiInput("localhost", port);
-            input.Start(telemetryBatch =>
-            {
-                batchesReceived++;
-                receivedBatch = telemetryBatch;
-            });
+            input.Start(
+                (telemetryBatch, callContext) =>
+                {
+                    batchesReceived++;
+                    receivedBatch = telemetryBatch;
+                },
+                null);
             Assert.IsTrue(SpinWait.SpinUntil(() => input.IsRunning, GrpcAiInputTests.DefaultTimeout));
 
             var grpcWriter = new GrpcWriter(true, port);
@@ -106,11 +108,13 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library.Inputs.GrpcInput
             
             int port = Common.GetPort();
             var input = new GrpcAiInput("localhost", port);
-            input.Start(telemetryBatch =>
-            {
-                Interlocked.Increment(ref batchesReceived);
-                receivedBatch = telemetryBatch;
-            });
+            input.Start(
+                (telemetryBatch, callContext) =>
+                {
+                    Interlocked.Increment(ref batchesReceived);
+                    receivedBatch = telemetryBatch;
+                },
+                null);
             Assert.IsTrue(SpinWait.SpinUntil(() => input.IsRunning, GrpcAiInputTests.DefaultTimeout));
 
             // ACT
@@ -142,11 +146,13 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library.Inputs.GrpcInput
             int port = Common.GetPort();
             var input = new GrpcAiInput("localhost", port);
 
-            input.Start(telemetryBatch =>
-            {
-                batchesReceived++;
-                receivedBatch = telemetryBatch;
-            });
+            input.Start(
+                (telemetryBatch, callContext) =>
+                {
+                    batchesReceived++;
+                    receivedBatch = telemetryBatch;
+                },
+                null);
 
             Assert.IsTrue(SpinWait.SpinUntil(() => input.IsRunning, GrpcAiInputTests.DefaultTimeout));
 
@@ -180,11 +186,13 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library.Inputs.GrpcInput
             int port = Common.GetPort();
             var input = new GrpcAiInput("localhost", port);
 
-            input.Start(telemetryBatch =>
-            {
-                batchesReceived++;
-                receivedBatch = telemetryBatch;
-            });
+            input.Start(
+                (telemetryBatch, callContext) =>
+                {
+                    batchesReceived++;
+                    receivedBatch = telemetryBatch;
+                },
+                null);
 
             Assert.IsTrue(SpinWait.SpinUntil(() => input.IsRunning, GrpcAiInputTests.DefaultTimeout));
 
@@ -206,11 +214,13 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library.Inputs.GrpcInput
                 () => !input.IsRunning && input.GetStats().BatchesReceived == 1 && batchesReceived == 1 &&
                       receivedBatch.Items.Single().Event.Name == "Event1", GrpcAiInputTests.DefaultTimeout);
 
-            input.Start(telemetryBatch =>
-            {
-                batchesReceived++;
-                receivedBatch = telemetryBatch;
-            });
+            input.Start(
+                (telemetryBatch, callContext) =>
+                {
+                    batchesReceived++;
+                    receivedBatch = telemetryBatch;
+                },
+                null);
 
             Assert.IsTrue(SpinWait.SpinUntil(() => input.IsRunning, GrpcAiInputTests.DefaultTimeout));
 
@@ -231,14 +241,14 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library.Inputs.GrpcInput
             int port = Common.GetPort();
             var input = new GrpcAiInput("localhost", port);
 
-            input.Start(telemetryBatch => throw new InvalidOperationException());
+            input.Start((telemetryBatch, callContext) => throw new InvalidOperationException(), null);
 
             Assert.IsTrue(SpinWait.SpinUntil(() => input.IsRunning, GrpcAiInputTests.DefaultTimeout));
 
             var grpcWriter = new GrpcWriter(true, port);
 
             TelemetryBatch batch = new TelemetryBatch();
-            batch.Items.Add(new Telemetry() {Event = new Event() {Name = "Event1"}});
+            batch.Items.Add(new Telemetry() {Event = new Event {Name = "Event1"}});
 
             // ACT
             await grpcWriter.Write(batch).ConfigureAwait(false);

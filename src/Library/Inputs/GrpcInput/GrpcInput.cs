@@ -6,7 +6,7 @@
     using Common;
     using Contracts;
     using Grpc.Core;
-    using Opencensus.Proto.Exporter;
+    using Opencensus.Proto.Agent.Trace.V1;
 
     /// <summary>
     /// gRpc-based input
@@ -17,7 +17,8 @@
         private readonly GrpcOpenCensusServer openCensusServer = null;
 
         private CancellationTokenSource cts;
-        private Action<TTelemetryBatch> onBatchReceived;
+        private Action<TTelemetryBatch, ServerCallContext> onBatchReceived;
+        private Func<ConfigTraceServiceRequest, ServerCallContext, ConfigTraceServiceResponse> onConfigReceived;
         private Server server;
         private InputStats stats;
         private readonly string host;
@@ -37,13 +38,20 @@
                             context).ConfigureAwait(false)
                 );
             }
-            else if (typeof(TTelemetryBatch) == typeof(ExportSpanRequest))
+            else if (typeof(TTelemetryBatch) == typeof(ExportTraceServiceRequest))
             {
                 this.openCensusServer = new GrpcOpenCensusServer(
-                    async (IAsyncStreamReader<ExportSpanRequest> requestStream, IServerStreamWriter<ExportSpanResponse> responseStream, ServerCallContext context)
+                    async (requestStream, responseStream, context)
                         => await this.OnSendTelemetryBatch((IAsyncStreamReader<TTelemetryBatch>) requestStream,
                             (IServerStreamWriter<TResponse>) responseStream,
-                            context).ConfigureAwait(false));
+                            context).ConfigureAwait(false),
+
+                    async (configRequestStream, configResponseStream, context)
+                        => await this.OnSendConfig(
+                            configRequestStream,
+                            configResponseStream,
+                            context).ConfigureAwait(false)
+                    );
             }
             else
             {
@@ -51,7 +59,9 @@
             }
         }
 
-        public void Start(Action<TTelemetryBatch> onBatchReceived)
+        public void Start(
+            Action<TTelemetryBatch, ServerCallContext> onBatchReceived,
+            Func<ConfigTraceServiceRequest, ServerCallContext, ConfigTraceServiceResponse> onConfigReceived)
         {
             if (this.IsRunning)
             {
@@ -62,12 +72,12 @@
             this.stats = new InputStats();
             this.cts = new CancellationTokenSource();
             this.onBatchReceived = onBatchReceived;
-
+            this.onConfigReceived = onConfigReceived;
             try
             {
                 this.server = new Server
                 {
-                    Services = {this.aiServer != null ? AITelemetryService.BindService(this.aiServer) : Export.BindService(this.openCensusServer)},
+                    Services = {this.aiServer != null ? AITelemetryService.BindService(this.aiServer) : TraceService.BindService(this.openCensusServer)},
                     Ports = {new ServerPort(this.host, this.port, ServerCredentials.Insecure)}
                 };
 
@@ -122,7 +132,7 @@
 
                     try
                     {
-                        this.onBatchReceived?.Invoke(batch);
+                        this.onBatchReceived?.Invoke(batch, context);
 
                         Interlocked.Increment(ref this.stats.BatchesReceived);
                     }
@@ -138,6 +148,8 @@
             catch (TaskCanceledException)
             {
                 // we have been stopped
+                Diagnostics.LogError("cancel batch");
+
             }
             catch (System.Exception e)
             {
@@ -148,6 +160,49 @@
             }
         }
 
+        private async Task OnSendConfig(IAsyncStreamReader<ConfigTraceServiceRequest> requestStream,
+            IServerStreamWriter<ConfigTraceServiceResponse> responseStream,
+            ServerCallContext context)
+        {
+            if (this.onConfigReceived == null)
+            {
+                return;
+            }
+
+            try
+            {
+                while (await requestStream.MoveNext(this.cts.Token).ConfigureAwait(false))
+                {
+                    ConfigTraceServiceRequest configRequest = requestStream.Current;
+
+                    try
+                    {
+                        await responseStream.WriteAsync(this.onConfigReceived(configRequest, context)).ConfigureAwait(false);
+
+                        Interlocked.Increment(ref this.stats.ConfigsReceived);
+                    }
+                    catch (System.Exception e)
+                    {
+                        // unexpected exception occured while processing the batch
+                        Interlocked.Increment(ref this.stats.ConfigsFailed);
+
+                        Diagnostics.LogError(FormattableString.Invariant($"Unknown exception while processing a config request through the OpenCensus gRpc input. {e.ToString()}"));
+                    }
+                }
+            }
+            catch (TaskCanceledException)
+            {
+                // we have been stopped
+                Diagnostics.LogError("cancel");
+            }
+            catch (System.Exception e)
+            {
+                // unexpected exception occured
+                Diagnostics.LogError(FormattableString.Invariant($"Unknown exception while reading from gRpc stream. {e.ToString()}"));
+
+                this.Stop();
+            }
+        }
         #region gRPC servers
 
         private class GrpcAiServer : AITelemetryService.AITelemetryServiceBase
@@ -172,27 +227,46 @@
             }
         }
 
-        private class GrpcOpenCensusServer : Export.ExportBase
+        private class GrpcOpenCensusServer : TraceService.TraceServiceBase
         {
             private readonly
-                Func<IAsyncStreamReader<ExportSpanRequest>, IServerStreamWriter<ExportSpanResponse>, ServerCallContext, Task
+                Func<IAsyncStreamReader<ExportTraceServiceRequest>, IServerStreamWriter<ExportTraceServiceResponse>, ServerCallContext, Task
                 >
                 onSendTelemetryBatch;
 
+            private readonly
+                Func<IAsyncStreamReader<ConfigTraceServiceRequest>, IServerStreamWriter<ConfigTraceServiceResponse>, ServerCallContext, Task
+                >
+                onConfigRequest;
+
             public GrpcOpenCensusServer(
-                Func<IAsyncStreamReader<ExportSpanRequest>, IServerStreamWriter<ExportSpanResponse>, ServerCallContext, Task
+                Func<IAsyncStreamReader<ExportTraceServiceRequest>, IServerStreamWriter<ExportTraceServiceResponse>, ServerCallContext, Task
                     >
-                    onSendTelemetryBatch)
+                    onSendTelemetryBatch,
+                Func<IAsyncStreamReader<ConfigTraceServiceRequest>, IServerStreamWriter<ConfigTraceServiceResponse>, ServerCallContext, Task
+                    >
+                    onConfigRequest)
             {
                 this.onSendTelemetryBatch =
                     onSendTelemetryBatch ?? throw new ArgumentNullException(nameof(onSendTelemetryBatch));
+
+                this.onConfigRequest =
+                    onConfigRequest ?? throw new ArgumentNullException(nameof(onConfigRequest));
             }
 
-            public override async Task ExportSpan(IAsyncStreamReader<ExportSpanRequest> requestStream,
-                IServerStreamWriter<ExportSpanResponse> responseStream,
+            public override async Task Export(IAsyncStreamReader<ExportTraceServiceRequest> requestStream,
+                IServerStreamWriter<ExportTraceServiceResponse> responseStream,
                 ServerCallContext context)
             {
                 await this.onSendTelemetryBatch.Invoke(requestStream, responseStream, context).ConfigureAwait(false);
+            }
+
+            public override async Task Config(IAsyncStreamReader<ConfigTraceServiceRequest> configRequestStream,
+                IServerStreamWriter<ConfigTraceServiceResponse> configResponseStream,
+                ServerCallContext context)
+            {
+                await this.onConfigRequest.Invoke(configRequestStream, configResponseStream, context)
+                    .ConfigureAwait(false);
             }
         }
 

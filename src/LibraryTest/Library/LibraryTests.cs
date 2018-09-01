@@ -1,15 +1,11 @@
 namespace Microsoft.LocalForwarder.LibraryTest.Library
 {
-    using ApplicationInsights;
-    using ApplicationInsights.Channel;
     using ApplicationInsights.DataContracts;
-    using ApplicationInsights.Extensibility;
     using LocalForwarder.Library;
     using LocalForwarder.Library.Inputs.Contracts;
-    using Opencensus.Proto.Exporter;
-    using Opencensus.Proto.Trace;
+    using Opencensus.Proto.Agent.Trace.V1;
+    using Opencensus.Proto.Trace.V1;
     using System;
-    using System.Collections.Concurrent;
     using System.Linq;
     using System.Net.Sockets;
     using System.Threading.Tasks;
@@ -720,7 +716,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
 </LocalForwarderConfiguration>
 ";
 
-            var telemetryBatch = new ExportSpanRequest();
+            var telemetryBatch = new ExportTraceServiceRequest();
             telemetryBatch.Spans.Add(new Span() {Name = new TruncatableString() {Value = "Span1"}, Kind = Span.Types.SpanKind.Server});
             telemetryBatch.Spans.Add(new Span() {Name = new TruncatableString() {Value = "Span2"}, Kind = Span.Types.SpanKind.Client});
 

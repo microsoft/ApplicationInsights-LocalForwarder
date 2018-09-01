@@ -1,16 +1,25 @@
-﻿namespace Microsoft.LocalForwarder.Library
+﻿using Microsoft.LocalForwarder.Library.Utils;
+
+namespace Microsoft.LocalForwarder.Library
 {
     using ApplicationInsights;
     using ApplicationInsights.Channel;
     using Common;
     using Inputs.Contracts;
     using Inputs.GrpcInput;
+    using Grpc.Core;
+
     using Microsoft.ApplicationInsights.Extensibility;
     using Microsoft.ApplicationInsights.Extensibility.PerfCounterCollector.QuickPulse;
-    using Opencensus.Proto.Exporter;
-    using Opencensus.Proto.Trace;
+
+    using Opencensus.Proto.Agent.Common.V1;
+    using Opencensus.Proto.Agent.Trace.V1;
+    using Opencensus.Proto.Trace.V1;
+
     using System;
+    using System.Collections.Concurrent;
     using System.Linq;
+
     using Exception = System.Exception;
 
     public class Library
@@ -23,6 +32,8 @@
         private readonly Configuration config;
         private readonly string ocToAiInstrumentationKey;
         private readonly string liveMetricsStreamInstrumentationKey;
+        private readonly OpenCensusClientCache<string, Node> opencensusPeers;
+        private readonly TraceConfig DefaultOpencensusConfig;
 
         /// <summary>
         /// For unit tests only.
@@ -40,6 +51,14 @@
 
             this.ocToAiInstrumentationKey = config.OpenCensusToApplicationInsights_InstrumentationKey;
             this.liveMetricsStreamInstrumentationKey = config.ApplicationInsights_LiveMetricsStreamInstrumentationKey;
+            this.opencensusPeers = new OpenCensusClientCache<string, Node>();
+            this.DefaultOpencensusConfig = new TraceConfig
+                {
+                    ConstantSampler = new ConstantSampler
+                    {
+                        Decision = true
+                    }
+                };
 
             Diagnostics.LogInfo(
                 FormattableString.Invariant($"Loaded configuration. {Environment.NewLine}{configuration}"));
@@ -133,7 +152,7 @@
 
             try
             {
-                this.gRpcAiInput?.Start(this.OnAiBatchReceived);
+                this.gRpcAiInput?.Start(this.OnAiBatchReceived, null);
             }
             catch (Exception e)
             {
@@ -146,7 +165,7 @@
 
             try
             {
-                this.gRpcOpenCensusInput?.Start(this.OnOcBatchReceived);
+                this.gRpcOpenCensusInput?.Start(this.OnOcBatchReceived, this.OnOcConfigReceived); 
             }
             catch (Exception e)
             {
@@ -204,7 +223,7 @@
         /// Processes an incoming telemetry batch for AI channel.
         /// </summary>
         /// <remarks>This method may be called from multiple threads concurrently.</remarks>
-        private void OnAiBatchReceived(TelemetryBatch batch)
+        private void OnAiBatchReceived(TelemetryBatch batch, ServerCallContext callContext)
         {
             try
             {
@@ -289,22 +308,58 @@
         }
 
         /// <summary>
+        /// Processes incoming trace config request and responds with always sample config.
+        /// </summary>
+        /// <param name="configRequest">Incoming config request.</param>
+        /// <param name="callContext">Call context.</param>
+        /// <returns>LocalForwarder trace config.</returns>
+        private ConfigTraceServiceResponse OnOcConfigReceived(ConfigTraceServiceRequest configRequest,
+            ServerCallContext callContext)
+        {
+            TryGetOrUpdatePeerInfo(configRequest.Node, callContext, out var _);
+
+            Diagnostics.LogTrace($"Got config request from {callContext.Peer} with {configRequest.Config?.SamplerCase}");
+
+            return new ConfigTraceServiceResponse { Config = DefaultOpencensusConfig };
+        }
+
+        /// <summary>
+        /// Gets or updates opencensus peer info. 
+        /// </summary>
+        /// <param name="originalNode">Node in the message (or null).</param>
+        /// <param name="callContext">Call context.</param>
+        /// <param name="peerInfo">Cached peer info (or the new one).</param>
+        /// <returns>True is peer info was found/avaialble, false otherwise.</returns>
+        private bool TryGetOrUpdatePeerInfo(Node originalNode, ServerCallContext callContext, out Node peerInfo)
+        {
+            if (originalNode != null)
+            {
+                this.telemetryClient.TrackNodeEvent(originalNode, callContext.Method, callContext.Peer, this.ocToAiInstrumentationKey);
+                peerInfo = opencensusPeers.AddOrUpdate(callContext.Peer, originalNode);
+                return true;
+            }
+
+            return opencensusPeers.TryGet(callContext.Peer, out peerInfo);
+        }
+
+        /// <summary>
         /// Processes an incoming telemetry batch for OpenCensus channel.
         /// </summary>
         /// <remarks>This method may be called from multiple threads concurrently.</remarks>
-        private void OnOcBatchReceived(ExportSpanRequest batch)
+        private void OnOcBatchReceived(ExportTraceServiceRequest batch, ServerCallContext callContext)
         {
             try
             {
+                TryGetOrUpdatePeerInfo(batch.Node, callContext, out Node peerInfo);
+
                 // send incoming telemetry items to the telemetryClient
                 foreach (Span span in batch.Spans)
                 {
                     try
                     {
-                        //!!!
-                        Diagnostics.LogTrace($"OpenCensus message received: {batch.Spans.Count} spans, first span: {batch.Spans.First().Name}");
+                        Diagnostics.LogTrace($"OpenCensus message received: {batch.Spans.Count} spans, first span: {batch.Spans.FirstOrDefault()?.Name}");
 
-                        this.telemetryClient.TrackSpan(span, this.ocToAiInstrumentationKey);
+                        this.telemetryClient.TrackSpan(span, peerInfo, this.ocToAiInstrumentationKey);
                     }
                     catch (Exception e)
                     {

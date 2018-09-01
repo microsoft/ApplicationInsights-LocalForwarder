@@ -10,5 +10,9 @@
         public long BatchesReceived = 0;
 
         public long BatchesFailed = 0;
+
+        public long ConfigsReceived = 0;
+
+        public long ConfigsFailed = 0;
     }
 }
