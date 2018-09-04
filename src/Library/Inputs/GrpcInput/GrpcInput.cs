@@ -148,7 +148,6 @@
             catch (TaskCanceledException)
             {
                 // we have been stopped
-                Diagnostics.LogError("cancel batch");
 
             }
             catch (System.Exception e)
@@ -183,7 +182,7 @@
                     }
                     catch (System.Exception e)
                     {
-                        // unexpected exception occured while processing the batch
+                        // unexpected exception occured while processing the config request
                         Interlocked.Increment(ref this.stats.ConfigsFailed);
 
                         Diagnostics.LogError(FormattableString.Invariant($"Unknown exception while processing a config request through the OpenCensus gRpc input. {e.ToString()}"));
@@ -193,12 +192,11 @@
             catch (TaskCanceledException)
             {
                 // we have been stopped
-                Diagnostics.LogError("cancel");
             }
             catch (System.Exception e)
             {
                 // unexpected exception occured
-                Diagnostics.LogError(FormattableString.Invariant($"Unknown exception while reading from gRpc stream. {e.ToString()}"));
+                Diagnostics.LogError(FormattableString.Invariant($"Unknown exception while reading config from gRpc stream. {e.ToString()}"));
 
                 this.Stop();
             }
