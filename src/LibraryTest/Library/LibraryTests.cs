@@ -842,7 +842,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             Diagnostics.Flush(TimeSpan.FromSeconds(5));
             string logFileName = Common.SwitchLoggerToDifferentFile();
 
-            var lib = new Library(config, telemetryClient, TimeSpan.FromMilliseconds(1));
+            var lib = new Library(config, telemetryClient, TimeSpan.FromMilliseconds(10));
             lib.Run();
 
             // ACT
@@ -854,6 +854,8 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
 
             // ASSERT
             Common.AssertIsTrueEventually(() => sentItems.Count == 10);
+
+            await Task.Delay(TimeSpan.FromSeconds(1)).ConfigureAwait(false);
 
             lib.Stop();
 
