@@ -173,8 +173,6 @@
 
             this.IsRunning = true;
 
-            //!!!
-            System.Diagnostics.Trace.WriteLine("Starting task...");
             Task.Run(async () => await this.TraceStatsWorker().ConfigureAwait(false));
         }
 
@@ -233,7 +231,6 @@
 
                     try
                     {
-                        //!!!
                         Diagnostics.LogTrace($"AI message received: {batch.Items.Count} items, first item: {batch.Items.First().InstrumentationKey}");
 
                         switch (telemetry.DataCase)
@@ -319,7 +316,6 @@
                 {
                     try
                     {
-                        //!!!
                         Diagnostics.LogTrace($"OpenCensus message received: {batch.Spans.Count} spans, first span: {batch.Spans.First().Name}");
 
                         this.telemetryClient.TrackSpan(span, this.ocToAiInstrumentationKey);
@@ -346,15 +342,8 @@
 
         private async Task TraceStatsWorker()
         {
-            //!!!
-            System.Diagnostics.Trace.WriteLine($"Started task. Timeout: {this.statsTracingTimeout.ToString()}");
             while (this.IsRunning)
             {
-                //!!!
-                System.Diagnostics.Trace.WriteLine($"Task iteration.");
-                //!!!
-                Common.Diagnostics.LogInfo("Iteration");
-
                 try
                 {
                     if (this.gRpcAiInput?.IsRunning == true)

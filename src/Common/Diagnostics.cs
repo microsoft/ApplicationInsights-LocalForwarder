@@ -22,36 +22,22 @@
             {
                 logger = LogManager.GetCurrentClassLogger();
 
-                //!!!
-                System.Diagnostics.Trace.WriteLine("Diagnostics static ctr");
-
                 if (LogManager.Configuration?.LoggingRules?.Any() == true)
                 {
-                    System.Diagnostics.Trace.WriteLine("Config file read");
-
                     // config file has been read, use that
                 }
                 else
                 {
-                    System.Diagnostics.Trace.WriteLine("Reading default");
-
                     // no config file, use default config
                     string nlogConfigXml = ReadDefaultConfiguration();
 
-                    System.Diagnostics.Trace.WriteLine("Read default: " + nlogConfigXml);
-
-
                     SetDefaultConfiguration(nlogConfigXml);
-
-                    System.Diagnostics.Trace.WriteLine("Set default");
                 }
             }
             catch (Exception e)
             {
                 // telemetry can never crash the application, swallow the exception
                 // this probably means no logging
-                //!!!
-                System.Diagnostics.Trace.WriteLine($"Crashed! {e.ToString()}");
             }
         }
 
