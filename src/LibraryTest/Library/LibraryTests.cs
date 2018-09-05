@@ -845,7 +845,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             var lib = new Library(config, telemetryClient, TimeSpan.FromMilliseconds(1));
             lib.Run();
 
-            await Task.Delay(TimeSpan.FromSeconds(15));
+            await Task.Delay(TimeSpan.FromSeconds(15)).ConfigureAwait(false);
             
             // ACT
             var writer = new GrpcWriter(true, portAI);

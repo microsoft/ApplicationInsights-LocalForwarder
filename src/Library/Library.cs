@@ -171,9 +171,11 @@
                 throw;
             }
 
-            Task.Run(async () => await this.TraceStatsWorker().ConfigureAwait(false));
-
             this.IsRunning = true;
+
+            //!!!
+            System.Diagnostics.Trace.WriteLine("Starting task...");
+            Task.Run(async () => await this.TraceStatsWorker().ConfigureAwait(false));
         }
 
         public void Stop()
@@ -344,6 +346,8 @@
 
         private async Task TraceStatsWorker()
         {
+            //!!!
+            System.Diagnostics.Trace.WriteLine("Started task");
             while (this.IsRunning)
             {
                 try
