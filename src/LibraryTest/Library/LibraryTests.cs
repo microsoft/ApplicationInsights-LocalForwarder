@@ -856,7 +856,13 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             Common.AssertIsTrueEventually(() => sentItems.Count == 10);
 
             var text = new System.Text.StringBuilder();
-            text.AppendLine($"Current dir: {Environment.CurrentDirectory}, NLog.LogManager.Configuration: {NLog.LogManager.Configuration?.ToString() ?? "<null>"}, NLog.LogManager.Configuration.AllTargets: {NLog.LogManager.Configuration.AllTargets?.Count ?? -1},NLog.LogManager.Configuration.LoggingRules: {NLog.LogManager.Configuration.LoggingRules?.Count ?? -1}");
+            text.AppendLine($"Current dir: {Environment.CurrentDirectory}");
+            text.AppendLine($"NLog.LogManager.Configuration: {NLog.LogManager.Configuration?.ToString() ?? "<null>"}");
+            if (NLog.LogManager.Configuration != null)
+            {
+                text.AppendLine($"NLog.LogManager.Configuration.AllTargets: {NLog.LogManager.Configuration.AllTargets?.Count ?? -1}");
+                text.AppendLine($"NLog.LogManager.Configuration.LoggingRules: {NLog.LogManager.Configuration.LoggingRules?.Count ?? -1}");
+            }
             //foreach(var target in NLog.LogManager.Configuration.LoggingRules)
             //{
             //    if (target is NLog.Targets.FileTarget)
