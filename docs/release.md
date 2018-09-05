@@ -8,7 +8,7 @@ This document describes the sequence of publishing a release of Local Forwarder.
 * Bump the NuGet version up by modifying the *<version/>* element in the *<metadata/>* section.
 * Commit the changes.
 * Build the library (AI_LocalForwarder_Library_Signed_Release).
-* Upload the built NuGet package onto a NuGet feed. Ensure the feed is mentioned in *ApplicationInsights-LocalForwarder/src/NuGet.config*.
+* Upload the built NuGet package onto a NuGet feed. Ensure the feed is mentioned in *ApplicationInsights-LocalForwarder/src/NuGet.config*. The build pushes the package to MyGet on its own, so feel free to use that if able.
 
 ### Hosts
 * Open *ApplicationInsights-LocalForwarder/src/Hosts.sln*
