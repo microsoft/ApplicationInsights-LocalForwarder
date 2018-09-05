@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <ItemGroup>
-    <FilesToSign Include="$(TargetPath)">
-      <!-- Microsoft authenticode certificate for all file types -->
-      <Authenticode>Microsoft</Authenticode>
-      <!-- Microsoft strong-name key for managed assemblies -->
-      <!-- <StrongName>StrongName</StrongName> -->
-    </FilesToSign>
-  </ItemGroup>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" InitialTargets="SigningTarget">
+	<Target Name="SigningTarget" Condition="'$(SkipSigning)' != 'True'">
+		<Message Text="SigningPath is: $(SigningPath)"/>
+		<PropertyGroup Condition="$(SigningPath) == ''">  	
+			<SigningPath>$(TargetPath)</SigningPath>
+		</PropertyGroup> 
+		<Message Text="SigningPath adjusted to: $(SigningPath)"/>
+		
+		<ItemGroup> 
+			<FilesToSign Include="$(SigningPath)">
+				<!-- Microsoft authenticode certificate for all file types -->
+				<Authenticode>Microsoft</Authenticode>
+				<!-- Microsoft strong-name key for managed assemblies -->
+				<!-- <StrongName>StrongName</StrongName> -->
+			</FilesToSign>
+		</ItemGroup>
+	</Target>
 </Project>

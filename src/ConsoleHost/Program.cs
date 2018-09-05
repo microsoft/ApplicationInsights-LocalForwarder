@@ -2,13 +2,24 @@
 {
     using System;
     using System.IO;
+    using System.Threading;
     using Library;
 
     class Program
     {
         static void Main(string[] args)
         {
+            if(args.Length > 1)
+            {
+                throw new ArgumentException($"Too many arguments: {string.Join(',', args)}");
+            }
+
+            // a non-interactive session is something like a Linux daemon where no user input is available
+            bool nonInteractiveMode = args.Length > 0 && string.Equals(args[0], "noninteractive", StringComparison.OrdinalIgnoreCase);
+
             Common.Diagnostics.LogInfo("Starting the console host...");
+
+            Common.Diagnostics.LogInfo($"Mode: noninteractive={nonInteractiveMode}");
 
             Host host = new Host();
 
@@ -29,7 +40,14 @@
             }
             finally
             {
-                Console.ReadKey();
+                if (!nonInteractiveMode)
+                {
+                    Console.ReadLine();
+                }
+                else
+                {
+                    Thread.Sleep(Timeout.InfiniteTimeSpan);
+                }
             }
 
             try
@@ -49,8 +67,14 @@
             finally
             {
                 Common.Diagnostics.LogInfo("The console host is stopped");
-                Console.ReadKey();
+
+                if (!nonInteractiveMode)
+                {
+                    Console.ReadLine();
+                }
             }
+
+            Common.Diagnostics.LogInfo("The console host has exited");
         }
 
         private static string ReadConfiguratiion()
