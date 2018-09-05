@@ -18,10 +18,10 @@
 
         static Diagnostics()
         {
-            logger = LogManager.GetCurrentClassLogger();
-
             try
             {
+                logger = LogManager.GetCurrentClassLogger();
+
                 //!!!
                 System.Diagnostics.Trace.WriteLine("Diagnostics static ctr");
 
