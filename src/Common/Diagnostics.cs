@@ -46,10 +46,12 @@
                     System.Diagnostics.Trace.WriteLine("Set default");
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 // telemetry can never crash the application, swallow the exception
                 // this probably means no logging
+                //!!!
+                System.Diagnostics.Trace.WriteLine($"Crashed! {e.ToString()}");
             }
         }
 
