@@ -347,9 +347,11 @@
         private async Task TraceStatsWorker()
         {
             //!!!
-            System.Diagnostics.Trace.WriteLine("Started task");
+            System.Diagnostics.Trace.WriteLine($"Started task. Timeout: {this.statsTracingTimeout.ToString()}");
             while (this.IsRunning)
             {
+                //!!!
+                System.Diagnostics.Trace.WriteLine($"Task iteration.");
                 try
                 {
                     if (this.gRpcAiInput?.IsRunning == true)
