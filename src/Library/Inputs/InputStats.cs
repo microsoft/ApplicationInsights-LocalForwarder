@@ -10,5 +10,10 @@
         public long BatchesReceived = 0;
 
         public long BatchesFailed = 0;
+
+        public override string ToString()
+        {
+            return $"ConnectionCount: {this.ConnectionCount}, BatchesReceived: {this.BatchesReceived}, BatchesFailed: {this.BatchesFailed}";
+        }
     }
 }

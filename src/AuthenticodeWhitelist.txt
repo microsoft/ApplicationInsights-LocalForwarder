@@ -1,8 +1,22 @@
-**\*.nupkg,package is not signed
-**\*.xml,do not verify xml
 **\google.protobuf.dll,3rd party assemblies
 **\grpc.core.dll,3rd party assemblies
 **\nlog.dll,3rd party assemblies
 **\nlog.extensions.logging.dll,3rd party assemblies
 **\grpc_csharp_ext.x64.dll,3rd party assemblies
 **\grpc_csharp_ext.x86.dll,3rd party assemblies
+**\*.config,config
+**\*.xml,xml
+**\*.json,json
+**\*.pdb,pdb
+**\*.nupkg,nuget
+**\System.*.dll,System namespace assemblies
+**\system.dll
+**\mscorlib.dll
+**\api-ms-win-core-xstate-l2-1-0.dll
+**\microsoft.csharp.dll
+**\microsoft.visualbasic.dll
+**\microsoft.win32.primitives.dll
+**\microsoft.win32.registry.dll
+**\netstandard.dll
+**\sos.netcore.dll
+**\windowsbase.dll
