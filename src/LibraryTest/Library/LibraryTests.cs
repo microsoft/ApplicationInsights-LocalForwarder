@@ -855,11 +855,16 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             // ASSERT
             Common.AssertIsTrueEventually(() => sentItems.Count == 10);
 
+            Common.AssertIsTrueEventually(() =>
+            {
+                Diagnostics.Flush(TimeSpan.FromSeconds(1));
+                return File.Exists("LocalForwarder.log");
+            });
+
             lib.Stop();
 
             Diagnostics.Shutdown(TimeSpan.FromSeconds(5));
 
-            Common.AssertIsTrueEventually(() => File.Exists("LocalForwarder.log"));
             string logs = File.ReadAllText("LocalForwarder.log");
 
             Assert.IsTrue(logs.Contains("|INFO|AI input: [ConnectionCount: 0, BatchesReceived: 0, BatchesFailed: 0]"));
