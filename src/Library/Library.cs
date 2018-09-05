@@ -170,7 +170,7 @@ namespace Microsoft.LocalForwarder.Library
 
                 try
                 {
-                    this.gRpcOpenCensusInput?.Start(this.OnOcBatchReceived, this.OnOcConfigReceived));
+                    this.gRpcOpenCensusInput?.Start(this.OnOcBatchReceived, this.OnOcConfigReceived);
                 }
                 catch (Exception e)
                 {

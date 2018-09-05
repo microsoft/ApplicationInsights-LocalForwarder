@@ -4,8 +4,6 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
     using LocalForwarder.Library;
     using LocalForwarder.Library.Inputs.Contracts;
     using Microsoft.LocalForwarder.Common;
-    using Opencensus.Proto.Exporter;
-    using Opencensus.Proto.Trace;
     using Opencensus.Proto.Agent.Trace.V1;
     using Opencensus.Proto.Trace.V1;
     using System;
@@ -836,7 +834,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             telemetryBatchAI.Items.Add(new Telemetry() { PageView = new PageView() { Id = "PageView1" } });
             telemetryBatchAI.Items.Add(new Telemetry() { Request = new Request() { Name = "Request1" } });
 
-            var telemetryBatchOC = new ExportSpanRequest();
+            var telemetryBatchOC = new ExportTraceServiceRequest();
             telemetryBatchOC.Spans.Add(new Span() { Name = new TruncatableString() { Value = "Span1" }, Kind = Span.Types.SpanKind.Server });
             telemetryBatchOC.Spans.Add(new Span() { Name = new TruncatableString() { Value = "Span2" }, Kind = Span.Types.SpanKind.Client });
 
