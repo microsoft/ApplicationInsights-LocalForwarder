@@ -352,6 +352,9 @@
             {
                 //!!!
                 System.Diagnostics.Trace.WriteLine($"Task iteration.");
+                //!!!
+                Common.Diagnostics.LogInfo("Iteration");
+
                 try
                 {
                     if (this.gRpcAiInput?.IsRunning == true)
