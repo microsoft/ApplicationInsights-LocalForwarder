@@ -838,15 +838,13 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             telemetryBatchOC.Spans.Add(new Span() { Name = new TruncatableString() { Value = "Span1" }, Kind = Span.Types.SpanKind.Server });
             telemetryBatchOC.Spans.Add(new Span() { Name = new TruncatableString() { Value = "Span2" }, Kind = Span.Types.SpanKind.Client });
 
-            //File.Delete("LocalForwarder.log");
-
-            //Common.AssertIsFalseEventually(() => File.Exists("LocalForwarder.log"));
+            // redirect loggging to a new file
+            Diagnostics.Flush(TimeSpan.FromSeconds(5));
+            string logFileName = Common.SwitchLoggerToDifferentFile();
 
             var lib = new Library(config, telemetryClient, TimeSpan.FromMilliseconds(1));
             lib.Run();
 
-            await Task.Delay(TimeSpan.FromSeconds(15)).ConfigureAwait(false);
-            
             // ACT
             var writer = new GrpcWriter(true, portAI);
             await writer.Write(telemetryBatchAI).ConfigureAwait(false);
@@ -857,37 +855,14 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             // ASSERT
             Common.AssertIsTrueEventually(() => sentItems.Count == 10);
 
-            ////!!!
-            //var text = new System.Text.StringBuilder();
-            //text.AppendLine($"Current dir: {Environment.CurrentDirectory}");
-            //text.AppendLine($"NLog.LogManager.Configuration: {NLog.LogManager.Configuration?.ToString() ?? "<null>"}");
-            //if (NLog.LogManager.Configuration != null)
-            //{
-            //    text.AppendLine($"NLog.LogManager.Configuration.AllTargets: {NLog.LogManager.Configuration.AllTargets?.Count ?? -1}");
-            //    text.AppendLine($"NLog.LogManager.Configuration.LoggingRules: {NLog.LogManager.Configuration.LoggingRules?.Count ?? -1}");
-            //}
-            //foreach(var target in NLog.LogManager.Configuration.LoggingRules)
-            //{
-            //    if (target is NLog.Targets.FileTarget)
-            //    {
-            //        text.AppendFormat("{0}{1}", target.Name, (target as NLog.Targets.FileTarget).FileName);
-            //    }
-            //}
-
-            //System.Diagnostics.Trace.WriteLine(text.ToString());
-            //Assert.Fail(text.ToString());
-
-            Common.AssertIsTrueEventually(() =>
-            {
-                Diagnostics.Flush(TimeSpan.FromSeconds(1));
-                return File.Exists("LocalForwarder.log");
-            });
-
             lib.Stop();
 
-            Diagnostics.Shutdown(TimeSpan.FromSeconds(5));
+            Diagnostics.Flush(TimeSpan.FromSeconds(5));
 
-            string logs = File.ReadAllText("LocalForwarder.log");
+            // close the file
+            Common.SwitchLoggerToDifferentFile();
+
+            string logs = await File.ReadAllTextAsync(logFileName).ConfigureAwait(false);
 
             Assert.IsTrue(logs.Contains("|INFO|AI input: [ConnectionCount: 0, BatchesReceived: 0, BatchesFailed: 0]"));
             Assert.IsTrue(logs.Contains("|INFO|OpenCensus input: [ConnectionCount: 0, BatchesReceived: 0, BatchesFailed: 0]"));
@@ -898,6 +873,5 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             Assert.IsFalse(logs.Contains("|INFO|AI input: [ConnectionCount: 0, BatchesReceived: 2, BatchesFailed: 0]"));
             Assert.IsFalse(logs.Contains("|INFO|OpenCensus input: [ConnectionCount: 0, BatchesReceived: 2, BatchesFailed: 0]"));
         }
-
     }
 }

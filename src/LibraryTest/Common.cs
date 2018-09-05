@@ -57,5 +57,16 @@ namespace Microsoft.LocalForwarder.LibraryTest
 
             return new TelemetryClient(configuration);
         }
+
+        public static string SwitchLoggerToDifferentFile()
+        {
+            NLog.LogManager.Flush();
+
+            string newLogFileName = $"LocalForwarder_{Guid.NewGuid()}.log";
+            NLog.LogManager.Configuration.FindTargetByName<NLog.Targets.FileTarget>("LogFile").FileName = newLogFileName;
+            NLog.LogManager.ReconfigExistingLoggers();
+
+            return newLogFileName;
+        }
     }
 }

@@ -34,7 +34,7 @@
                     SetDefaultConfiguration(nlogConfigXml);
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 // telemetry can never crash the application, swallow the exception
                 // this probably means no logging
@@ -80,17 +80,6 @@
 
                 spinLock.Exit();
             }
-        }
-
-        /// <summary>
-        /// Do not use during normal operation.
-        /// Unit test use only.
-        /// </summary>
-        internal static void Shutdown(TimeSpan timeout)
-        {
-            LogManager.Flush(timeout);
-
-            LogManager.Shutdown();
         }
 
         public static void Flush(TimeSpan timeout)

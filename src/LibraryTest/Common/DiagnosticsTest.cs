@@ -25,7 +25,7 @@ namespace Microsoft.LocalForwarder.LibraryTest
             Diagnostics.LogInfo(testInfoMessage);
 
             // ASSERT
-            Diagnostics.Shutdown(TimeSpan.FromSeconds(1));
+            Common.SwitchLoggerToDifferentFile();
             Thread.Sleep(TimeSpan.FromSeconds(1));
 
             Assert.IsTrue(SpinWait.SpinUntil(() => File.Exists("LocalForwarder-internal.log"), this.timeout));
