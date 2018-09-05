@@ -855,6 +855,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             // ASSERT
             Common.AssertIsTrueEventually(() => sentItems.Count == 10);
 
+            //!!!
             var text = new System.Text.StringBuilder();
             text.AppendLine($"Current dir: {Environment.CurrentDirectory}");
             text.AppendLine($"NLog.LogManager.Configuration: {NLog.LogManager.Configuration?.ToString() ?? "<null>"}");
