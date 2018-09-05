@@ -855,6 +855,19 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             // ASSERT
             Common.AssertIsTrueEventually(() => sentItems.Count == 10);
 
+            var text = new System.Text.StringBuilder();
+            text.AppendLine($"Current dir: {Environment.CurrentDirectory}, dir to log to:");
+            foreach(var target in NLog.LogManager.Configuration.AllTargets)
+            {
+                if (target is NLog.Targets.FileTarget)
+                {
+                    text.AppendFormat("{0}{1}", target.Name, (target as NLog.Targets.FileTarget).FileName);
+                }
+            }
+
+            System.Diagnostics.Trace.WriteLine(text.ToString());
+            Assert.Fail(text.ToString());
+
             Common.AssertIsTrueEventually(() =>
             {
                 Diagnostics.Flush(TimeSpan.FromSeconds(1));
