@@ -866,14 +866,14 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
 
             string logs = await File.ReadAllTextAsync(logFileName).ConfigureAwait(false);
 
-            Assert.IsTrue(logs.Contains("|INFO|AI input: [ConnectionCount: 0, BatchesReceived: 0, BatchesFailed: 0]"));
-            Assert.IsTrue(logs.Contains("|INFO|OpenCensus input: [ConnectionCount: 0, BatchesReceived: 0, BatchesFailed: 0]"));
+            Assert.IsTrue(logs.Contains("|INFO|AI input: [ConnectionCount: 0, BatchesReceived: 0, BatchesFailed: 0, ConfigsReceived: 0, ConfigsFailed: 0]"));
+            Assert.IsTrue(logs.Contains("|INFO|OpenCensus input: [ConnectionCount: 0, BatchesReceived: 0, BatchesFailed: 0, ConfigsReceived: 0, ConfigsFailed: 0]"));
 
-            Assert.IsTrue(logs.Contains("|INFO|AI input: [ConnectionCount: 0, BatchesReceived: 1, BatchesFailed: 0]"));
-            Assert.IsTrue(logs.Contains("|INFO|OpenCensus input: [ConnectionCount: 0, BatchesReceived: 1, BatchesFailed: 0]"));
+            Assert.IsTrue(logs.Contains("|INFO|AI input: [ConnectionCount: 0, BatchesReceived: 1, BatchesFailed: 0, ConfigsReceived: 0, ConfigsFailed: 0]"));
+            Assert.IsTrue(logs.Contains("|INFO|OpenCensus input: [ConnectionCount: 0, BatchesReceived: 1, BatchesFailed: 0, ConfigsReceived: 0, ConfigsFailed: 0]"));
 
-            Assert.IsFalse(logs.Contains("|INFO|AI input: [ConnectionCount: 0, BatchesReceived: 2, BatchesFailed: 0]"));
-            Assert.IsFalse(logs.Contains("|INFO|OpenCensus input: [ConnectionCount: 0, BatchesReceived: 2, BatchesFailed: 0]"));
+            Assert.IsFalse(logs.Contains("|INFO|AI input: [ConnectionCount: 0, BatchesReceived: 2, BatchesFailed, ConfigsReceived: 0, ConfigsFailed: 0]"));
+            Assert.IsFalse(logs.Contains("|INFO|OpenCensus input: [ConnectionCount: 0, BatchesReceived: 2, BatchesFailed, ConfigsReceived: 0, ConfigsFailed: 0]"));
         }
     }
 }
