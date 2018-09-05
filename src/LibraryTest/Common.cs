@@ -28,8 +28,8 @@ namespace Microsoft.LocalForwarder.LibraryTest
 
         public static void AssertIsFalseEventually(Func<bool> condition, TimeSpan? timeout = null)
         {
-            timeout = timeout ?? Timeout.InfiniteTimeSpan;
-            Assert.IsFalse(SpinWait.SpinUntil(condition, timeout.Value));
+            timeout = timeout ?? TimeSpan.FromSeconds(10);
+            Assert.IsTrue(SpinWait.SpinUntil(() => !condition(), timeout.Value));
         }
 
         public static int GetPort()

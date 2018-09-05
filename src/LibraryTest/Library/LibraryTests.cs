@@ -840,6 +840,8 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
 
             File.Delete("LocalForwarder.log");
 
+            Common.AssertIsFalseEventually(() => File.Exists("LocalForwarder.log"));
+
             var lib = new Library(config, telemetryClient, TimeSpan.FromMilliseconds(1));
             lib.Run();
 
@@ -857,6 +859,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
 
             Diagnostics.Shutdown(TimeSpan.FromSeconds(5));
 
+            Common.AssertIsTrueEventually(() => File.Exists("LocalForwarder.log"));
             string logs = File.ReadAllText("LocalForwarder.log");
 
             Assert.IsTrue(logs.Contains("|INFO|AI input: [ConnectionCount: 0, BatchesReceived: 0, BatchesFailed: 0]"));
