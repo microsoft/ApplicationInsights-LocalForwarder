@@ -18,13 +18,13 @@
 
         static Diagnostics()
         {
-            //!!!
-            System.Diagnostics.Trace.WriteLine("Diagnostics static ctr");
-
             logger = LogManager.GetCurrentClassLogger();
 
             try
             {
+                //!!!
+                System.Diagnostics.Trace.WriteLine("Diagnostics static ctr");
+
                 if (LogManager.Configuration?.LoggingRules?.Any() == true)
                 {
                     System.Diagnostics.Trace.WriteLine("Config file read");
