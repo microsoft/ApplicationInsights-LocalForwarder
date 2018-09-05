@@ -856,14 +856,14 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             Common.AssertIsTrueEventually(() => sentItems.Count == 10);
 
             var text = new System.Text.StringBuilder();
-            text.AppendLine($"Current dir: {Environment.CurrentDirectory}, dir to log to:");
-            foreach(var target in NLog.LogManager.Configuration.AllTargets)
-            {
-                if (target is NLog.Targets.FileTarget)
-                {
-                    text.AppendFormat("{0}{1}", target.Name, (target as NLog.Targets.FileTarget).FileName);
-                }
-            }
+            text.AppendLine($"Current dir: {Environment.CurrentDirectory}, NLog.LogManager.Configuration: {NLog.LogManager.Configuration?.ToString() ?? "<null>"}, NLog.LogManager.Configuration.AllTargets: {NLog.LogManager.Configuration.AllTargets?.Count ?? -1},NLog.LogManager.Configuration.LoggingRules: {NLog.LogManager.Configuration.LoggingRules?.Count ?? -1}");
+            //foreach(var target in NLog.LogManager.Configuration.LoggingRules)
+            //{
+            //    if (target is NLog.Targets.FileTarget)
+            //    {
+            //        text.AppendFormat("{0}{1}", target.Name, (target as NLog.Targets.FileTarget).FileName);
+            //    }
+            //}
 
             System.Diagnostics.Trace.WriteLine(text.ToString());
             Assert.Fail(text.ToString());
