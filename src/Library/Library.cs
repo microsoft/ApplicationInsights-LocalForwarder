@@ -19,7 +19,7 @@ namespace Microsoft.LocalForwarder.Library
     using System;
     using System.Collections.Concurrent;
     using System.Linq;
-
+    using System.Threading.Tasks;
     using Exception = System.Exception;
 
     public class Library
@@ -35,12 +35,15 @@ namespace Microsoft.LocalForwarder.Library
         private readonly OpenCensusClientCache<string, Node> opencensusPeers;
         private readonly TraceConfig DefaultOpencensusConfig;
 
+        private readonly TimeSpan statsTracingTimeout = TimeSpan.FromMinutes(1);
+        
         /// <summary>
         /// For unit tests only.
         /// </summary>
-        internal Library(string configuration, TelemetryClient telemetryClient) : this(configuration)
+        internal Library(string configuration, TelemetryClient telemetryClient, TimeSpan? statsTracingTimeout = null) : this(configuration)
         {
             this.telemetryClient = telemetryClient;
+            this.statsTracingTimeout = statsTracingTimeout ?? this.statsTracingTimeout;
         }
 
         public bool IsRunning { get; private set; } = false;
@@ -78,9 +81,9 @@ namespace Microsoft.LocalForwarder.Library
                     })
                     .Build();
 
-                var QuickPulse = new QuickPulseTelemetryModule();
-                QuickPulse.Initialize(activeConfiguration);
-                QuickPulse.RegisterTelemetryProcessor(processor);
+                var quickPulseModule = new QuickPulseTelemetryModule();
+                quickPulseModule.Initialize(activeConfiguration);
+                quickPulseModule.RegisterTelemetryProcessor(processor);
 
                 this.telemetryClient = new TelemetryClient();
             }
@@ -152,31 +155,43 @@ namespace Microsoft.LocalForwarder.Library
 
             try
             {
-                this.gRpcAiInput?.Start(this.OnAiBatchReceived, null);
-            }
-            catch (Exception e)
-            {
-                Diagnostics.LogError(
-                    FormattableString.Invariant($"Could not start the gRPC AI channel. {e.ToString()}"));
+                try
+                {
+                    this.gRpcAiInput?.Start(this.OnAiBatchReceived, null);
+                }
+                catch (Exception e)
+                {
+                    Diagnostics.LogError(
+                        FormattableString.Invariant($"Could not start the gRPC AI channel. {e.ToString()}"));
 
-                throw new InvalidOperationException(
-                    FormattableString.Invariant($"Could not start the gRPC AI channel. {e.ToString()}"), e);
-            }
+                    throw new InvalidOperationException(
+                        FormattableString.Invariant($"Could not start the gRPC AI channel. {e.ToString()}"), e);
+                }
 
-            try
-            {
-                this.gRpcOpenCensusInput?.Start(this.OnOcBatchReceived, this.OnOcConfigReceived); 
-            }
-            catch (Exception e)
-            {
-                Diagnostics.LogError(
-                    FormattableString.Invariant($"Could not start the gRPC OpenCensus channel. {e.ToString()}"));
+                try
+                {
+                    this.gRpcOpenCensusInput?.Start(this.OnOcBatchReceived, this.OnOcConfigReceived));
+                }
+                catch (Exception e)
+                {
+                    Diagnostics.LogError(
+                        FormattableString.Invariant($"Could not start the gRPC OpenCensus channel. {e.ToString()}"));
 
-                throw new InvalidOperationException(
-                    FormattableString.Invariant($"Could not start the gRPC OpenCensus channel. {e.ToString()}"), e);
+                    throw new InvalidOperationException(
+                        FormattableString.Invariant($"Could not start the gRPC OpenCensus channel. {e.ToString()}"), e);
+                }
+            }
+            catch (Exception)
+            {
+                // something went wrong, so stop both inputs to ensure consistent state
+                this.EmergencyShutdownAllInputs();
+
+                throw;
             }
 
             this.IsRunning = true;
+
+            Task.Run(async () => await this.TraceStatsWorker().ConfigureAwait(false));
         }
 
         public void Stop()
@@ -234,7 +249,6 @@ namespace Microsoft.LocalForwarder.Library
 
                     try
                     {
-                        //!!!
                         Diagnostics.LogTrace($"AI message received: {batch.Items.Count} items, first item: {batch.Items.First().InstrumentationKey}");
 
                         switch (telemetry.DataCase)
@@ -378,6 +392,56 @@ namespace Microsoft.LocalForwarder.Library
                 Diagnostics.LogError(
                     FormattableString.Invariant(
                         $"Could not process an incoming OpenCensus telemetry batch. {e.ToString()}"));
+            }
+        }
+
+        private async Task TraceStatsWorker()
+        {
+            while (this.IsRunning)
+            {
+                try
+                {
+                    if (this.gRpcAiInput?.IsRunning == true)
+                    {
+                        Common.Diagnostics.LogInfo($"AI input: [{this.gRpcAiInput.GetStats()}]");
+                    }
+
+                    if (this.gRpcOpenCensusInput?.IsRunning == true)
+                    {
+                        Common.Diagnostics.LogInfo($"OpenCensus input: [{this.gRpcOpenCensusInput.GetStats()}]");
+                    }
+                }
+                catch (Exception e)
+                {
+                    Common.Diagnostics.LogInfo($"Unexpected exception in the stats thread: {e.ToString()}");
+                }
+
+                await Task.Delay(this.statsTracingTimeout).ConfigureAwait(false);
+            }
+        }
+
+        /// <summary>
+        /// Shuts down all inputs in case at least one of them failed.
+        /// </summary>
+        /// <remarks>We don't care about exceptions here, this is the best effort to clean things up.</remarks>
+        private void EmergencyShutdownAllInputs()
+        {
+            try
+            {
+                this.gRpcAiInput?.Stop();
+            }
+            catch (Exception)
+            {
+                // swallow any further exceptions
+            }
+
+            try
+            {
+                this.gRpcOpenCensusInput?.Stop();
+            }
+            catch (Exception)
+            {
+                // swallow any further exceptions
             }
         }
     }

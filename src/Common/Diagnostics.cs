@@ -18,10 +18,10 @@
 
         static Diagnostics()
         {
-            logger = LogManager.GetCurrentClassLogger();
-
             try
             {
+                logger = LogManager.GetCurrentClassLogger();
+
                 if (LogManager.Configuration?.LoggingRules?.Any() == true)
                 {
                     // config file has been read, use that
@@ -80,17 +80,6 @@
 
                 spinLock.Exit();
             }
-        }
-
-        /// <summary>
-        /// Do not use during normal operation.
-        /// Unit test use only.
-        /// </summary>
-        internal static void Shutdown(TimeSpan timeout)
-        {
-            LogManager.Flush(timeout);
-
-            LogManager.Shutdown();
         }
 
         public static void Flush(TimeSpan timeout)
