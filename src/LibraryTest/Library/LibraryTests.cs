@@ -1,15 +1,13 @@
 namespace Microsoft.LocalForwarder.LibraryTest.Library
 {
-    using ApplicationInsights;
-    using ApplicationInsights.Channel;
     using ApplicationInsights.DataContracts;
-    using ApplicationInsights.Extensibility;
     using LocalForwarder.Library;
     using LocalForwarder.Library.Inputs.Contracts;
+    using Microsoft.LocalForwarder.Common;
     using Opencensus.Proto.Exporter;
     using Opencensus.Proto.Trace;
     using System;
-    using System.Collections.Concurrent;
+    using System.IO;
     using System.Linq;
     using System.Net.Sockets;
     using System.Threading.Tasks;
@@ -627,6 +625,62 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
         }
 
         [TestMethod]
+        public void LibraryTests_LibraryCleansUpFirstInputIfSecondOneFailsToStart()
+        {
+            // ARRANGE
+            int portAI = Common.GetPort();
+            
+            var config = $@"<?xml version=""1.0"" encoding=""utf-8"" ?>
+<LocalForwarderConfiguration>
+  <Inputs>
+    <ApplicationInsightsInput Enabled=""true"">
+      <Host>0.0.0.0</Host>
+      <Port>{portAI}</Port>
+    </ApplicationInsightsInput>
+    <OpenCensusInput Enabled=""true"">
+      <Host>2220.2220.2220.2220</Host>
+      <Port>0</Port>
+    </OpenCensusInput>
+  </Inputs>
+  <OpenCensusToApplicationInsights>
+    <InstrumentationKey>[SPECIFY INSTRUMENTATION KEY HERE]</InstrumentationKey>
+  </OpenCensusToApplicationInsights>
+  <ApplicationInsights>
+    <LiveMetricsStreamInstrumentationKey>[SPECIFY LIVE METRICS STREAM INSTRUMENTATION KEY HERE]</LiveMetricsStreamInstrumentationKey>
+  </ApplicationInsights>
+</LocalForwarderConfiguration>
+";
+
+            Library lib;
+            lib = new Library(config);
+
+            // ACT
+            try
+            {
+                lib.Run();
+            }
+            catch (Exception)
+            {
+                // expected to fail due to bad host configuration above
+            }
+
+            // ASSERT
+            // check which ports are in use (listened on)
+            TcpClient clientAI = null;
+            
+            try
+            {
+                clientAI = new TcpClient("localhost", portAI);
+            }
+            catch (Exception)
+            {
+                // swallow
+            }
+
+            Assert.IsNull(clientAI);
+        }
+
+        [TestMethod]
         public async Task LibraryTests_LibraryProcessesAiBatchesCorrectly()
         {
             // ARRANGE
@@ -738,6 +792,88 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
 
             Assert.AreEqual("Span1", (sentItems.Skip(0).First() as RequestTelemetry).Name);
             Assert.AreEqual("Span2", (sentItems.Skip(1).First() as DependencyTelemetry).Name);
+        }
+
+        [TestMethod]
+        public async Task LibraryTests_LibraryLogsInputStatsCorrectly()
+        {
+            // ARRANGE
+            var telemetryClient = Common.SetupStubTelemetryClient(out var sentItems);
+
+            int portAI = Common.GetPort();
+            int portOC = Common.GetPort();
+
+            var config = $@"<?xml version=""1.0"" encoding=""utf-8"" ?>
+<LocalForwarderConfiguration>
+  <Inputs>
+    <ApplicationInsightsInput Enabled=""true"">
+      <Host>0.0.0.0</Host>
+      <Port>{portAI}</Port>
+    </ApplicationInsightsInput>
+    <OpenCensusInput Enabled=""true"">
+      <Host>0.0.0.0</Host>
+      <Port>{portOC}</Port>
+    </OpenCensusInput>
+  </Inputs>
+  <OpenCensusToApplicationInsights>
+    <InstrumentationKey>ikey1</InstrumentationKey>
+  </OpenCensusToApplicationInsights>
+  <ApplicationInsights>
+    <LiveMetricsStreamInstrumentationKey>[SPECIFY LIVE METRICS STREAM INSTRUMENTATION KEY HERE]</LiveMetricsStreamInstrumentationKey>
+  </ApplicationInsights>
+</LocalForwarderConfiguration>
+";
+
+            var telemetryBatchAI = new TelemetryBatch();
+            telemetryBatchAI.Items.Add(new Telemetry() { Event = new Event() { Name = "Event1" } });
+            telemetryBatchAI.Items.Add(new Telemetry() { Message = new Message() { Message_ = "Message1" } });
+            telemetryBatchAI.Items.Add(new Telemetry() { Metric = new LocalForwarder.Library.Inputs.Contracts.Metric() { Metrics = { new DataPoint() { Name = "Metric1", Value = 1 } } } });
+            telemetryBatchAI.Items.Add(new Telemetry() { Exception = new LocalForwarder.Library.Inputs.Contracts.Exception() { ProblemId = "Exception1", Exceptions = { new ExceptionDetails() { Message = "Exception1" } } } });
+            telemetryBatchAI.Items.Add(new Telemetry() { Dependency = new Dependency() { Name = "Dependency1" } });
+            telemetryBatchAI.Items.Add(new Telemetry() { Availability = new Availability() { Name = "Availability1" } });
+            telemetryBatchAI.Items.Add(new Telemetry() { PageView = new PageView() { Id = "PageView1" } });
+            telemetryBatchAI.Items.Add(new Telemetry() { Request = new Request() { Name = "Request1" } });
+
+            var telemetryBatchOC = new ExportSpanRequest();
+            telemetryBatchOC.Spans.Add(new Span() { Name = new TruncatableString() { Value = "Span1" }, Kind = Span.Types.SpanKind.Server });
+            telemetryBatchOC.Spans.Add(new Span() { Name = new TruncatableString() { Value = "Span2" }, Kind = Span.Types.SpanKind.Client });
+
+            // redirect loggging to a new file
+            Diagnostics.Flush(TimeSpan.FromSeconds(5));
+            string logFileName = Common.SwitchLoggerToDifferentFile();
+
+            var lib = new Library(config, telemetryClient, TimeSpan.FromMilliseconds(10));
+            lib.Run();
+
+            // ACT
+            var writer = new GrpcWriter(true, portAI);
+            await writer.Write(telemetryBatchAI).ConfigureAwait(false);
+
+            writer = new GrpcWriter(false, portOC);
+            await writer.Write(telemetryBatchOC).ConfigureAwait(false);
+
+            // ASSERT
+            Common.AssertIsTrueEventually(() => sentItems.Count == 10);
+
+            await Task.Delay(TimeSpan.FromSeconds(1)).ConfigureAwait(false);
+
+            lib.Stop();
+
+            Diagnostics.Flush(TimeSpan.FromSeconds(5));
+
+            // close the file
+            Common.SwitchLoggerToDifferentFile();
+
+            string logs = await File.ReadAllTextAsync(logFileName).ConfigureAwait(false);
+
+            Assert.IsTrue(logs.Contains("|INFO|AI input: [ConnectionCount: 0, BatchesReceived: 0, BatchesFailed: 0]"));
+            Assert.IsTrue(logs.Contains("|INFO|OpenCensus input: [ConnectionCount: 0, BatchesReceived: 0, BatchesFailed: 0]"));
+
+            Assert.IsTrue(logs.Contains("|INFO|AI input: [ConnectionCount: 0, BatchesReceived: 1, BatchesFailed: 0]"));
+            Assert.IsTrue(logs.Contains("|INFO|OpenCensus input: [ConnectionCount: 0, BatchesReceived: 1, BatchesFailed: 0]"));
+
+            Assert.IsFalse(logs.Contains("|INFO|AI input: [ConnectionCount: 0, BatchesReceived: 2, BatchesFailed: 0]"));
+            Assert.IsFalse(logs.Contains("|INFO|OpenCensus input: [ConnectionCount: 0, BatchesReceived: 2, BatchesFailed: 0]"));
         }
     }
 }

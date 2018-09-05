@@ -4,7 +4,6 @@ namespace Microsoft.LocalForwarder.LibraryTest
     using System.IO;
     using System.Threading;
     using LocalForwarder.Common;
-    using NLog;
     using VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
@@ -19,16 +18,20 @@ namespace Microsoft.LocalForwarder.LibraryTest
             var guid = Guid.NewGuid();
 
             // ACT
-            string testLogMessage = $"Log message here {guid.ToString()}";
-            Diagnostics.LogTrace(testLogMessage);
+            string testTraceMessage = $"Trace message here {guid.ToString()}";
+            string testInfoMessage = $"Info message here {guid.ToString()}";
+
+            Diagnostics.LogTrace(testTraceMessage);
+            Diagnostics.LogInfo(testInfoMessage);
 
             // ASSERT
-            Diagnostics.Shutdown(TimeSpan.FromSeconds(1));
+            Common.SwitchLoggerToDifferentFile();
             Thread.Sleep(TimeSpan.FromSeconds(1));
 
             Assert.IsTrue(SpinWait.SpinUntil(() => File.Exists("LocalForwarder-internal.log"), this.timeout));
             Assert.IsTrue(SpinWait.SpinUntil(() => File.Exists("LocalForwarder.log"), this.timeout));
-            Assert.IsTrue(File.ReadAllText("LocalForwarder.log").Contains(testLogMessage));
+            Assert.IsFalse(File.ReadAllText("LocalForwarder.log").Contains(testTraceMessage));
+            Assert.IsTrue(File.ReadAllText("LocalForwarder.log").Contains(testInfoMessage));
         }
     }
 }

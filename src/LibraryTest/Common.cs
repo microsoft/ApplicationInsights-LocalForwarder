@@ -28,8 +28,8 @@ namespace Microsoft.LocalForwarder.LibraryTest
 
         public static void AssertIsFalseEventually(Func<bool> condition, TimeSpan? timeout = null)
         {
-            timeout = timeout ?? Timeout.InfiniteTimeSpan;
-            Assert.IsFalse(SpinWait.SpinUntil(condition, timeout.Value));
+            timeout = timeout ?? TimeSpan.FromSeconds(10);
+            Assert.IsTrue(SpinWait.SpinUntil(() => !condition(), timeout.Value));
         }
 
         public static int GetPort()
@@ -56,6 +56,17 @@ namespace Microsoft.LocalForwarder.LibraryTest
             configuration.TelemetryChannel = channel;
 
             return new TelemetryClient(configuration);
+        }
+
+        public static string SwitchLoggerToDifferentFile()
+        {
+            NLog.LogManager.Flush();
+
+            string newLogFileName = $"LocalForwarder_{Guid.NewGuid()}.log";
+            NLog.LogManager.Configuration.FindTargetByName<NLog.Targets.FileTarget>("LogFile").FileName = newLogFileName;
+            NLog.LogManager.ReconfigExistingLoggers();
+
+            return newLogFileName;
         }
     }
 }
