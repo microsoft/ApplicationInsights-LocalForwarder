@@ -30,10 +30,10 @@
         /// <summary>
         /// For unit tests only.
         /// </summary>
-        internal Library(string configuration, TelemetryClient telemetryClient, TimeSpan? statsTimeout = null) : this(configuration)
+        internal Library(string configuration, TelemetryClient telemetryClient, TimeSpan? statsTracingTimeout = null) : this(configuration)
         {
             this.telemetryClient = telemetryClient;
-            this.statsTracingTimeout = statsTimeout ?? this.statsTracingTimeout;
+            this.statsTracingTimeout = statsTracingTimeout ?? this.statsTracingTimeout;
         }
 
         public bool IsRunning { get; private set; } = false;
