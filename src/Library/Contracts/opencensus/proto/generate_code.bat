@@ -20,10 +20,8 @@ setlocal
 cd /d %~dp0
 
 set PROTOC=%UserProfile%\.nuget\packages\Google.Protobuf.Tools\3.6.0\tools\windows_x64\protoc.exe
-set PLUGIN=%UserProfile%\.nuget\packages\Grpc.Tools\1.13.1\tools\windows_x64\grpc_csharp_plugin.exe
+set PLUGIN=%UserProfile%\.nuget\packages\Grpc.Tools\1.14.1\tools\windows_x64\grpc_csharp_plugin.exe
 
-%PROTOC% -I=.\ --csharp_out=..\code --csharp_opt=file_extension=.g.cs --grpc_out=..\code --plugin=protoc-gen-grpc=%PLUGIN% --proto_path=..\..\include --proto_path=..\..\ trace\trace.proto
-
-%PROTOC% -I=.\ --csharp_out=..\code --csharp_opt=file_extension=.g.cs --grpc_out=..\code --plugin=protoc-gen-grpc=%PLUGIN% --proto_path=..\..\include --proto_path=..\..\ exporter\exporter.proto
+%PROTOC% -I=.\ --csharp_out=..\code --csharp_opt=file_extension=.g.cs --grpc_out=..\code --plugin=protoc-gen-grpc=%PLUGIN% --proto_path=..\..\include .\opencensus\proto\trace\v1\trace.proto .\opencensus\proto\trace\v1\trace_config.proto .\opencensus\proto\agent\common\v1\common.proto .\opencensus\proto\agent\trace\v1\trace_service.proto
 
 endlocal
