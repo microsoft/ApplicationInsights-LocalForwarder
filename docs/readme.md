@@ -1,11 +1,10 @@
 # Local Forwarder
 
 ## Background
-Local Forwarder is an agent that collects Application Insights or OpenCensus telemetry from a variety of SDKs and routes it to the Application Insights backend.
-Local Forwarder is a .NET Core application capable of running under Windows and Linux. You may also be able to run it under macOS, but that is not officially supported at this time.
+Local Forwarder is an agent that collects Application Insights or OpenCensus telemetry from a variety of SDKs and routes it to the Application Insights backend. It's capable of running under Windows and Linux. You may also be able to run it under macOS, but that is not officially supported at this time.
 
 ## Running Local Forwarder
-Local Forwarder is a .NET Core application; it's an [open source project on GitHub](https://github.com/Microsoft/ApplicationInsights-LocalForwarder/releases). There is a variaty of ways to run Local Forwarder across multiple platforms.
+Local Forwarder is an [open source project on GitHub](https://github.com/Microsoft/ApplicationInsights-LocalForwarder/releases). There is a variety of ways to run Local Forwarder across multiple platforms.
 
 ### Windows
 #### Windows Service
@@ -24,17 +23,35 @@ sc failure "Local Forwarder" reset= 432000 actions= restart/1000/restart/1000/re
 Once the service is registered, use Windows tools to manage it.
 
 #### Console application
-For certain use cases it might be beneficial to run Local Forwarder as a console application. The release comes with a .NET Core binary (*Microsoft.LocalForwarder.ConsoleHost.dll*) which can be invoked from a console.
+For certain use cases it might be beneficial to run Local Forwarder as a console application. The release comes with the following executable versions of console host:
+* a framework-dependent .NET Core binary */ConsoleHost/publish/Microsoft.LocalForwarder.ConsoleHost.dll*. Running this binary requires a .NET Core runtime to be installed; refer to this download [page](https://www.microsoft.com/net/download/dotnet-core/2.1) for details.
 ```batchfile
 dotnet Microsoft.LocalForwarder.ConsoleHost.dll
 ```
+* a self-contained .NET Core set of binaries for x86 and x64 platforms. These don't require .NET Core runtime to run. */ConsoleHost/win-x86/publish/Microsoft.LocalForwarder.ConsoleHost.exe*, */ConsoleHost/win-x64/publish/Microsoft.LocalForwarder.ConsoleHost.exe*.
+```batchfile
+E:\uncdrop\ConsoleHost\win-x86\publish>Microsoft.LocalForwarder.ConsoleHost.exe
+E:\uncdrop\ConsoleHost\win-x64\publish>Microsoft.LocalForwarder.ConsoleHost.exe
+```
 
 ### Linux
-Most users will want to run Local Forwarder as a daemon. Linux systems come with a variety of solutions for service management, like Upstart, sysv, or systemd. Whatever your particular version is, you can use it to run the .NET Core assembly *Microsoft.LocalForwarder.ConsoleHost.dll* in the way which is most appropriate for your scenario.
+Same as for Windows, the release comes with the following executable versions of console host:
+* a framework-dependent .NET Core binary */ConsoleHost/publish/Microsoft.LocalForwarder.ConsoleHost.dll*. Running this binary requires a .NET Core runtime to be installed; refer to this download [page](https://www.microsoft.com/net/download/dotnet-core/2.1) for details.
+```batchfile
+dotnet Microsoft.LocalForwarder.ConsoleHost.dll
+```
+* a self-contained .NET Core set of binaries for linux-64. This one doesn't require .NET Core runtime to run. */ConsoleHost/linux-x64/publish/Microsoft.LocalForwarder.ConsoleHost*.
+```batchfile
+user@machine:~/ConsoleHost/linux-x64/publish$ sudo chmod +x Microsoft.LocalForwarder.ConsoleHost
+user@machine:~/ConsoleHost/linux-x64/publish$ ./Microsoft.LocalForwarder.ConsoleHost
+```
 
-As an example, let's create a daemon service using systemd.
+Many Linux users will want to run Local Forwarder as a daemon. Linux systems come with a variety of solutions for service management, like Upstart, sysv, or systemd. Whatever your particular version is, you can use it to run Local Forwarder in a way which is most appropriate for your scenario.
+
+As an example, let's create a daemon service using systemd. We'll use a framework-dependent version, but the same can be done for the self-contained one as well.
+
 * create the following service file named localforwarder.service and place it into /lib/systemd/system.
-This sample assumes your user name is SAMPLE_USER and you've copied Local Forwarder binaries to /home/SAMPLE_USER/LOCALFORWARDER_DIR.
+This sample assumes your user name is SAMPLE_USER and you've copied Local Forwarder framework-dependent binaries (from /ConsoleHost/publish) to /home/SAMPLE_USER/LOCALFORWARDER_DIR.
 ```
 # localforwarder.service
 # Place this file into /lib/systemd/system/
@@ -70,15 +87,8 @@ systemctl start localforwarder
 
 * Monitor the service by inspecting **.log* files in the /home/SAMPLE_USER/LOCALFORWARDER_DIR directory.
 
-Of course, you can also run the same executable in a console.
-```batchfile
-dotnet Microsoft.LocalForwarder.ConsoleHost.dll
-```
-
 ### Mac
 You may be able to run Local Forwarder under macOS, but that is not officially supported at this time.
-
-//!!! TODO include self-contained options that require no .NET Core installation
 
 ### Self-hosting
 Local Forwarder is also distributed as a .NET Standard NuGet package, allowing you to host it inside your own .NET application.
