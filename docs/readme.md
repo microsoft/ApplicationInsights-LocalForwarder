@@ -8,11 +8,11 @@ Local Forwarder is an [open source project on GitHub](https://github.com/Microso
 
 ### Windows
 #### Windows Service
-The most natural way of running Local Forwarder under Windows is by installing it as a Windows Service. The release comes with a Windows Service executable (*Microsoft.LocalForwarder.WindowsServiceHost.exe*) which can be easily registered with the OS by running a script similar to the following:
+The most natural way of running Local Forwarder under Windows is by installing it as a Windows Service. The release comes with a Windows Service executable (*WindowsServiceHost/Microsoft.LocalForwarder.WindowsServiceHost.exe*) which can be easily registered with the OS by running a script similar to the following:
 
 Register a service and configure it to start at system boot.
 ```
-sc create "Local Forwarder" binpath="<path>\Microsoft.LocalForwarder.WindowsServiceHost.exe" start=auto
+sc create "Local Forwarder" binpath="WindowsServiceHost\Microsoft.LocalForwarder.WindowsServiceHost.exe" start=auto
 ```
 
 Configure the service to restart automatically if it fails for any reason.
@@ -23,10 +23,10 @@ sc failure "Local Forwarder" reset= 432000 actions= restart/1000/restart/1000/re
 Once the service is registered, use Windows tools to manage it.
 
 #### Console application
-For certain use cases it might be beneficial to run Local Forwarder as a console application. The release comes with the following executable versions of console host:
+For certain use cases it might be beneficial to run Local Forwarder as a console application. The release comes with the following executable versions of the console host:
 * a framework-dependent .NET Core binary */ConsoleHost/publish/Microsoft.LocalForwarder.ConsoleHost.dll*. Running this binary requires a .NET Core runtime to be installed; refer to this download [page](https://www.microsoft.com/net/download/dotnet-core/2.1) for details.
 ```batchfile
-dotnet Microsoft.LocalForwarder.ConsoleHost.dll
+E:\uncdrop\ConsoleHost\publish>dotnet Microsoft.LocalForwarder.ConsoleHost.dll
 ```
 * a self-contained .NET Core set of binaries for x86 and x64 platforms. These don't require .NET Core runtime to run. */ConsoleHost/win-x86/publish/Microsoft.LocalForwarder.ConsoleHost.exe*, */ConsoleHost/win-x64/publish/Microsoft.LocalForwarder.ConsoleHost.exe*.
 ```batchfile
@@ -35,7 +35,7 @@ E:\uncdrop\ConsoleHost\win-x64\publish>Microsoft.LocalForwarder.ConsoleHost.exe
 ```
 
 ### Linux
-Same as for Windows, the release comes with the following executable versions of console host:
+Same as for Windows, the release comes with the following executable versions of the console host:
 * a framework-dependent .NET Core binary */ConsoleHost/publish/Microsoft.LocalForwarder.ConsoleHost.dll*. Running this binary requires a .NET Core runtime to be installed; refer to this download [page](https://www.microsoft.com/net/download/dotnet-core/2.1) for details.
 ```batchfile
 dotnet Microsoft.LocalForwarder.ConsoleHost.dll
@@ -48,10 +48,10 @@ user@machine:~/ConsoleHost/linux-x64/publish$ ./Microsoft.LocalForwarder.Console
 
 Many Linux users will want to run Local Forwarder as a daemon. Linux systems come with a variety of solutions for service management, like Upstart, sysv, or systemd. Whatever your particular version is, you can use it to run Local Forwarder in a way which is most appropriate for your scenario.
 
-As an example, let's create a daemon service using systemd. We'll use a framework-dependent version, but the same can be done for the self-contained one as well.
+As an example, let's create a daemon service using systemd. We'll use the framework-dependent version, but the same can be done for a self-contained one as well.
 
-* create the following service file named localforwarder.service and place it into /lib/systemd/system.
-This sample assumes your user name is SAMPLE_USER and you've copied Local Forwarder framework-dependent binaries (from /ConsoleHost/publish) to /home/SAMPLE_USER/LOCALFORWARDER_DIR.
+* create the following service file named *localforwarder.service* and place it into */lib/systemd/system*.
+This sample assumes your user name is SAMPLE_USER and you've copied Local Forwarder framework-dependent binaries (from */ConsoleHost/publish*) to */home/SAMPLE_USER/LOCALFORWARDER_DIR*.
 ```
 # localforwarder.service
 # Place this file into /lib/systemd/system/
