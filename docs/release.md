@@ -16,4 +16,5 @@ This document describes the sequence of publishing a release of Local Forwarder.
 * Commit the changes.
 * Build the hosts (AI_LocalForwarder_Host_Signed_Release).
 * Create the release tag on GitHub.
+* Create a release on GitHub, upload binaries from build outputs.
 
