@@ -1,8 +1,8 @@
 ﻿namespace Microsoft.LocalForwarder.Library.Inputs.GrpcInput
 {
-    using Opencensus.Proto.Exporter;
+    using Opencensus.Proto.Agent.Trace.V1;
 
-    class GrpcOpenCensusInput : GrpcInput<ExportSpanRequest, ExportSpanResponse>
+    class GrpcOpenCensusInput : GrpcInput<ExportTraceServiceRequest, ExportTraceServiceResponse>
     {
         public GrpcOpenCensusInput(string host, int port) : base(host, port)
         {
