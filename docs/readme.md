@@ -20,6 +20,11 @@ Configure the service to restart automatically if it fails for any reason.
 sc failure "Local Forwarder" reset= 432000 actions= restart/1000/restart/1000/restart/1000
 ```
 
+Start the service immediately.
+```
+sc start "Local Forwarder"
+```
+
 Once the service is registered, use Windows tools to manage it.
 
 #### Console application
