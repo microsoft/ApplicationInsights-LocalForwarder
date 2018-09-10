@@ -35,7 +35,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
 
             Assert.AreEqual(true, config.OpenCensusInput_Enabled);
             Assert.AreEqual("0.0.0.0", config.OpenCensusInput_Host);
-            Assert.AreEqual(50002, config.OpenCensusInput_Port);
+            Assert.AreEqual(55678, config.OpenCensusInput_Port);
 
             Assert.AreEqual("[SPECIFY INSTRUMENTATION KEY HERE]", config.OpenCensusToApplicationInsights_InstrumentationKey);
         }
