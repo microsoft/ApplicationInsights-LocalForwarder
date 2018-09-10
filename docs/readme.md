@@ -12,7 +12,7 @@ The most natural way of running Local Forwarder under Windows is by installing i
 
 Register a service and configure it to start at system boot.
 ```
-sc create "Local Forwarder" binpath="WindowsServiceHost\Microsoft.LocalForwarder.WindowsServiceHost.exe" start=auto
+sc create "Local Forwarder" binpath= "WindowsServiceHost\Microsoft.LocalForwarder.WindowsServiceHost.exe" start= auto
 ```
 
 Configure the service to restart automatically if it fails for any reason.
