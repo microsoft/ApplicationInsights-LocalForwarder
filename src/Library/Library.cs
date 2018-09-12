@@ -327,14 +327,14 @@ namespace Microsoft.LocalForwarder.Library
         /// <param name="configRequest">Incoming config request.</param>
         /// <param name="callContext">Call context.</param>
         /// <returns>LocalForwarder trace config.</returns>
-        private ConfigTraceServiceResponse OnOcConfigReceived(ConfigTraceServiceRequest configRequest,
+        private UpdatedLibraryConfig OnOcConfigReceived(CurrentLibraryConfig configRequest,
             ServerCallContext callContext)
         {
             TryGetOrUpdatePeerInfo(configRequest.Node, callContext, out var _);
 
             Diagnostics.LogTrace($"Got config request from {callContext.Peer} with {configRequest.Config?.SamplerCase}");
 
-            return new ConfigTraceServiceResponse { Config = DefaultOpencensusConfig };
+            return new UpdatedLibraryConfig { Config = DefaultOpencensusConfig };
         }
 
         /// <summary>

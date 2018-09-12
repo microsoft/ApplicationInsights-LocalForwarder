@@ -1650,7 +1650,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             Assert.AreEqual(serviceName, evnt.Context.Cloud.RoleName);
             Assert.AreEqual($"{hostName}.{pid}", evnt.Context.Cloud.RoleInstance);
 
-            Assert.AreEqual(version, evnt.Properties["oc_version"]);
+            Assert.AreEqual(version, evnt.Properties["oc_library_version"]);
             Assert.AreEqual(start.ToString("o"), evnt.Properties["process_start_ts"]);
             Assert.AreEqual(peer, evnt.Properties["peer"]);
 
@@ -1687,7 +1687,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             var node = new Node
             {
                 Identifier = new ProcessIdentifier { Pid = 1 },
-                LibraryInfo = new LibraryInfo { Version = "1" }
+                LibraryInfo = new LibraryInfo { ExporterVersion = "1", CoreLibraryVersion = "2"}
             };
 
             // ACT
@@ -1702,8 +1702,9 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             Assert.IsTrue(evnt.Context.GetInternalContext().SdkVersion.StartsWith("oclf0"));
             Assert.IsNull(evnt.Context.Cloud.RoleName);
             Assert.AreEqual(peer, evnt.Properties["peer"]);
-            Assert.AreEqual("1", evnt.Properties["oc_version"]);
-            Assert.AreEqual(2, evnt.Properties.Count);
+            Assert.AreEqual("1", evnt.Properties["oc_exporter_version"]);
+            Assert.AreEqual("2", evnt.Properties["oc_library_version"]);
+            Assert.AreEqual(3, evnt.Properties.Count);
 
             Assert.AreEqual(".1", evnt.Context.Cloud.RoleInstance);
         }
@@ -1720,7 +1721,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
                 LibraryInfo = new LibraryInfo
                 {
                     Language = lang,
-                    Version = version
+                    CoreLibraryVersion = version
                 },
                 ServiceInfo = new ServiceInfo
                 {

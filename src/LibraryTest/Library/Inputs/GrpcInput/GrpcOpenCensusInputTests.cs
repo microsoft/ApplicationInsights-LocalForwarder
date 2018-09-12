@@ -13,9 +13,9 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library.Inputs.GrpcInput
     [TestClass]
     public class GrpcOpenCensusInputTests
     {
-        private static readonly Random rand = new Random();
+        private static readonly Random Rand = new Random();
         private static readonly TimeSpan DefaultTimeout = TimeSpan.FromSeconds(5);
-        private static readonly ConfigTraceServiceResponse ConfigResponse = new ConfigTraceServiceResponse
+        private static readonly UpdatedLibraryConfig ConfigResponse = new UpdatedLibraryConfig
         {
             Config = new TraceConfig
             {
@@ -24,7 +24,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library.Inputs.GrpcInput
         };
 
         [TestMethod]
-        public async Task GrpcOpenCensusInputTests_StartsAndStops()
+        public void GrpcOpenCensusInputTests_StartsAndStops()
         {
             // ARRANGE
             int port = GetPort();
@@ -62,7 +62,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library.Inputs.GrpcInput
 
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
-        public async Task GrpcOpenCensusInputTests_CantStopWhileStopped()
+        public void GrpcOpenCensusInputTests_CantStopWhileStopped()
         {
             // ARRANGE
             int port = GetPort();
@@ -152,7 +152,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library.Inputs.GrpcInput
         {
             // ARRANGE
             int configsReceived = 0;
-            ConfigTraceServiceRequest receivedConfigRequest = null;
+            CurrentLibraryConfig receivedConfigRequest = null;
 
             int port = GetPort();
             var input = new GrpcOpenCensusInput("localhost", port);
@@ -169,8 +169,8 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library.Inputs.GrpcInput
             var grpcWriter = new GrpcWriter(false, port);
 
             // ACT
-            ConfigTraceServiceRequest request =
-                new ConfigTraceServiceRequest
+            CurrentLibraryConfig request =
+                new CurrentLibraryConfig
                 {
                     Config = new TraceConfig { RateLimitingSampler = new RateLimitingSampler{Qps = 1}}
                 };
@@ -192,7 +192,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library.Inputs.GrpcInput
         {
             // ARRANGE
             int configsReceived = 0;
-            ConfigTraceServiceRequest receivedConfigRequest = null;
+            CurrentLibraryConfig receivedConfigRequest = null;
 
             int port = GetPort();
             var input = new GrpcOpenCensusInput("localhost", port);
@@ -209,8 +209,8 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library.Inputs.GrpcInput
             var grpcWriter = new GrpcWriter(false, port);
 
             // ACT
-            ConfigTraceServiceRequest request =
-                new ConfigTraceServiceRequest
+            CurrentLibraryConfig request =
+                new CurrentLibraryConfig
                 {
                     Config = new TraceConfig { RateLimitingSampler = new RateLimitingSampler { Qps = 1 } },
                     Node = new Node { Identifier = new ProcessIdentifier {Pid = 2}}
@@ -230,7 +230,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library.Inputs.GrpcInput
         }
 
         [TestMethod]
-        public async Task GrpcOpenCensusInputTests_ReceivesDataFromMultipleClients()
+        public void GrpcOpenCensusInputTests_ReceivesDataFromMultipleClients()
         {
             // ARRANGE
             int batchesReceived = 0;
@@ -411,7 +411,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library.Inputs.GrpcInput
 
             var grpcWriter = new GrpcWriter(false, port);
 
-            ConfigTraceServiceRequest configRequest = new ConfigTraceServiceRequest
+            CurrentLibraryConfig configRequest = new CurrentLibraryConfig
             {
                 Config = new TraceConfig {RateLimitingSampler = new RateLimitingSampler {Qps = 1}}
             };
@@ -437,7 +437,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library.Inputs.GrpcInput
         private static int GetPort()
         {
             // dynamic port range
-            return rand.Next(49152, 65535);
+            return Rand.Next(49152, 65535);
         }
     }
 }

@@ -18,7 +18,7 @@
 
         private CancellationTokenSource cts;
         private Action<TTelemetryBatch, ServerCallContext> onBatchReceived;
-        private Func<ConfigTraceServiceRequest, ServerCallContext, ConfigTraceServiceResponse> onConfigReceived;
+        private Func<CurrentLibraryConfig, ServerCallContext, UpdatedLibraryConfig> onConfigReceived;
         private Server server;
         private InputStats stats;
         private readonly string host;
@@ -61,7 +61,7 @@
 
         public void Start(
             Action<TTelemetryBatch, ServerCallContext> onBatchReceived,
-            Func<ConfigTraceServiceRequest, ServerCallContext, ConfigTraceServiceResponse> onConfigReceived)
+            Func<CurrentLibraryConfig, ServerCallContext, UpdatedLibraryConfig> onConfigReceived)
         {
             if (this.IsRunning)
             {
@@ -159,8 +159,8 @@
             }
         }
 
-        private async Task OnSendConfig(IAsyncStreamReader<ConfigTraceServiceRequest> requestStream,
-            IServerStreamWriter<ConfigTraceServiceResponse> responseStream,
+        private async Task OnSendConfig(IAsyncStreamReader<CurrentLibraryConfig> requestStream,
+            IServerStreamWriter<UpdatedLibraryConfig> responseStream,
             ServerCallContext context)
         {
             if (this.onConfigReceived == null)
@@ -172,7 +172,7 @@
             {
                 while (await requestStream.MoveNext(this.cts.Token).ConfigureAwait(false))
                 {
-                    ConfigTraceServiceRequest configRequest = requestStream.Current;
+                    CurrentLibraryConfig configRequest = requestStream.Current;
 
                     try
                     {
@@ -233,7 +233,7 @@
                 onSendTelemetryBatch;
 
             private readonly
-                Func<IAsyncStreamReader<ConfigTraceServiceRequest>, IServerStreamWriter<ConfigTraceServiceResponse>, ServerCallContext, Task
+                Func<IAsyncStreamReader<CurrentLibraryConfig>, IServerStreamWriter<UpdatedLibraryConfig>, ServerCallContext, Task
                 >
                 onConfigRequest;
 
@@ -241,7 +241,7 @@
                 Func<IAsyncStreamReader<ExportTraceServiceRequest>, IServerStreamWriter<ExportTraceServiceResponse>, ServerCallContext, Task
                     >
                     onSendTelemetryBatch,
-                Func<IAsyncStreamReader<ConfigTraceServiceRequest>, IServerStreamWriter<ConfigTraceServiceResponse>, ServerCallContext, Task
+                Func<IAsyncStreamReader<CurrentLibraryConfig>, IServerStreamWriter<UpdatedLibraryConfig>, ServerCallContext, Task
                     >
                     onConfigRequest)
             {
@@ -259,8 +259,8 @@
                 await this.onSendTelemetryBatch.Invoke(requestStream, responseStream, context).ConfigureAwait(false);
             }
 
-            public override async Task Config(IAsyncStreamReader<ConfigTraceServiceRequest> configRequestStream,
-                IServerStreamWriter<ConfigTraceServiceResponse> configResponseStream,
+            public override async Task Config(IAsyncStreamReader<CurrentLibraryConfig> configRequestStream,
+                IServerStreamWriter<UpdatedLibraryConfig> configResponseStream,
                 ServerCallContext context)
             {
                 await this.onConfigRequest.Invoke(configRequestStream, configResponseStream, context)

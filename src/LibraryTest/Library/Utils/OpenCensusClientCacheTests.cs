@@ -146,9 +146,9 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library.Utils
                 LibraryInfo = new LibraryInfo
                 {
                     Language = LibraryInfo.Types.Language.Cpp,
-                    Version = "0"
+                    CoreLibraryVersion = "0"
                 },
-                ServiceInfo = new ServiceInfo()
+                ServiceInfo = new ServiceInfo
                 {
                     Name = "tests"
                 }

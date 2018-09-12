@@ -27,17 +27,17 @@ namespace Opencensus.Proto.Agent.Trace.V1 {
   {
     static readonly string __ServiceName = "opencensus.proto.agent.trace.v1.TraceService";
 
-    static readonly grpc::Marshaller<global::Opencensus.Proto.Agent.Trace.V1.ConfigTraceServiceRequest> __Marshaller_opencensus_proto_agent_trace_v1_ConfigTraceServiceRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Opencensus.Proto.Agent.Trace.V1.ConfigTraceServiceRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::Opencensus.Proto.Agent.Trace.V1.ConfigTraceServiceResponse> __Marshaller_opencensus_proto_agent_trace_v1_ConfigTraceServiceResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Opencensus.Proto.Agent.Trace.V1.ConfigTraceServiceResponse.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::Opencensus.Proto.Agent.Trace.V1.CurrentLibraryConfig> __Marshaller_opencensus_proto_agent_trace_v1_CurrentLibraryConfig = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Opencensus.Proto.Agent.Trace.V1.CurrentLibraryConfig.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::Opencensus.Proto.Agent.Trace.V1.UpdatedLibraryConfig> __Marshaller_opencensus_proto_agent_trace_v1_UpdatedLibraryConfig = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Opencensus.Proto.Agent.Trace.V1.UpdatedLibraryConfig.Parser.ParseFrom);
     static readonly grpc::Marshaller<global::Opencensus.Proto.Agent.Trace.V1.ExportTraceServiceRequest> __Marshaller_opencensus_proto_agent_trace_v1_ExportTraceServiceRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Opencensus.Proto.Agent.Trace.V1.ExportTraceServiceRequest.Parser.ParseFrom);
     static readonly grpc::Marshaller<global::Opencensus.Proto.Agent.Trace.V1.ExportTraceServiceResponse> __Marshaller_opencensus_proto_agent_trace_v1_ExportTraceServiceResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Opencensus.Proto.Agent.Trace.V1.ExportTraceServiceResponse.Parser.ParseFrom);
 
-    static readonly grpc::Method<global::Opencensus.Proto.Agent.Trace.V1.ConfigTraceServiceRequest, global::Opencensus.Proto.Agent.Trace.V1.ConfigTraceServiceResponse> __Method_Config = new grpc::Method<global::Opencensus.Proto.Agent.Trace.V1.ConfigTraceServiceRequest, global::Opencensus.Proto.Agent.Trace.V1.ConfigTraceServiceResponse>(
+    static readonly grpc::Method<global::Opencensus.Proto.Agent.Trace.V1.CurrentLibraryConfig, global::Opencensus.Proto.Agent.Trace.V1.UpdatedLibraryConfig> __Method_Config = new grpc::Method<global::Opencensus.Proto.Agent.Trace.V1.CurrentLibraryConfig, global::Opencensus.Proto.Agent.Trace.V1.UpdatedLibraryConfig>(
         grpc::MethodType.DuplexStreaming,
         __ServiceName,
         "Config",
-        __Marshaller_opencensus_proto_agent_trace_v1_ConfigTraceServiceRequest,
-        __Marshaller_opencensus_proto_agent_trace_v1_ConfigTraceServiceResponse);
+        __Marshaller_opencensus_proto_agent_trace_v1_CurrentLibraryConfig,
+        __Marshaller_opencensus_proto_agent_trace_v1_UpdatedLibraryConfig);
 
     static readonly grpc::Method<global::Opencensus.Proto.Agent.Trace.V1.ExportTraceServiceRequest, global::Opencensus.Proto.Agent.Trace.V1.ExportTraceServiceResponse> __Method_Export = new grpc::Method<global::Opencensus.Proto.Agent.Trace.V1.ExportTraceServiceRequest, global::Opencensus.Proto.Agent.Trace.V1.ExportTraceServiceResponse>(
         grpc::MethodType.DuplexStreaming,
@@ -56,22 +56,22 @@ namespace Opencensus.Proto.Agent.Trace.V1 {
     public abstract partial class TraceServiceBase
     {
       /// <summary>
-      /// After the initialization this RPC must be kept alive for the
-      /// entire life of the application. Agent pushes configs to the
-      /// application via a stream of responses.
+      /// After initialization, this RPC must be kept alive for the
+      /// entire life of the application. The agent pushes configs
+      /// down to applications via a stream.
       /// </summary>
       /// <param name="requestStream">Used for reading requests from the client.</param>
       /// <param name="responseStream">Used for sending responses back to the client.</param>
       /// <param name="context">The context of the server-side call handler being invoked.</param>
       /// <returns>A task indicating completion of the handler.</returns>
-      public virtual global::System.Threading.Tasks.Task Config(grpc::IAsyncStreamReader<global::Opencensus.Proto.Agent.Trace.V1.ConfigTraceServiceRequest> requestStream, grpc::IServerStreamWriter<global::Opencensus.Proto.Agent.Trace.V1.ConfigTraceServiceResponse> responseStream, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task Config(grpc::IAsyncStreamReader<global::Opencensus.Proto.Agent.Trace.V1.CurrentLibraryConfig> requestStream, grpc::IServerStreamWriter<global::Opencensus.Proto.Agent.Trace.V1.UpdatedLibraryConfig> responseStream, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
       /// <summary>
-      /// Allow to export Spans.
-      /// For performance reason, it is recommended to keep this RPC
+      /// Allows applications to send spans to the agent.
+      /// For performance reasons, it is recommended to keep this RPC
       /// alive for the entire life of the application.
       /// </summary>
       /// <param name="requestStream">Used for reading requests from the client.</param>
@@ -109,32 +109,32 @@ namespace Opencensus.Proto.Agent.Trace.V1 {
       }
 
       /// <summary>
-      /// After the initialization this RPC must be kept alive for the
-      /// entire life of the application. Agent pushes configs to the
-      /// application via a stream of responses.
+      /// After initialization, this RPC must be kept alive for the
+      /// entire life of the application. The agent pushes configs
+      /// down to applications via a stream.
       /// </summary>
       /// <param name="headers">The initial metadata to send with the call. This parameter is optional.</param>
       /// <param name="deadline">An optional deadline for the call. The call will be cancelled if deadline is hit.</param>
       /// <param name="cancellationToken">An optional token for canceling the call.</param>
       /// <returns>The call object.</returns>
-      public virtual grpc::AsyncDuplexStreamingCall<global::Opencensus.Proto.Agent.Trace.V1.ConfigTraceServiceRequest, global::Opencensus.Proto.Agent.Trace.V1.ConfigTraceServiceResponse> Config(grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncDuplexStreamingCall<global::Opencensus.Proto.Agent.Trace.V1.CurrentLibraryConfig, global::Opencensus.Proto.Agent.Trace.V1.UpdatedLibraryConfig> Config(grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return Config(new grpc::CallOptions(headers, deadline, cancellationToken));
       }
       /// <summary>
-      /// After the initialization this RPC must be kept alive for the
-      /// entire life of the application. Agent pushes configs to the
-      /// application via a stream of responses.
+      /// After initialization, this RPC must be kept alive for the
+      /// entire life of the application. The agent pushes configs
+      /// down to applications via a stream.
       /// </summary>
       /// <param name="options">The options for the call.</param>
       /// <returns>The call object.</returns>
-      public virtual grpc::AsyncDuplexStreamingCall<global::Opencensus.Proto.Agent.Trace.V1.ConfigTraceServiceRequest, global::Opencensus.Proto.Agent.Trace.V1.ConfigTraceServiceResponse> Config(grpc::CallOptions options)
+      public virtual grpc::AsyncDuplexStreamingCall<global::Opencensus.Proto.Agent.Trace.V1.CurrentLibraryConfig, global::Opencensus.Proto.Agent.Trace.V1.UpdatedLibraryConfig> Config(grpc::CallOptions options)
       {
         return CallInvoker.AsyncDuplexStreamingCall(__Method_Config, null, options);
       }
       /// <summary>
-      /// Allow to export Spans.
-      /// For performance reason, it is recommended to keep this RPC
+      /// Allows applications to send spans to the agent.
+      /// For performance reasons, it is recommended to keep this RPC
       /// alive for the entire life of the application.
       /// </summary>
       /// <param name="headers">The initial metadata to send with the call. This parameter is optional.</param>
@@ -146,8 +146,8 @@ namespace Opencensus.Proto.Agent.Trace.V1 {
         return Export(new grpc::CallOptions(headers, deadline, cancellationToken));
       }
       /// <summary>
-      /// Allow to export Spans.
-      /// For performance reason, it is recommended to keep this RPC
+      /// Allows applications to send spans to the agent.
+      /// For performance reasons, it is recommended to keep this RPC
       /// alive for the entire life of the application.
       /// </summary>
       /// <param name="options">The options for the call.</param>

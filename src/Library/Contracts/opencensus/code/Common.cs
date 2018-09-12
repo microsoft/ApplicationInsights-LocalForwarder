@@ -36,22 +36,23 @@ namespace Opencensus.Proto.Agent.Common.V1 {
             "RW50cnkaMQoPQXR0cmlidXRlc0VudHJ5EgsKA2tleRgBIAEoCRINCgV2YWx1",
             "ZRgCIAEoCToCOAEiaAoRUHJvY2Vzc0lkZW50aWZpZXISEQoJaG9zdF9uYW1l",
             "GAEgASgJEgsKA3BpZBgCIAEoDRIzCg9zdGFydF90aW1lc3RhbXAYAyABKAsy",
-            "Gi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wIvQBCgtMaWJyYXJ5SW5mbxJI",
+            "Gi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wIpsCCgtMaWJyYXJ5SW5mbxJI",
             "CghsYW5ndWFnZRgBIAEoDjI2Lm9wZW5jZW5zdXMucHJvdG8uYWdlbnQuY29t",
-            "bW9uLnYxLkxpYnJhcnlJbmZvLkxhbmd1YWdlEg8KB3ZlcnNpb24YAiABKAki",
-            "iQEKCExhbmd1YWdlEhgKFExBTkdVQUdFX1VOU1BFQ0lGSUVEEAASBwoDQ1BQ",
-            "EAESCwoHQ19TSEFSUBACEgoKBkVSTEFORxADEgsKB0dPX0xBTkcQBBIICgRK",
-            "QVZBEAUSCwoHTk9ERV9KUxAGEgcKA1BIUBAHEgoKBlBZVEhPThAIEggKBFJV",
-            "QlkQCSIbCgtTZXJ2aWNlSW5mbxIMCgRuYW1lGAEgASgJQn8KI2lvLm9wZW5j",
-            "ZW5zdXMucHJvdG8uYWdlbnQuY29tbW9uLnYxQgtDb21tb25Qcm90b1ABWkln",
-            "aXRodWIuY29tL2NlbnN1cy1pbnN0cnVtZW50YXRpb24vb3BlbmNlbnN1cy1w",
-            "cm90by9nZW4tZ28vYWdlbnQvY29tbW9uL3YxYgZwcm90bzM="));
+            "bW9uLnYxLkxpYnJhcnlJbmZvLkxhbmd1YWdlEhgKEGV4cG9ydGVyX3ZlcnNp",
+            "b24YAiABKAkSHAoUY29yZV9saWJyYXJ5X3ZlcnNpb24YAyABKAkiiQEKCExh",
+            "bmd1YWdlEhgKFExBTkdVQUdFX1VOU1BFQ0lGSUVEEAASBwoDQ1BQEAESCwoH",
+            "Q19TSEFSUBACEgoKBkVSTEFORxADEgsKB0dPX0xBTkcQBBIICgRKQVZBEAUS",
+            "CwoHTk9ERV9KUxAGEgcKA1BIUBAHEgoKBlBZVEhPThAIEggKBFJVQlkQCSIb",
+            "CgtTZXJ2aWNlSW5mbxIMCgRuYW1lGAEgASgJQn8KI2lvLm9wZW5jZW5zdXMu",
+            "cHJvdG8uYWdlbnQuY29tbW9uLnYxQgtDb21tb25Qcm90b1ABWklnaXRodWIu",
+            "Y29tL2NlbnN1cy1pbnN0cnVtZW50YXRpb24vb3BlbmNlbnN1cy1wcm90by9n",
+            "ZW4tZ28vYWdlbnQvY29tbW9uL3YxYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Opencensus.Proto.Agent.Common.V1.Node), global::Opencensus.Proto.Agent.Common.V1.Node.Parser, new[]{ "Identifier", "LibraryInfo", "ServiceInfo", "Attributes" }, null, null, new pbr::GeneratedClrTypeInfo[] { null, }),
             new pbr::GeneratedClrTypeInfo(typeof(global::Opencensus.Proto.Agent.Common.V1.ProcessIdentifier), global::Opencensus.Proto.Agent.Common.V1.ProcessIdentifier.Parser, new[]{ "HostName", "Pid", "StartTimestamp" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Opencensus.Proto.Agent.Common.V1.LibraryInfo), global::Opencensus.Proto.Agent.Common.V1.LibraryInfo.Parser, new[]{ "Language", "Version" }, null, new[]{ typeof(global::Opencensus.Proto.Agent.Common.V1.LibraryInfo.Types.Language) }, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Opencensus.Proto.Agent.Common.V1.LibraryInfo), global::Opencensus.Proto.Agent.Common.V1.LibraryInfo.Parser, new[]{ "Language", "ExporterVersion", "CoreLibraryVersion" }, null, new[]{ typeof(global::Opencensus.Proto.Agent.Common.V1.LibraryInfo.Types.Language) }, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Opencensus.Proto.Agent.Common.V1.ServiceInfo), global::Opencensus.Proto.Agent.Common.V1.ServiceInfo.Parser, new[]{ "Name" }, null, null, null)
           }));
     }
@@ -532,7 +533,8 @@ namespace Opencensus.Proto.Agent.Common.V1 {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public LibraryInfo(LibraryInfo other) : this() {
       language_ = other.language_;
-      version_ = other.version_;
+      exporterVersion_ = other.exporterVersion_;
+      coreLibraryVersion_ = other.coreLibraryVersion_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -555,17 +557,31 @@ namespace Opencensus.Proto.Agent.Common.V1 {
       }
     }
 
-    /// <summary>Field number for the "version" field.</summary>
-    public const int VersionFieldNumber = 2;
-    private string version_ = "";
+    /// <summary>Field number for the "exporter_version" field.</summary>
+    public const int ExporterVersionFieldNumber = 2;
+    private string exporterVersion_ = "";
     /// <summary>
     /// Version of Agent exporter of Library.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public string Version {
-      get { return version_; }
+    public string ExporterVersion {
+      get { return exporterVersion_; }
       set {
-        version_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+        exporterVersion_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "core_library_version" field.</summary>
+    public const int CoreLibraryVersionFieldNumber = 3;
+    private string coreLibraryVersion_ = "";
+    /// <summary>
+    /// Version of OpenCensus Library.
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string CoreLibraryVersion {
+      get { return coreLibraryVersion_; }
+      set {
+        coreLibraryVersion_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
       }
     }
 
@@ -583,7 +599,8 @@ namespace Opencensus.Proto.Agent.Common.V1 {
         return true;
       }
       if (Language != other.Language) return false;
-      if (Version != other.Version) return false;
+      if (ExporterVersion != other.ExporterVersion) return false;
+      if (CoreLibraryVersion != other.CoreLibraryVersion) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -591,7 +608,8 @@ namespace Opencensus.Proto.Agent.Common.V1 {
     public override int GetHashCode() {
       int hash = 1;
       if (Language != 0) hash ^= Language.GetHashCode();
-      if (Version.Length != 0) hash ^= Version.GetHashCode();
+      if (ExporterVersion.Length != 0) hash ^= ExporterVersion.GetHashCode();
+      if (CoreLibraryVersion.Length != 0) hash ^= CoreLibraryVersion.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -609,9 +627,13 @@ namespace Opencensus.Proto.Agent.Common.V1 {
         output.WriteRawTag(8);
         output.WriteEnum((int) Language);
       }
-      if (Version.Length != 0) {
+      if (ExporterVersion.Length != 0) {
         output.WriteRawTag(18);
-        output.WriteString(Version);
+        output.WriteString(ExporterVersion);
+      }
+      if (CoreLibraryVersion.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(CoreLibraryVersion);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -624,8 +646,11 @@ namespace Opencensus.Proto.Agent.Common.V1 {
       if (Language != 0) {
         size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Language);
       }
-      if (Version.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(Version);
+      if (ExporterVersion.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(ExporterVersion);
+      }
+      if (CoreLibraryVersion.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(CoreLibraryVersion);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -641,8 +666,11 @@ namespace Opencensus.Proto.Agent.Common.V1 {
       if (other.Language != 0) {
         Language = other.Language;
       }
-      if (other.Version.Length != 0) {
-        Version = other.Version;
+      if (other.ExporterVersion.Length != 0) {
+        ExporterVersion = other.ExporterVersion;
+      }
+      if (other.CoreLibraryVersion.Length != 0) {
+        CoreLibraryVersion = other.CoreLibraryVersion;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -660,7 +688,11 @@ namespace Opencensus.Proto.Agent.Common.V1 {
             break;
           }
           case 18: {
-            Version = input.ReadString();
+            ExporterVersion = input.ReadString();
+            break;
+          }
+          case 26: {
+            CoreLibraryVersion = input.ReadString();
             break;
           }
         }
