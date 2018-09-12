@@ -24,6 +24,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
                     defaultConfig = reader.ReadToEnd();
                 }
             }
+            Environment.SetEnvironmentVariable("APPINSIGHTS_INSTRUMENTATIONKEY", null);
 
             // ACT
             var config = new Configuration(defaultConfig);
@@ -37,7 +38,8 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             Assert.AreEqual("0.0.0.0", config.OpenCensusInput_Host);
             Assert.AreEqual(55678, config.OpenCensusInput_Port);
 
-            Assert.AreEqual("[SPECIFY INSTRUMENTATION KEY HERE]", config.OpenCensusToApplicationInsights_InstrumentationKey);
+            Assert.AreEqual("%APPINSIGHTS_INSTRUMENTATIONKEY%", config.OpenCensusToApplicationInsights_InstrumentationKey);
+            Assert.AreEqual("%APPINSIGHTS_INSTRUMENTATIONKEY%", config.ApplicationInsights_LiveMetricsStreamInstrumentationKey);
         }
 
         [TestMethod]
@@ -59,6 +61,9 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
   <OpenCensusToApplicationInsights>
     <InstrumentationKey>%ConfigTestInstrumentationKey%</InstrumentationKey>
   </OpenCensusToApplicationInsights>
+  <ApplicationInsights>
+    <LiveMetricsStreamInstrumentationKey>%ConfigLiveStreamTestInstrumentationKey%</LiveMetricsStreamInstrumentationKey>
+  </ApplicationInsights>
 </LocalForwarderConfiguration>
 ";
 
@@ -68,12 +73,14 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             string ocHost = Guid.NewGuid().ToString();
             string ocPort = rand.Next().ToString();
             string ikey = Guid.NewGuid().ToString();
+            string liveikey = Guid.NewGuid().ToString();
 
             Environment.SetEnvironmentVariable("AI_Host", aiHost);
             Environment.SetEnvironmentVariable("AI_Port", aiPort);
             Environment.SetEnvironmentVariable("OC_Host", ocHost);
             Environment.SetEnvironmentVariable("OC_Port", ocPort);
             Environment.SetEnvironmentVariable("ConfigTestInstrumentationKey", ikey);
+            Environment.SetEnvironmentVariable("ConfigLiveStreamTestInstrumentationKey", liveikey);
 
             // ACT
             var configuration = new Configuration(config);
@@ -84,6 +91,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             Assert.AreEqual(ocHost, configuration.OpenCensusInput_Host);
             Assert.AreEqual(ocPort, configuration.OpenCensusInput_Port.ToString());
             Assert.AreEqual(ikey, configuration.OpenCensusToApplicationInsights_InstrumentationKey);
+            Assert.AreEqual(liveikey, configuration.ApplicationInsights_LiveMetricsStreamInstrumentationKey);
         }
 
         [TestMethod]
@@ -105,6 +113,9 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
   <OpenCensusToApplicationInsights>
     <InstrumentationKey>%ConfigTestInstrumentationKey%</InstrumentationKey>
   </OpenCensusToApplicationInsights>
+  <ApplicationInsights>
+    <LiveMetricsStreamInstrumentationKey>%ConfigLiveStreamTestInstrumentationKey%</LiveMetricsStreamInstrumentationKey>
+  </ApplicationInsights>
 </LocalForwarderConfiguration>
 ";
 
@@ -115,6 +126,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             Environment.SetEnvironmentVariable("AI_Host", null);
             Environment.SetEnvironmentVariable("OC_Host", null);
             Environment.SetEnvironmentVariable("ConfigTestInstrumentationKey", null);
+            Environment.SetEnvironmentVariable("ConfigLiveStreamTestInstrumentationKey", null);
 
             // ACT
             var configuration = new Configuration(config);
@@ -123,6 +135,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             Assert.AreEqual("%AI_Host%", configuration.ApplicationInsightsInput_Host);
             Assert.AreEqual("%OC_Host%", configuration.OpenCensusInput_Host);
             Assert.AreEqual("%ConfigTestInstrumentationKey%", configuration.OpenCensusToApplicationInsights_InstrumentationKey);
+            Assert.AreEqual("%ConfigLiveStreamTestInstrumentationKey%", configuration.ApplicationInsights_LiveMetricsStreamInstrumentationKey);
         }
     }
 }
