@@ -397,7 +397,7 @@
         {
             string traceId = BytesStringToHexString(span.TraceId);
             telemetry.Context.Operation.Id = BytesStringToHexString(span.TraceId);
-            if (span.ParentSpanId != null && !span.ParentSpanId.IsEmpty)
+            if (span.ParentSpanId != null && !span.ParentSpanId.IsEmpty && span.ParentSpanId.Any(b => b != 0))
             {
                 telemetry.Context.Operation.ParentId = FormatId(traceId, BytesStringToHexString(span.ParentSpanId));
             }
@@ -413,23 +413,29 @@
 
         private static string FormatId(string traceId, string spanId)
         {
-            return String.Concat('|', traceId, '.', spanId, '.');
+            return string.Concat('|', traceId, '.', spanId, '.');
         }
 
-        private static Uri GetUrl(String host, int port, String path)
+        private static Uri GetUrl(string host, int port, string path)
         {
-            if (host == null)
+            if (string.IsNullOrEmpty(host))
             {
                 return null;
             }
 
-            String scheme = port == 80 ? "http" : "https";
-            if (port < 0 || port == 80 || port == 443)
+            string slash = string.Empty;
+            if (!string.IsNullOrEmpty(path) && !path.StartsWith("/"))
             {
-                return new Uri($"{scheme}://{host}/{path}");
+                slash = "/";
             }
 
-            return new Uri($"{scheme}://{host}:{port}/{path}");
+            string scheme = port == 80 ? "http" : "https";
+            if (port < 0 || port == 80 || port == 443)
+            {
+                return new Uri($"{scheme}://{host}{slash}{path}");
+            }
+
+            return new Uri($"{scheme}://{host}:{port}{slash}{path}");
         }
 
         private static string GetHttpTelemetryName(string method, string path, string route)
