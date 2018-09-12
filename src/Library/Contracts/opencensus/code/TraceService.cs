@@ -28,31 +28,30 @@ namespace Opencensus.Proto.Agent.Trace.V1 {
             "Y2UucHJvdG8SH29wZW5jZW5zdXMucHJvdG8uYWdlbnQudHJhY2UudjEaLW9w",
             "ZW5jZW5zdXMvcHJvdG8vYWdlbnQvY29tbW9uL3YxL2NvbW1vbi5wcm90bxol",
             "b3BlbmNlbnN1cy9wcm90by90cmFjZS92MS90cmFjZS5wcm90bxosb3BlbmNl",
-            "bnN1cy9wcm90by90cmFjZS92MS90cmFjZV9jb25maWcucHJvdG8iiQEKGUNv",
-            "bmZpZ1RyYWNlU2VydmljZVJlcXVlc3QSNAoEbm9kZRgBIAEoCzImLm9wZW5j",
-            "ZW5zdXMucHJvdG8uYWdlbnQuY29tbW9uLnYxLk5vZGUSNgoGY29uZmlnGAIg",
-            "ASgLMiYub3BlbmNlbnN1cy5wcm90by50cmFjZS52MS5UcmFjZUNvbmZpZyJU",
-            "ChpDb25maWdUcmFjZVNlcnZpY2VSZXNwb25zZRI2CgZjb25maWcYAiABKAsy",
-            "Ji5vcGVuY2Vuc3VzLnByb3RvLnRyYWNlLnYxLlRyYWNlQ29uZmlnIoEBChlF",
-            "eHBvcnRUcmFjZVNlcnZpY2VSZXF1ZXN0EjQKBG5vZGUYASABKAsyJi5vcGVu",
-            "Y2Vuc3VzLnByb3RvLmFnZW50LmNvbW1vbi52MS5Ob2RlEi4KBXNwYW5zGAIg",
-            "AygLMh8ub3BlbmNlbnN1cy5wcm90by50cmFjZS52MS5TcGFuIhwKGkV4cG9y",
-            "dFRyYWNlU2VydmljZVJlc3BvbnNlMqICCgxUcmFjZVNlcnZpY2UShwEKBkNv",
-            "bmZpZxI6Lm9wZW5jZW5zdXMucHJvdG8uYWdlbnQudHJhY2UudjEuQ29uZmln",
-            "VHJhY2VTZXJ2aWNlUmVxdWVzdBo7Lm9wZW5jZW5zdXMucHJvdG8uYWdlbnQu",
-            "dHJhY2UudjEuQ29uZmlnVHJhY2VTZXJ2aWNlUmVzcG9uc2UiACgBMAEShwEK",
-            "BkV4cG9ydBI6Lm9wZW5jZW5zdXMucHJvdG8uYWdlbnQudHJhY2UudjEuRXhw",
-            "b3J0VHJhY2VTZXJ2aWNlUmVxdWVzdBo7Lm9wZW5jZW5zdXMucHJvdG8uYWdl",
-            "bnQudHJhY2UudjEuRXhwb3J0VHJhY2VTZXJ2aWNlUmVzcG9uc2UiACgBMAFC",
-            "gwEKImlvLm9wZW5jZW5zdXMucHJvdG8uYWdlbnQudHJhY2UudjFCEVRyYWNl",
-            "U2VydmljZVByb3RvUAFaSGdpdGh1Yi5jb20vY2Vuc3VzLWluc3RydW1lbnRh",
-            "dGlvbi9vcGVuY2Vuc3VzLXByb3RvL2dlbi1nby9hZ2VudC90cmFjZS92MWIG",
-            "cHJvdG8z"));
+            "bnN1cy9wcm90by90cmFjZS92MS90cmFjZV9jb25maWcucHJvdG8ihAEKFEN1",
+            "cnJlbnRMaWJyYXJ5Q29uZmlnEjQKBG5vZGUYASABKAsyJi5vcGVuY2Vuc3Vz",
+            "LnByb3RvLmFnZW50LmNvbW1vbi52MS5Ob2RlEjYKBmNvbmZpZxgCIAEoCzIm",
+            "Lm9wZW5jZW5zdXMucHJvdG8udHJhY2UudjEuVHJhY2VDb25maWciTgoUVXBk",
+            "YXRlZExpYnJhcnlDb25maWcSNgoGY29uZmlnGAIgASgLMiYub3BlbmNlbnN1",
+            "cy5wcm90by50cmFjZS52MS5UcmFjZUNvbmZpZyKBAQoZRXhwb3J0VHJhY2VT",
+            "ZXJ2aWNlUmVxdWVzdBI0CgRub2RlGAEgASgLMiYub3BlbmNlbnN1cy5wcm90",
+            "by5hZ2VudC5jb21tb24udjEuTm9kZRIuCgVzcGFucxgCIAMoCzIfLm9wZW5j",
+            "ZW5zdXMucHJvdG8udHJhY2UudjEuU3BhbiIcChpFeHBvcnRUcmFjZVNlcnZp",
+            "Y2VSZXNwb25zZTKWAgoMVHJhY2VTZXJ2aWNlEnwKBkNvbmZpZxI1Lm9wZW5j",
+            "ZW5zdXMucHJvdG8uYWdlbnQudHJhY2UudjEuQ3VycmVudExpYnJhcnlDb25m",
+            "aWcaNS5vcGVuY2Vuc3VzLnByb3RvLmFnZW50LnRyYWNlLnYxLlVwZGF0ZWRM",
+            "aWJyYXJ5Q29uZmlnIgAoATABEocBCgZFeHBvcnQSOi5vcGVuY2Vuc3VzLnBy",
+            "b3RvLmFnZW50LnRyYWNlLnYxLkV4cG9ydFRyYWNlU2VydmljZVJlcXVlc3Qa",
+            "Oy5vcGVuY2Vuc3VzLnByb3RvLmFnZW50LnRyYWNlLnYxLkV4cG9ydFRyYWNl",
+            "U2VydmljZVJlc3BvbnNlIgAoATABQoMBCiJpby5vcGVuY2Vuc3VzLnByb3Rv",
+            "LmFnZW50LnRyYWNlLnYxQhFUcmFjZVNlcnZpY2VQcm90b1ABWkhnaXRodWIu",
+            "Y29tL2NlbnN1cy1pbnN0cnVtZW50YXRpb24vb3BlbmNlbnN1cy1wcm90by9n",
+            "ZW4tZ28vYWdlbnQvdHJhY2UvdjFiBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Opencensus.Proto.Agent.Common.V1.CommonReflection.Descriptor, global::Opencensus.Proto.Trace.V1.TraceReflection.Descriptor, global::Opencensus.Proto.Trace.V1.TraceConfigReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Opencensus.Proto.Agent.Trace.V1.ConfigTraceServiceRequest), global::Opencensus.Proto.Agent.Trace.V1.ConfigTraceServiceRequest.Parser, new[]{ "Node", "Config" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Opencensus.Proto.Agent.Trace.V1.ConfigTraceServiceResponse), global::Opencensus.Proto.Agent.Trace.V1.ConfigTraceServiceResponse.Parser, new[]{ "Config" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Opencensus.Proto.Agent.Trace.V1.CurrentLibraryConfig), global::Opencensus.Proto.Agent.Trace.V1.CurrentLibraryConfig.Parser, new[]{ "Node", "Config" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Opencensus.Proto.Agent.Trace.V1.UpdatedLibraryConfig), global::Opencensus.Proto.Agent.Trace.V1.UpdatedLibraryConfig.Parser, new[]{ "Config" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Opencensus.Proto.Agent.Trace.V1.ExportTraceServiceRequest), global::Opencensus.Proto.Agent.Trace.V1.ExportTraceServiceRequest.Parser, new[]{ "Node", "Spans" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Opencensus.Proto.Agent.Trace.V1.ExportTraceServiceResponse), global::Opencensus.Proto.Agent.Trace.V1.ExportTraceServiceResponse.Parser, null, null, null, null)
           }));
@@ -61,11 +60,11 @@ namespace Opencensus.Proto.Agent.Trace.V1 {
 
   }
   #region Messages
-  public sealed partial class ConfigTraceServiceRequest : pb::IMessage<ConfigTraceServiceRequest> {
-    private static readonly pb::MessageParser<ConfigTraceServiceRequest> _parser = new pb::MessageParser<ConfigTraceServiceRequest>(() => new ConfigTraceServiceRequest());
+  public sealed partial class CurrentLibraryConfig : pb::IMessage<CurrentLibraryConfig> {
+    private static readonly pb::MessageParser<CurrentLibraryConfig> _parser = new pb::MessageParser<CurrentLibraryConfig>(() => new CurrentLibraryConfig());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public static pb::MessageParser<ConfigTraceServiceRequest> Parser { get { return _parser; } }
+    public static pb::MessageParser<CurrentLibraryConfig> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
@@ -78,22 +77,22 @@ namespace Opencensus.Proto.Agent.Trace.V1 {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public ConfigTraceServiceRequest() {
+    public CurrentLibraryConfig() {
       OnConstruction();
     }
 
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public ConfigTraceServiceRequest(ConfigTraceServiceRequest other) : this() {
+    public CurrentLibraryConfig(CurrentLibraryConfig other) : this() {
       Node = other.node_ != null ? other.Node.Clone() : null;
       Config = other.config_ != null ? other.Config.Clone() : null;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public ConfigTraceServiceRequest Clone() {
-      return new ConfigTraceServiceRequest(this);
+    public CurrentLibraryConfig Clone() {
+      return new CurrentLibraryConfig(this);
     }
 
     /// <summary>Field number for the "node" field.</summary>
@@ -127,11 +126,11 @@ namespace Opencensus.Proto.Agent.Trace.V1 {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override bool Equals(object other) {
-      return Equals(other as ConfigTraceServiceRequest);
+      return Equals(other as CurrentLibraryConfig);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public bool Equals(ConfigTraceServiceRequest other) {
+    public bool Equals(CurrentLibraryConfig other) {
       if (ReferenceEquals(other, null)) {
         return false;
       }
@@ -190,7 +189,7 @@ namespace Opencensus.Proto.Agent.Trace.V1 {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public void MergeFrom(ConfigTraceServiceRequest other) {
+    public void MergeFrom(CurrentLibraryConfig other) {
       if (other == null) {
         return;
       }
@@ -237,11 +236,11 @@ namespace Opencensus.Proto.Agent.Trace.V1 {
 
   }
 
-  public sealed partial class ConfigTraceServiceResponse : pb::IMessage<ConfigTraceServiceResponse> {
-    private static readonly pb::MessageParser<ConfigTraceServiceResponse> _parser = new pb::MessageParser<ConfigTraceServiceResponse>(() => new ConfigTraceServiceResponse());
+  public sealed partial class UpdatedLibraryConfig : pb::IMessage<UpdatedLibraryConfig> {
+    private static readonly pb::MessageParser<UpdatedLibraryConfig> _parser = new pb::MessageParser<UpdatedLibraryConfig>(() => new UpdatedLibraryConfig());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public static pb::MessageParser<ConfigTraceServiceResponse> Parser { get { return _parser; } }
+    public static pb::MessageParser<UpdatedLibraryConfig> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
@@ -254,21 +253,21 @@ namespace Opencensus.Proto.Agent.Trace.V1 {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public ConfigTraceServiceResponse() {
+    public UpdatedLibraryConfig() {
       OnConstruction();
     }
 
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public ConfigTraceServiceResponse(ConfigTraceServiceResponse other) : this() {
+    public UpdatedLibraryConfig(UpdatedLibraryConfig other) : this() {
       Config = other.config_ != null ? other.Config.Clone() : null;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public ConfigTraceServiceResponse Clone() {
-      return new ConfigTraceServiceResponse(this);
+    public UpdatedLibraryConfig Clone() {
+      return new UpdatedLibraryConfig(this);
     }
 
     /// <summary>Field number for the "config" field.</summary>
@@ -287,11 +286,11 @@ namespace Opencensus.Proto.Agent.Trace.V1 {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override bool Equals(object other) {
-      return Equals(other as ConfigTraceServiceResponse);
+      return Equals(other as UpdatedLibraryConfig);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public bool Equals(ConfigTraceServiceResponse other) {
+    public bool Equals(UpdatedLibraryConfig other) {
       if (ReferenceEquals(other, null)) {
         return false;
       }
@@ -341,7 +340,7 @@ namespace Opencensus.Proto.Agent.Trace.V1 {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public void MergeFrom(ConfigTraceServiceResponse other) {
+    public void MergeFrom(UpdatedLibraryConfig other) {
       if (other == null) {
         return;
       }

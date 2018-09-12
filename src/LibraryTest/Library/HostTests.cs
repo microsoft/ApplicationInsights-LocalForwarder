@@ -56,7 +56,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             telemetryBatch.Spans.Add(new Span { Name = new TruncatableString { Value = "Span2" }, Kind = Span.Types.SpanKind.Client });
             telemetryBatch.Node = new Node { ServiceInfo = new ServiceInfo { Name = "tests" } };
 
-            var configRequest = new ConfigTraceServiceRequest
+            var configRequest = new CurrentLibraryConfig
             {
                 Config = new TraceConfig
                 {

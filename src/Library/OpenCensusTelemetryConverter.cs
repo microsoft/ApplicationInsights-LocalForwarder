@@ -47,7 +47,8 @@
         private static readonly string AssemblyVersion = GetAssemblyVersionString();
 
         private const string PeerPropertyKey = "peer";
-        private const string OpenCensusVersionPropertyKey = "oc_version";
+        private const string OpenCensusExporterVersionPropertyKey = "oc_exporter_version";
+        private const string OpenCensusCoreLibraryVersionPropertyKey = "oc_library_version";
         private const string StartTimestampPropertyKey = "process_start_ts";
 
         private static readonly uint[] Lookup32 = CreateLookup32();
@@ -60,7 +61,8 @@
             nodeEvent.Properties[PeerPropertyKey] = peer;
             if (peerInfo.LibraryInfo != null)
             {
-                nodeEvent.Properties[OpenCensusVersionPropertyKey] = peerInfo.LibraryInfo.Version;
+                nodeEvent.Properties[OpenCensusExporterVersionPropertyKey] = peerInfo.LibraryInfo.ExporterVersion;
+                nodeEvent.Properties[OpenCensusCoreLibraryVersionPropertyKey] = peerInfo.LibraryInfo.CoreLibraryVersion;
             }
 
             if (peerInfo.Identifier?.StartTimestamp != null )

@@ -1687,7 +1687,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             var node = new Node
             {
                 Identifier = new ProcessIdentifier { Pid = 1 },
-                LibraryInfo = new LibraryInfo { Version = "1" }
+                LibraryInfo = new LibraryInfo { ExporterVersion = "1" }
             };
 
             // ACT
@@ -1720,7 +1720,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
                 LibraryInfo = new LibraryInfo
                 {
                     Language = lang,
-                    Version = version
+                    CoreLibraryVersion = version
                 },
                 ServiceInfo = new ServiceInfo
                 {
