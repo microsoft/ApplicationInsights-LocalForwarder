@@ -12,7 +12,7 @@ namespace Microsoft.LocalForwarder.LibraryTest
 
         readonly AsyncDuplexStreamingCall<TelemetryBatch, AiResponse> aiStreamingCall;
         readonly AsyncDuplexStreamingCall<ExportTraceServiceRequest, ExportTraceServiceResponse> openCensusExportStreamingCall;
-        readonly AsyncDuplexStreamingCall<ConfigTraceServiceRequest, ConfigTraceServiceResponse> openCensusConfigStreamingCall;
+        readonly AsyncDuplexStreamingCall<CurrentLibraryConfig, UpdatedLibraryConfig> openCensusConfigStreamingCall;
         private int port;
 
         public GrpcWriter(bool aiMode, int port)
@@ -81,7 +81,7 @@ namespace Microsoft.LocalForwarder.LibraryTest
             }
         }
 
-        public async Task Write(ConfigTraceServiceRequest config)
+        public async Task Write(CurrentLibraryConfig config)
         {
             if (this.aiMode)
             {
