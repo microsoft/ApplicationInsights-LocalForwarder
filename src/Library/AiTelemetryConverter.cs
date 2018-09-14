@@ -14,7 +14,8 @@
     static class AiTelemetryConverter
     {
         private static readonly ContextTagKeys TagKeys = new ContextTagKeys();
-
+        private const string DefaultSdkVersion = "lf_unspecified:0.0.0";
+        
         public static EventTelemetry ConvertEventToSdkApi(Telemetry inputTelemetry)
         {
             var result = new EventTelemetry();
@@ -338,6 +339,11 @@
                     // unknown tag, log and ignore
                     Diagnostics.LogTrace(FormattableString.Invariant($"Unknown tag. Ignoring. {tag.Key}"));
                 }
+            }
+
+            if (string.IsNullOrEmpty(telemetry.Context.GetInternalContext().SdkVersion))
+            {
+                telemetry.Context.GetInternalContext().SdkVersion = DefaultSdkVersion;
             }
         }
 

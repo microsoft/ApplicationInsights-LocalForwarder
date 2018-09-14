@@ -1,8 +1,7 @@
-using Microsoft.ApplicationInsights.Extensibility.Implementation;
-
 namespace Microsoft.LocalForwarder.LibraryTest.Library
 {
     using Microsoft.ApplicationInsights.DataContracts;
+    using Microsoft.ApplicationInsights.Extensibility.Implementation;
     using Microsoft.LocalForwarder.Library;
     using Microsoft.LocalForwarder.Library.Inputs.Contracts;
     using System;
@@ -97,6 +96,130 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
 
             // sampling fields
             Assert.AreEqual(25, (result as ISupportSampling).SamplingPercentage);
+        }
+
+        [TestMethod]
+        public void AiTelemetryConverterTests_ConvertsTelemetryWithoutSdkVersion()
+        {
+            // ARRANGE
+            var timestamp = DateTimeOffset.UtcNow;
+
+            Telemetry trace = new Telemetry
+            {
+                Ver = 5,
+                DataTypeName = "Trace",
+                DateTime = timestamp.ToString("o"),
+                SequenceNumber = "50",
+                InstrumentationKey = "ikey",
+                Message = new Message { Ver = 6, Message_ = "Message1", SeverityLevel = LocalForwarder.Library.Inputs.Contracts.SeverityLevel.Warning }
+            };
+
+            Telemetry evnt = new Telemetry
+            {
+                Ver = 5,
+                DataTypeName = "Event",
+                DateTime = timestamp.ToString("o"),
+                SequenceNumber = "50",
+                InstrumentationKey = "ikey",
+                Event = new Event { Ver = 6, Name = "Event1" }
+            };
+
+            Telemetry request = new Telemetry
+            {
+                Ver = 5,
+                DataTypeName = "Request",
+                DateTime = timestamp.ToString("o"),
+                SequenceNumber = "50",
+                InstrumentationKey = "ikey",
+                Request = new Request { Ver = 6, Id = "Req1", Name = "Request1", Duration = new Google.Protobuf.WellKnownTypes.Duration() { Seconds = 123 }, Success = new Google.Protobuf.WellKnownTypes.BoolValue() { Value = true }, Source = "Source", Url = "http://microsoft.com/" }
+            };
+
+            Telemetry dependency = new Telemetry
+            {
+                Ver = 5,
+                DataTypeName = "Dependency",
+                DateTime = timestamp.ToString("o"),
+                SequenceNumber = "50",
+                InstrumentationKey = "ikey",
+                Dependency = new Dependency { Ver = 6, Name = "Dependency1", Id = "Dep1", ResultCode = "ResultCode1", Duration = new Google.Protobuf.WellKnownTypes.Duration() { Seconds = 123 }, Success = new Google.Protobuf.WellKnownTypes.BoolValue() { Value = true }, Data = "Data", Type = "Type", Target = "Target" }
+            };
+
+            Telemetry exception = new Telemetry
+            {
+                Ver = 5,
+                DataTypeName = "Exception",
+                DateTime = timestamp.ToString("o"),
+                SequenceNumber = "50",
+                InstrumentationKey = "ikey",
+                Exception = new LocalForwarder.Library.Inputs.Contracts.Exception
+                {
+                    Ver = 6,
+                    SeverityLevel = LocalForwarder.Library.Inputs.Contracts.SeverityLevel.Warning,
+                    ProblemId = "Problem1",
+                }
+            };
+
+            Telemetry metric = new Telemetry
+            {
+                Ver = 5,
+                DataTypeName = "Metric",
+                DateTime = timestamp.ToString("o"),
+                SequenceNumber = "50",
+                InstrumentationKey = "ikey",
+                Metric = new Metric { Ver = 6 }
+            };
+
+            metric.Metric.Metrics.Add(new DataPoint
+            {
+                Ns = "ns1",
+                Name = "Metric1",
+                Kind = DataPointType.Aggregation,
+                Value = 11,
+                Count = new Google.Protobuf.WellKnownTypes.Int32Value { Value = 2 },
+                Min = new Google.Protobuf.WellKnownTypes.DoubleValue { Value = 10 },
+                Max = new Google.Protobuf.WellKnownTypes.DoubleValue { Value = 12 },
+                StdDev = new Google.Protobuf.WellKnownTypes.DoubleValue { Value = 0.2 }
+            });
+
+            Telemetry avail = new Telemetry
+            {
+                Ver = 5,
+                DataTypeName = "Event",
+                DateTime = timestamp.ToString("o"),
+                SequenceNumber = "50",
+                InstrumentationKey = "ikey",
+                Availability = new Availability { Ver = 6, Id = "Avail1", Name = "Availability1", Duration = new Google.Protobuf.WellKnownTypes.Duration() { Seconds = 123 }, Success = true, RunLocation = "RunLocation", Message = "Message" }
+            };
+
+            Telemetry pageView = new Telemetry
+            {
+                Ver = 5,
+                DataTypeName = "PageView",
+                DateTime = timestamp.ToString("o"),
+                SequenceNumber = "50",
+                InstrumentationKey = "ikey",
+                PageView = new PageView { Url = "http://microsoft.com/", Duration = new Google.Protobuf.WellKnownTypes.Duration { Seconds = 123 }, Id = "PageView1", ReferrerUri = "http://none.com", Event = new Event() { Ver = 6, Name = "Event1" } }
+            };
+
+            // ACT
+            var traceResult = AiTelemetryConverter.ConvertTraceToSdkApi(trace);
+            var evntResult = AiTelemetryConverter.ConvertEventToSdkApi(evnt);
+            var requestResult = AiTelemetryConverter.ConvertRequestToSdkApi(request);
+            var dependencyResult = AiTelemetryConverter.ConvertDependencyToSdkApi(dependency);
+            var exceptionResult = AiTelemetryConverter.ConvertExceptionToSdkApi(exception);
+            var metricResult = AiTelemetryConverter.ConvertMetricToSdkApi(metric);
+            var availResult = AiTelemetryConverter.ConvertAvailabilityToSdkApi(avail);
+            var pageViewResult = AiTelemetryConverter.ConvertPageViewToSdkApi(pageView);
+
+            // ASSERT
+            Assert.AreEqual("lf_unspecified:0.0.0", traceResult.Context.GetInternalContext().SdkVersion);
+            Assert.AreEqual("lf_unspecified:0.0.0", evntResult.Context.GetInternalContext().SdkVersion);
+            Assert.AreEqual("lf_unspecified:0.0.0", requestResult.Context.GetInternalContext().SdkVersion);
+            Assert.AreEqual("lf_unspecified:0.0.0", dependencyResult.Context.GetInternalContext().SdkVersion);
+            Assert.AreEqual("lf_unspecified:0.0.0", exceptionResult.Context.GetInternalContext().SdkVersion);
+            Assert.AreEqual("lf_unspecified:0.0.0", metricResult.Context.GetInternalContext().SdkVersion);
+            Assert.AreEqual("lf_unspecified:0.0.0", availResult.Context.GetInternalContext().SdkVersion);
+            Assert.AreEqual("lf_unspecified:0.0.0", pageViewResult.Context.GetInternalContext().SdkVersion);
         }
 
         [TestMethod]

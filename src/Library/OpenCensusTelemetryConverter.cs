@@ -608,7 +608,7 @@
             }
 
             telemetry.Context.GetInternalContext().SdkVersion =
-                string.Concat("lf_", libLanguage, "_oc:", ocLibVersion);
+                string.Concat("lf_", libLanguage, "-oc:", ocLibVersion);
         }
 
         internal static string GetAssemblyVersionString()
