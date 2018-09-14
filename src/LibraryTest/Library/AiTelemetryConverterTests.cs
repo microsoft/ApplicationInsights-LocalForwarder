@@ -1,3 +1,5 @@
+using Microsoft.ApplicationInsights.Extensibility.Implementation;
+
 namespace Microsoft.LocalForwarder.LibraryTest.Library
 {
     using Microsoft.ApplicationInsights.DataContracts;
@@ -29,6 +31,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             };
 
             telemetry.Tags.Add(new ContextTagKeys().SessionId, "sessionId");
+            telemetry.Tags.Add("ai.internal.sdkVersion", "java:2.1.2");
 
             telemetry.Event.Properties.Add("prop1", "propValue1");
             telemetry.Event.Measurements.Add("measurement1", 105);
@@ -48,6 +51,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             Assert.AreEqual(timestamp, result.Timestamp);
             Assert.AreEqual("ikey", result.Context.InstrumentationKey);
             Assert.AreEqual("sessionId", result.Context.Session.Id);
+            Assert.AreEqual("lf_java:2.1.2", result.Context.GetInternalContext().SdkVersion);
 
             // sampling fields
             Assert.AreEqual(25, (result as ISupportSampling).SamplingPercentage);
@@ -71,6 +75,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             };
 
             telemetry.Tags.Add(new ContextTagKeys().SessionId, "sessionId");
+            telemetry.Tags.Add("ai.internal.sdkVersion", "java:2.1.2");
 
             telemetry.Message.Properties.Add("prop1", "propValue1");
             
@@ -88,6 +93,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             Assert.AreEqual(timestamp, result.Timestamp);
             Assert.AreEqual("ikey", result.Context.InstrumentationKey);
             Assert.AreEqual("sessionId", result.Context.Session.Id);
+            Assert.AreEqual("lf_java:2.1.2", result.Context.GetInternalContext().SdkVersion);
 
             // sampling fields
             Assert.AreEqual(25, (result as ISupportSampling).SamplingPercentage);
@@ -111,6 +117,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             };
 
             telemetry.Tags.Add(new ContextTagKeys().SessionId, "sessionId");
+            telemetry.Tags.Add("ai.internal.sdkVersion", "java:2.1.2");
 
             telemetry.Metric.Metrics.Add(new DataPoint() { Ns = "ns1", Name = "Metric1", Kind = DataPointType.Measurement, Value = 11, Count = new Google.Protobuf.WellKnownTypes.Int32Value() { Value = 1 } });
             
@@ -137,6 +144,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             Assert.AreEqual(timestamp, result.Timestamp);
             Assert.AreEqual("ikey", result.Context.InstrumentationKey);
             Assert.AreEqual("sessionId", result.Context.Session.Id);
+            Assert.AreEqual("lf_java:2.1.2", result.Context.GetInternalContext().SdkVersion);
         }
 
         [TestMethod]
@@ -157,6 +165,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             };
 
             telemetry.Tags.Add(new ContextTagKeys().SessionId, "sessionId");
+            telemetry.Tags.Add("ai.internal.sdkVersion", "java:2.1.2");
 
             telemetry.Metric.Metrics.Add(new DataPoint()
             {
@@ -193,6 +202,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             Assert.AreEqual(timestamp, result.Timestamp);
             Assert.AreEqual("ikey", result.Context.InstrumentationKey);
             Assert.AreEqual("sessionId", result.Context.Session.Id);
+            Assert.AreEqual("lf_java:2.1.2", result.Context.GetInternalContext().SdkVersion);
         }
 
         [TestMethod]
@@ -218,6 +228,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             };
 
             telemetry.Tags.Add(new ContextTagKeys().SessionId, "sessionId");
+            telemetry.Tags.Add("ai.internal.sdkVersion", "java:2.1.2");
 
             telemetry.Exception.Exceptions.Add(new ExceptionDetails() { Id = 12, OuterId = 13, TypeName = "TerribleException1", Message = "Oh wow look what happened 1", HasFullStack = new Google.Protobuf.WellKnownTypes.BoolValue() { Value = true }, Stack = "Terrible stack 1" });
             telemetry.Exception.Exceptions[0].ParsedStack.Add(new LocalForwarder.Library.Inputs.Contracts.StackFrame() { Level = 4, Method = "Method1", Assembly = "Assm1", FileName = "File1", Line = 145 });
@@ -308,6 +319,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             Assert.AreEqual(timestamp, result.Timestamp);
             Assert.AreEqual("ikey", result.Context.InstrumentationKey);
             Assert.AreEqual("sessionId", result.Context.Session.Id);
+            Assert.AreEqual("lf_java:2.1.2", result.Context.GetInternalContext().SdkVersion);
 
             // sampling fields
             Assert.AreEqual(25, (result as ISupportSampling).SamplingPercentage);
@@ -331,6 +343,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             };
 
             telemetry.Tags.Add(new ContextTagKeys().SessionId, "sessionId");
+            telemetry.Tags.Add("ai.internal.sdkVersion", "java:2.1.2");
 
             telemetry.Dependency.Properties.Add("prop1", "propValue1");
             telemetry.Dependency.Measurements.Add("measurement1", 105);
@@ -358,6 +371,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             Assert.AreEqual(timestamp, result.Timestamp);
             Assert.AreEqual("ikey", result.Context.InstrumentationKey);
             Assert.AreEqual("sessionId", result.Context.Session.Id);
+            Assert.AreEqual("lf_java:2.1.2", result.Context.GetInternalContext().SdkVersion);
 
             // sampling fields
             Assert.AreEqual(25, (result as ISupportSampling).SamplingPercentage);
@@ -381,6 +395,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             };
 
             telemetry.Tags.Add(new ContextTagKeys().SessionId, "sessionId");
+            telemetry.Tags.Add("ai.internal.sdkVersion", "java:2.1.2");
 
             telemetry.Availability.Properties.Add("prop1", "propValue1");
             telemetry.Availability.Measurements.Add("measurement1", 105);
@@ -406,6 +421,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             Assert.AreEqual(timestamp, result.Timestamp);
             Assert.AreEqual("ikey", result.Context.InstrumentationKey);
             Assert.AreEqual("sessionId", result.Context.Session.Id);
+            Assert.AreEqual("lf_java:2.1.2", result.Context.GetInternalContext().SdkVersion);
         }
 
         [TestMethod]
@@ -426,6 +442,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             };
 
             telemetry.Tags.Add(new ContextTagKeys().SessionId, "sessionId");
+            telemetry.Tags.Add("ai.internal.sdkVersion", "java:2.1.2");
 
             telemetry.PageView.Event.Properties.Add("prop1", "propValue1");
             telemetry.PageView.Event.Measurements.Add("measurement1", 105);
@@ -449,6 +466,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             Assert.AreEqual(timestamp, result.Timestamp);
             Assert.AreEqual("ikey", result.Context.InstrumentationKey);
             Assert.AreEqual("sessionId", result.Context.Session.Id);
+            Assert.AreEqual("lf_java:2.1.2", result.Context.GetInternalContext().SdkVersion);
 
             // sampling fields
             Assert.AreEqual(25, (result as ISupportSampling).SamplingPercentage);
@@ -472,6 +490,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             };
 
             telemetry.Tags.Add(new ContextTagKeys().SessionId, "sessionId");
+            telemetry.Tags.Add("ai.internal.sdkVersion", "java:2.1.2");
 
             telemetry.Request.Properties.Add("prop1", "propValue1");
             telemetry.Request.Measurements.Add("measurement1", 105);
@@ -497,6 +516,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             Assert.AreEqual(timestamp, result.Timestamp);
             Assert.AreEqual("ikey", result.Context.InstrumentationKey);
             Assert.AreEqual("sessionId", result.Context.Session.Id);
+            Assert.AreEqual("lf_java:2.1.2", result.Context.GetInternalContext().SdkVersion);
 
             // sampling fields
             Assert.AreEqual(25, (result as ISupportSampling).SamplingPercentage);

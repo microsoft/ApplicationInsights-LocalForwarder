@@ -284,7 +284,7 @@
                 }
                 else if (string.Equals(tag.Key, AiTelemetryConverter.TagKeys.InternalSdkVersion, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    telemetry.Context.GetInternalContext().SdkVersion = tag.Value;
+                    telemetry.Context.GetInternalContext().SdkVersion = string.Concat("lf_", tag.Value);
                 }
                 else if (string.Equals(tag.Key, AiTelemetryConverter.TagKeys.LocationIp, StringComparison.InvariantCultureIgnoreCase))
                 {

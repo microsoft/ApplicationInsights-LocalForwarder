@@ -75,7 +75,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             Assert.IsFalse(request.Success.HasValue);
             Assert.IsTrue(string.IsNullOrEmpty(request.ResponseCode));
 
-            Assert.AreEqual($"oclf0:{GetAssemblyVersionString()}", request.Context.GetInternalContext().SdkVersion);
+            Assert.AreEqual("lf_unspecified_oc:0.0.0", request.Context.GetInternalContext().SdkVersion);
         }
 
         [TestMethod]
@@ -100,7 +100,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             Assert.AreEqual(2, request.Properties.Count);
             Assert.AreEqual("v1", request.Properties["k1"]);
             Assert.AreEqual("v2", request.Properties["k2"]);
-            Assert.AreEqual($"oclf0:{GetAssemblyVersionString()}", request.Context.GetInternalContext().SdkVersion);
+            Assert.AreEqual("lf_unspecified_oc:0.0.0", request.Context.GetInternalContext().SdkVersion);
         }
 
         [TestMethod]
@@ -230,7 +230,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             Assert.IsTrue(string.IsNullOrEmpty(dependency.ResultCode));
             Assert.IsFalse(dependency.Success.HasValue);
 
-            Assert.AreEqual($"oclf0:{GetAssemblyVersionString()}", dependency.Context.GetInternalContext().SdkVersion);
+            Assert.AreEqual("lf_unspecified_oc:0.0.0", dependency.Context.GetInternalContext().SdkVersion);
 
             Assert.IsTrue(string.IsNullOrEmpty(dependency.Type));
         }
@@ -257,7 +257,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             Assert.AreEqual(2, dependency.Properties.Count);
             Assert.AreEqual("v1", dependency.Properties["k1"]);
             Assert.AreEqual("v2", dependency.Properties["k2"]);
-            Assert.AreEqual($"oclf0:{GetAssemblyVersionString()}", dependency.Context.GetInternalContext().SdkVersion);
+            Assert.AreEqual("lf_unspecified_oc:0.0.0", dependency.Context.GetInternalContext().SdkVersion);
         }
 
         [TestMethod]
@@ -1709,11 +1709,11 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             var evnt = this.sentItems.OfType<EventTelemetry>().Single();
             Assert.AreEqual("ikey1", evnt.Context.InstrumentationKey);
             Assert.AreEqual($"{eventName}.node", evnt.Name);
-            Assert.IsTrue(evnt.Context.GetInternalContext().SdkVersion.StartsWith($"oclf{(int)lang}"));
+            Assert.AreEqual($"lf_{lang.ToString().ToLower()}_oc:{version}", evnt.Context.GetInternalContext().SdkVersion);
             Assert.AreEqual(serviceName, evnt.Context.Cloud.RoleName);
             Assert.AreEqual($"{hostName}.{pid}", evnt.Context.Cloud.RoleInstance);
 
-            Assert.AreEqual(version, evnt.Properties["oc_library_version"]);
+            Assert.AreEqual(GetAssemblyVersionString(), evnt.Properties["lf_version"]);
             Assert.AreEqual(start.ToString("o"), evnt.Properties["process_start_ts"]);
             Assert.AreEqual(peer, evnt.Properties["peer"]);
 
@@ -1736,7 +1736,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             var evnt = this.sentItems.OfType<EventTelemetry>().Single();
             Assert.AreEqual("ikey1", evnt.Context.InstrumentationKey);
             Assert.AreEqual($"{eventName}.node", evnt.Name);
-            Assert.IsTrue(evnt.Context.GetInternalContext().SdkVersion.StartsWith("oclf0"));
+            Assert.AreEqual("lf_unspecified_oc:0.0.0", evnt.Context.GetInternalContext().SdkVersion);
             Assert.IsNull(evnt.Context.Cloud.RoleName);
             Assert.AreEqual(peer, evnt.Properties["peer"]);
             Assert.AreEqual(1, evnt.Properties.Count);
@@ -1762,11 +1762,11 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             var evnt = this.sentItems.OfType<EventTelemetry>().Single();
             Assert.AreEqual("ikey1", evnt.Context.InstrumentationKey);
             Assert.AreEqual($"{eventName}.node", evnt.Name);
-            Assert.IsTrue(evnt.Context.GetInternalContext().SdkVersion.StartsWith("oclf0"));
+            Assert.AreEqual("lf_unspecified_oc:2", evnt.Context.GetInternalContext().SdkVersion);
             Assert.IsNull(evnt.Context.Cloud.RoleName);
             Assert.AreEqual(peer, evnt.Properties["peer"]);
             Assert.AreEqual("1", evnt.Properties["oc_exporter_version"]);
-            Assert.AreEqual("2", evnt.Properties["oc_library_version"]);
+            Assert.AreEqual(GetAssemblyVersionString(), evnt.Properties["lf_version"]);
             Assert.AreEqual(3, evnt.Properties.Count);
 
             Assert.AreEqual(".1", evnt.Context.Cloud.RoleInstance);
