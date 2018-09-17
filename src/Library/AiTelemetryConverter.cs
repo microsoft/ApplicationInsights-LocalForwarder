@@ -14,7 +14,8 @@
     static class AiTelemetryConverter
     {
         private static readonly ContextTagKeys TagKeys = new ContextTagKeys();
-
+        private const string DefaultSdkVersion = "lf_unspecified:0.0.0";
+        
         public static EventTelemetry ConvertEventToSdkApi(Telemetry inputTelemetry)
         {
             var result = new EventTelemetry();
@@ -284,7 +285,7 @@
                 }
                 else if (string.Equals(tag.Key, AiTelemetryConverter.TagKeys.InternalSdkVersion, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    telemetry.Context.GetInternalContext().SdkVersion = tag.Value;
+                    telemetry.Context.GetInternalContext().SdkVersion = string.Concat("lf_", tag.Value);
                 }
                 else if (string.Equals(tag.Key, AiTelemetryConverter.TagKeys.LocationIp, StringComparison.InvariantCultureIgnoreCase))
                 {
@@ -338,6 +339,11 @@
                     // unknown tag, log and ignore
                     Diagnostics.LogTrace(FormattableString.Invariant($"Unknown tag. Ignoring. {tag.Key}"));
                 }
+            }
+
+            if (string.IsNullOrEmpty(telemetry.Context.GetInternalContext().SdkVersion))
+            {
+                telemetry.Context.GetInternalContext().SdkVersion = DefaultSdkVersion;
             }
         }
 
