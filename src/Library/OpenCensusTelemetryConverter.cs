@@ -43,26 +43,28 @@
         private const string LinkSpanIdPropertyName = "spanId";
         private const string LinkTraceIdPropertyName = "traceId";
         private const string LinkTypePropertyName = "type";
-        private const string SdkVersionPrefix = "oclf"; 
         private static readonly string AssemblyVersion = GetAssemblyVersionString();
 
         private const string PeerPropertyKey = "peer";
         private const string OpenCensusExporterVersionPropertyKey = "oc_exporter_version";
-        private const string OpenCensusCoreLibraryVersionPropertyKey = "oc_library_version";
+        private const string LocalForwarderVersion = "lf_version";
         private const string StartTimestampPropertyKey = "process_start_ts";
 
         private static readonly uint[] Lookup32 = CreateLookup32();
 
+        private static readonly Dictionary<LibraryInfo.Types.Language, string> FriendlyLanguageNames =
+            CacheLanguageNames();
+
         public static void TrackNodeEvent(this TelemetryClient telemetryClient, Node peerInfo, string eventName, string peer, string ikey)
         {
-            EventTelemetry nodeEvent = new EventTelemetry($"{eventName}.node");
+            EventTelemetry nodeEvent = new EventTelemetry(string.Concat(eventName, ".node"));
             SetPeerInfo(nodeEvent, peerInfo);
 
             nodeEvent.Properties[PeerPropertyKey] = peer;
             if (peerInfo.LibraryInfo != null)
             {
                 nodeEvent.Properties[OpenCensusExporterVersionPropertyKey] = peerInfo.LibraryInfo.ExporterVersion;
-                nodeEvent.Properties[OpenCensusCoreLibraryVersionPropertyKey] = peerInfo.LibraryInfo.CoreLibraryVersion;
+                nodeEvent.Properties[LocalForwarderVersion] = AssemblyVersion;
             }
 
             if (peerInfo.Identifier?.StartTimestamp != null )
@@ -575,7 +577,7 @@
         private static void SetPeerInfo(ITelemetry telemetry, Node peerInfo)
         {
             string libLanguage = null;
-
+            string ocLibVersion = null;
             if (peerInfo != null)
             {
                 if (peerInfo.ServiceInfo != null)
@@ -590,12 +592,23 @@
 
                 if (peerInfo.LibraryInfo != null)
                 {
-                    libLanguage = ((int) peerInfo.LibraryInfo.Language).ToString();
+                    libLanguage = FriendlyLanguageNames[peerInfo.LibraryInfo.Language];
+                    ocLibVersion = peerInfo.LibraryInfo.CoreLibraryVersion;
                 }
             }
 
+            if (string.IsNullOrEmpty(libLanguage))
+            {
+                libLanguage = FriendlyLanguageNames[LibraryInfo.Types.Language.Unspecified];
+            }
+
+            if (string.IsNullOrEmpty(ocLibVersion))
+            {
+                ocLibVersion = "0.0.0";
+            }
+
             telemetry.Context.GetInternalContext().SdkVersion =
-                string.Concat(SdkVersionPrefix, libLanguage ?? "0", ':', AssemblyVersion);
+                string.Concat("lf_", libLanguage, "-oc:", ocLibVersion);
         }
 
         internal static string GetAssemblyVersionString()
@@ -628,6 +641,12 @@
                     }
                 }
             }
+        }
+
+        private static Dictionary<LibraryInfo.Types.Language, string> CacheLanguageNames()
+        {
+            var values = (LibraryInfo.Types.Language[])Enum.GetValues(typeof(LibraryInfo.Types.Language));
+            return values.ToDictionary(v => v, v => v.ToString().ToLower());
         }
     }
 }

@@ -176,7 +176,12 @@
 
                     try
                     {
-                        await responseStream.WriteAsync(this.onConfigReceived(configRequest, context)).ConfigureAwait(false);
+                        var configResponse = this.onConfigReceived(configRequest, context);
+                        if (configRequest.Config == null || !configRequest.Config.Equals(configResponse.Config))
+                        {
+                            await responseStream.WriteAsync(configResponse)
+                                .ConfigureAwait(false);
+                        }
 
                         Interlocked.Increment(ref this.stats.ConfigsReceived);
                     }
