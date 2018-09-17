@@ -50,7 +50,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             Assert.AreEqual("sessionId", result.Context.Session.Id);
 
             // sampling fields
-            Assert.AreEqual(25, (result as ISupportSampling).SamplingPercentage);
+            Assert.IsNull((result as ISupportSampling).SamplingPercentage);
         }
 
         [TestMethod]
@@ -90,7 +90,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             Assert.AreEqual("sessionId", result.Context.Session.Id);
 
             // sampling fields
-            Assert.AreEqual(25, (result as ISupportSampling).SamplingPercentage);
+            Assert.IsNull((result as ISupportSampling).SamplingPercentage);
         }
 
         [TestMethod]
@@ -310,7 +310,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             Assert.AreEqual("sessionId", result.Context.Session.Id);
 
             // sampling fields
-            Assert.AreEqual(25, (result as ISupportSampling).SamplingPercentage);
+            Assert.IsNull((result as ISupportSampling).SamplingPercentage);
         }
 
         [TestMethod]
@@ -360,7 +360,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             Assert.AreEqual("sessionId", result.Context.Session.Id);
 
             // sampling fields
-            Assert.AreEqual(25, (result as ISupportSampling).SamplingPercentage);
+            Assert.IsNull((result as ISupportSampling).SamplingPercentage);
         }
 
         [TestMethod]
@@ -451,7 +451,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             Assert.AreEqual("sessionId", result.Context.Session.Id);
 
             // sampling fields
-            Assert.AreEqual(25, (result as ISupportSampling).SamplingPercentage);
+            Assert.IsNull((result as ISupportSampling).SamplingPercentage);
         }
 
         [TestMethod]
@@ -499,7 +499,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             Assert.AreEqual("sessionId", result.Context.Session.Id);
 
             // sampling fields
-            Assert.AreEqual(25, (result as ISupportSampling).SamplingPercentage);
+            Assert.IsNull((result as ISupportSampling).SamplingPercentage);
         }
 
         [TestMethod]

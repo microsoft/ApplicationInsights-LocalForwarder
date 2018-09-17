@@ -42,7 +42,6 @@ namespace Microsoft.LocalForwarder.LibraryTest
                 throw new InvalidOperationException(
                     FormattableString.Invariant($"Error initializing the gRpc test client. {e.ToString()}"));
             }
-
         }
 
         public async Task Write(TelemetryBatch batch)
