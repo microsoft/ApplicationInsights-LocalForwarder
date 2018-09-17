@@ -43,6 +43,12 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
   </OpenCensusToApplicationInsights>
   <ApplicationInsights>
     <LiveMetricsStreamInstrumentationKey>[SPECIFY LIVE METRICS STREAM INSTRUMENTATION KEY HERE]</LiveMetricsStreamInstrumentationKey>
+    <LiveMetricsStreamAuthenticationApiKey></LiveMetricsStreamAuthenticationApiKey>
+    <AdaptiveSampling Enabled=""true"">
+      <MaxEventsPerSecond>%APPINSIGHTS_ADAPTIVESAMPLINGEVENTSLIMIT%</MaxEventsPerSecond>
+      <!--Telemetry items other than events are counted together-->
+      <MaxOtherItemsPerSecond>%APPINSIGHTS_ADAPTIVESAMPLINGNONEVENTSLIMIT%</MaxOtherItemsPerSecond>
+    </AdaptiveSampling>
   </ApplicationInsights>
 </LocalForwarderConfiguration>
 ";
@@ -92,6 +98,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
   </OpenCensusToApplicationInsights>
   <ApplicationInsights>
     <LiveMetricsStreamInstrumentationKey>[SPECIFY LIVE METRICS STREAM INSTRUMENTATION KEY HERE]</LiveMetricsStreamInstrumentationKey>
+    <LiveMetricsStreamAuthenticationApiKey></LiveMetricsStreamAuthenticationApiKey>
   </ApplicationInsights>
 </LocalForwarderConfiguration>
 ";
@@ -126,6 +133,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
   </OpenCensusToApplicationInsights>
   <ApplicationInsights>
     <LiveMetricsStreamInstrumentationKey>[SPECIFY LIVE METRICS STREAM INSTRUMENTATION KEY HERE]</LiveMetricsStreamInstrumentationKey>
+    <LiveMetricsStreamAuthenticationApiKey></LiveMetricsStreamAuthenticationApiKey>
   </ApplicationInsights>
 </LocalForwarderConfiguration>
 ";
@@ -161,6 +169,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
   </OpenCensusToApplicationInsights>
   <ApplicationInsights>
     <LiveMetricsStreamInstrumentationKey>[SPECIFY LIVE METRICS STREAM INSTRUMENTATION KEY HERE]</LiveMetricsStreamInstrumentationKey>
+    <LiveMetricsStreamAuthenticationApiKey></LiveMetricsStreamAuthenticationApiKey>
   </ApplicationInsights>
 </LocalForwarderConfiguration>
 ";
@@ -196,6 +205,12 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
   </OpenCensusToApplicationInsights>
   <ApplicationInsights>
     <LiveMetricsStreamInstrumentationKey>[SPECIFY LIVE METRICS STREAM INSTRUMENTATION KEY HERE]</LiveMetricsStreamInstrumentationKey>
+    <LiveMetricsStreamAuthenticationApiKey></LiveMetricsStreamAuthenticationApiKey>
+    <AdaptiveSampling Enabled=""true"">
+      <MaxEventsPerSecond>%APPINSIGHTS_ADAPTIVESAMPLINGEVENTSLIMIT%</MaxEventsPerSecond>
+      <!--Telemetry items other than events are counted together-->
+      <MaxOtherItemsPerSecond>%APPINSIGHTS_ADAPTIVESAMPLINGNONEVENTSLIMIT%</MaxOtherItemsPerSecond>
+    </AdaptiveSampling>
   </ApplicationInsights>
 </LocalForwarderConfiguration>
 ";
@@ -243,6 +258,12 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
   </OpenCensusToApplicationInsights>
   <ApplicationInsights>
     <LiveMetricsStreamInstrumentationKey>[SPECIFY LIVE METRICS STREAM INSTRUMENTATION KEY HERE]</LiveMetricsStreamInstrumentationKey>
+    <LiveMetricsStreamAuthenticationApiKey></LiveMetricsStreamAuthenticationApiKey>
+    <AdaptiveSampling Enabled=""true"">
+      <MaxEventsPerSecond>%APPINSIGHTS_ADAPTIVESAMPLINGEVENTSLIMIT%</MaxEventsPerSecond>
+      <!--Telemetry items other than events are counted together-->
+      <MaxOtherItemsPerSecond>%APPINSIGHTS_ADAPTIVESAMPLINGNONEVENTSLIMIT%</MaxOtherItemsPerSecond>
+    </AdaptiveSampling>
   </ApplicationInsights>
 </LocalForwarderConfiguration>
 ";
@@ -291,6 +312,12 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
   </OpenCensusToApplicationInsights>
   <ApplicationInsights>
     <LiveMetricsStreamInstrumentationKey>[SPECIFY LIVE METRICS STREAM INSTRUMENTATION KEY HERE]</LiveMetricsStreamInstrumentationKey>
+    <LiveMetricsStreamAuthenticationApiKey></LiveMetricsStreamAuthenticationApiKey>
+    <AdaptiveSampling Enabled=""true"">
+      <MaxEventsPerSecond>%APPINSIGHTS_ADAPTIVESAMPLINGEVENTSLIMIT%</MaxEventsPerSecond>
+      <!--Telemetry items other than events are counted together-->
+      <MaxOtherItemsPerSecond>%APPINSIGHTS_ADAPTIVESAMPLINGNONEVENTSLIMIT%</MaxOtherItemsPerSecond>
+    </AdaptiveSampling>
   </ApplicationInsights>
 </LocalForwarderConfiguration>
 ";
@@ -337,6 +364,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
   </OpenCensusToApplicationInsights>
   <ApplicationInsights>
     <LiveMetricsStreamInstrumentationKey>[SPECIFY LIVE METRICS STREAM INSTRUMENTATION KEY HERE]</LiveMetricsStreamInstrumentationKey>
+    <LiveMetricsStreamAuthenticationApiKey></LiveMetricsStreamAuthenticationApiKey>
   </ApplicationInsights>
 </LocalForwarderConfiguration>
 ";
@@ -371,6 +399,12 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
   </OpenCensusToApplicationInsights>
   <ApplicationInsights>
     <LiveMetricsStreamInstrumentationKey>[SPECIFY LIVE METRICS STREAM INSTRUMENTATION KEY HERE]</LiveMetricsStreamInstrumentationKey>
+    <LiveMetricsStreamAuthenticationApiKey></LiveMetricsStreamAuthenticationApiKey>
+    <AdaptiveSampling Enabled=""true"">
+      <MaxEventsPerSecond>%APPINSIGHTS_ADAPTIVESAMPLINGEVENTSLIMIT%</MaxEventsPerSecond>
+      <!--Telemetry items other than events are counted together-->
+      <MaxOtherItemsPerSecond>%APPINSIGHTS_ADAPTIVESAMPLINGNONEVENTSLIMIT%</MaxOtherItemsPerSecond>
+    </AdaptiveSampling>
   </ApplicationInsights>
 </LocalForwarderConfiguration>
 ";
@@ -415,6 +449,12 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
   </OpenCensusToApplicationInsights>
   <ApplicationInsights>
     <LiveMetricsStreamInstrumentationKey>[SPECIFY LIVE METRICS STREAM INSTRUMENTATION KEY HERE]</LiveMetricsStreamInstrumentationKey>
+    <LiveMetricsStreamAuthenticationApiKey></LiveMetricsStreamAuthenticationApiKey>
+    <AdaptiveSampling Enabled=""true"">
+      <MaxEventsPerSecond>%APPINSIGHTS_ADAPTIVESAMPLINGEVENTSLIMIT%</MaxEventsPerSecond>
+      <!--Telemetry items other than events are counted together-->
+      <MaxOtherItemsPerSecond>%APPINSIGHTS_ADAPTIVESAMPLINGNONEVENTSLIMIT%</MaxOtherItemsPerSecond>
+    </AdaptiveSampling>
   </ApplicationInsights>
 </LocalForwarderConfiguration>
 ";
@@ -468,6 +508,12 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
   </OpenCensusToApplicationInsights>
   <ApplicationInsights>
     <LiveMetricsStreamInstrumentationKey>[SPECIFY LIVE METRICS STREAM INSTRUMENTATION KEY HERE]</LiveMetricsStreamInstrumentationKey>
+    <LiveMetricsStreamAuthenticationApiKey></LiveMetricsStreamAuthenticationApiKey>
+    <AdaptiveSampling Enabled=""true"">
+      <MaxEventsPerSecond>%APPINSIGHTS_ADAPTIVESAMPLINGEVENTSLIMIT%</MaxEventsPerSecond>
+      <!--Telemetry items other than events are counted together-->
+      <MaxOtherItemsPerSecond>%APPINSIGHTS_ADAPTIVESAMPLINGNONEVENTSLIMIT%</MaxOtherItemsPerSecond>
+    </AdaptiveSampling>
   </ApplicationInsights>
 </LocalForwarderConfiguration>
 ";
@@ -521,6 +567,12 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
   </OpenCensusToApplicationInsights>
   <ApplicationInsights>
     <LiveMetricsStreamInstrumentationKey>[SPECIFY LIVE METRICS STREAM INSTRUMENTATION KEY HERE]</LiveMetricsStreamInstrumentationKey>
+    <LiveMetricsStreamAuthenticationApiKey></LiveMetricsStreamAuthenticationApiKey>
+    <AdaptiveSampling Enabled=""true"">
+      <MaxEventsPerSecond>%APPINSIGHTS_ADAPTIVESAMPLINGEVENTSLIMIT%</MaxEventsPerSecond>
+      <!--Telemetry items other than events are counted together-->
+      <MaxOtherItemsPerSecond>%APPINSIGHTS_ADAPTIVESAMPLINGNONEVENTSLIMIT%</MaxOtherItemsPerSecond>
+    </AdaptiveSampling>
   </ApplicationInsights>
 </LocalForwarderConfiguration>
 ";
@@ -582,6 +634,12 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
   </OpenCensusToApplicationInsights>
   <ApplicationInsights>
     <LiveMetricsStreamInstrumentationKey>[SPECIFY LIVE METRICS STREAM INSTRUMENTATION KEY HERE]</LiveMetricsStreamInstrumentationKey>
+    <LiveMetricsStreamAuthenticationApiKey></LiveMetricsStreamAuthenticationApiKey>
+    <AdaptiveSampling Enabled=""true"">
+      <MaxEventsPerSecond>%APPINSIGHTS_ADAPTIVESAMPLINGEVENTSLIMIT%</MaxEventsPerSecond>
+      <!--Telemetry items other than events are counted together-->
+      <MaxOtherItemsPerSecond>%APPINSIGHTS_ADAPTIVESAMPLINGNONEVENTSLIMIT%</MaxOtherItemsPerSecond>
+    </AdaptiveSampling>
   </ApplicationInsights>
 </LocalForwarderConfiguration>
 ";
@@ -647,6 +705,12 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
   </OpenCensusToApplicationInsights>
   <ApplicationInsights>
     <LiveMetricsStreamInstrumentationKey>[SPECIFY LIVE METRICS STREAM INSTRUMENTATION KEY HERE]</LiveMetricsStreamInstrumentationKey>
+    <LiveMetricsStreamAuthenticationApiKey></LiveMetricsStreamAuthenticationApiKey>
+    <AdaptiveSampling Enabled=""true"">
+      <MaxEventsPerSecond>%APPINSIGHTS_ADAPTIVESAMPLINGEVENTSLIMIT%</MaxEventsPerSecond>
+      <!--Telemetry items other than events are counted together-->
+      <MaxOtherItemsPerSecond>%APPINSIGHTS_ADAPTIVESAMPLINGNONEVENTSLIMIT%</MaxOtherItemsPerSecond>
+    </AdaptiveSampling>
   </ApplicationInsights>
 </LocalForwarderConfiguration>
 ";
@@ -706,6 +770,12 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
   </OpenCensusToApplicationInsights>
   <ApplicationInsights>
     <LiveMetricsStreamInstrumentationKey>[SPECIFY LIVE METRICS STREAM INSTRUMENTATION KEY HERE]</LiveMetricsStreamInstrumentationKey>
+    <LiveMetricsStreamAuthenticationApiKey></LiveMetricsStreamAuthenticationApiKey>
+    <AdaptiveSampling Enabled=""true"">
+      <MaxEventsPerSecond>%APPINSIGHTS_ADAPTIVESAMPLINGEVENTSLIMIT%</MaxEventsPerSecond>
+      <!--Telemetry items other than events are counted together-->
+      <MaxOtherItemsPerSecond>%APPINSIGHTS_ADAPTIVESAMPLINGNONEVENTSLIMIT%</MaxOtherItemsPerSecond>
+    </AdaptiveSampling>
   </ApplicationInsights>
 </LocalForwarderConfiguration>
 ";
@@ -770,6 +840,12 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
   </OpenCensusToApplicationInsights>
   <ApplicationInsights>
     <LiveMetricsStreamInstrumentationKey>[SPECIFY LIVE METRICS STREAM INSTRUMENTATION KEY HERE]</LiveMetricsStreamInstrumentationKey>
+    <LiveMetricsStreamAuthenticationApiKey></LiveMetricsStreamAuthenticationApiKey>
+    <AdaptiveSampling Enabled=""true"">
+      <MaxEventsPerSecond>%APPINSIGHTS_ADAPTIVESAMPLINGEVENTSLIMIT%</MaxEventsPerSecond>
+      <!--Telemetry items other than events are counted together-->
+      <MaxOtherItemsPerSecond>%APPINSIGHTS_ADAPTIVESAMPLINGNONEVENTSLIMIT%</MaxOtherItemsPerSecond>
+    </AdaptiveSampling>
   </ApplicationInsights>
 </LocalForwarderConfiguration>
 ";
@@ -820,6 +896,12 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
   </OpenCensusToApplicationInsights>
   <ApplicationInsights>
     <LiveMetricsStreamInstrumentationKey>[SPECIFY LIVE METRICS STREAM INSTRUMENTATION KEY HERE]</LiveMetricsStreamInstrumentationKey>
+    <LiveMetricsStreamAuthenticationApiKey></LiveMetricsStreamAuthenticationApiKey>
+    <AdaptiveSampling Enabled=""true"">
+      <MaxEventsPerSecond>%APPINSIGHTS_ADAPTIVESAMPLINGEVENTSLIMIT%</MaxEventsPerSecond>
+      <!--Telemetry items other than events are counted together-->
+      <MaxOtherItemsPerSecond>%APPINSIGHTS_ADAPTIVESAMPLINGNONEVENTSLIMIT%</MaxOtherItemsPerSecond>
+    </AdaptiveSampling>
   </ApplicationInsights>
 </LocalForwarderConfiguration>
 ";

@@ -41,6 +41,12 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
   </OpenCensusToApplicationInsights>
   <ApplicationInsights>
     <LiveMetricsStreamInstrumentationKey>ikey1</LiveMetricsStreamInstrumentationKey>
+    <LiveMetricsStreamAuthenticationApiKey></LiveMetricsStreamAuthenticationApiKey>
+    <AdaptiveSampling Enabled=""false"">
+      <MaxEventsPerSecond>%APPINSIGHTS_ADAPTIVESAMPLINGEVENTSLIMIT%</MaxEventsPerSecond>
+      <!--Telemetry items other than events are counted together-->
+      <MaxOtherItemsPerSecond>%APPINSIGHTS_ADAPTIVESAMPLINGNONEVENTSLIMIT%</MaxOtherItemsPerSecond>
+    </AdaptiveSampling>
   </ApplicationInsights>
 </LocalForwarderConfiguration>
 ";
@@ -149,6 +155,12 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
   </OpenCensusToApplicationInsights>
   <ApplicationInsights>
     <LiveMetricsStreamInstrumentationKey>ikey1</LiveMetricsStreamInstrumentationKey>
+    <LiveMetricsStreamAuthenticationApiKey></LiveMetricsStreamAuthenticationApiKey>
+    <AdaptiveSampling Enabled=""false"">
+      <MaxEventsPerSecond>%APPINSIGHTS_ADAPTIVESAMPLINGEVENTSLIMIT%</MaxEventsPerSecond>
+      <!--Telemetry items other than events are counted together-->
+      <MaxOtherItemsPerSecond>%APPINSIGHTS_ADAPTIVESAMPLINGNONEVENTSLIMIT%</MaxOtherItemsPerSecond>
+    </AdaptiveSampling>
   </ApplicationInsights>
 </LocalForwarderConfiguration>
 ";
@@ -170,6 +182,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             // ASSERT
             // wait for a new library
             Common.AssertIsTrueEventually(() => libraryFieldInfo.GetValue(host) != null);
+            Common.AssertIsTrueEventually(() => (libraryFieldInfo.GetValue(host) as Library).IsRunning);
 
             // verify the new library works
             var telemetryBatch = new ExportTraceServiceRequest();

@@ -77,6 +77,9 @@
     <Reference Include="Microsoft.AI.PerfCounterCollector, Version=2.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.ApplicationInsights.PerfCounterCollector.2.8.0-beta1\lib\net45\Microsoft.AI.PerfCounterCollector.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.AI.ServerTelemetryChannel, Version=2.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.2.8.0-beta1\lib\net45\Microsoft.AI.ServerTelemetryChannel.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.ApplicationInsights, Version=2.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.ApplicationInsights.2.8.0-beta1\lib\net46\Microsoft.ApplicationInsights.dll</HintPath>
     </Reference>
@@ -96,10 +99,10 @@
       <HintPath>..\packages\Microsoft.Extensions.Primitives.2.0.0\lib\netstandard2.0\Microsoft.Extensions.Primitives.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.LocalForwarder.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=19fdd7284a676c0d, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.LocalForwarder.Library.1.0.39-alpha\lib\netstandard\Microsoft.LocalForwarder.Common.dll</HintPath>
+      <HintPath>..\packages\Microsoft.LocalForwarder.Library.1.0.49-alpha\lib\netstandard\Microsoft.LocalForwarder.Common.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.LocalForwarder.Library, Version=1.0.0.0, Culture=neutral, PublicKeyToken=19fdd7284a676c0d, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.LocalForwarder.Library.1.0.39-alpha\lib\netstandard\Microsoft.LocalForwarder.Library.dll</HintPath>
+      <HintPath>..\packages\Microsoft.LocalForwarder.Library.1.0.49-alpha\lib\netstandard\Microsoft.LocalForwarder.Library.dll</HintPath>
     </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\packages\NLog.4.5.7\lib\net45\NLog.dll</HintPath>
@@ -123,6 +126,8 @@
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Transactions" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />

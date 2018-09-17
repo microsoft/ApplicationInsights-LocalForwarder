@@ -233,7 +233,7 @@
 
         private static void CopySamplingFields(Telemetry inputTelemetry, ISupportSampling telemetry)
         {
-            telemetry.SamplingPercentage = inputTelemetry.SamplingRate?.Value ?? 100;
+            telemetry.SamplingPercentage = null; // inputTelemetry.SamplingRate?.Value; always sample (if configured), regardless of whether it was sampled previousely on the client
         }
 
         private static void PopulateContext(Telemetry telemetryItem, ITelemetry telemetry)

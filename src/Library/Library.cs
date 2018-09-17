@@ -17,10 +17,10 @@ namespace Microsoft.LocalForwarder.Library
     using Opencensus.Proto.Trace.V1;
 
     using System;
-    using System.Collections.Concurrent;
     using System.Linq;
     using System.Threading.Tasks;
     using Exception = System.Exception;
+    using Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel;
 
     public class Library
     {
@@ -32,6 +32,7 @@ namespace Microsoft.LocalForwarder.Library
         private readonly Configuration config;
         private readonly string ocToAiInstrumentationKey;
         private readonly string liveMetricsStreamInstrumentationKey;
+        private readonly string liveMetricsStreamAuthenticationApiKey;
         private readonly OpenCensusClientCache<string, Node> opencensusPeers;
         private readonly TraceConfig DefaultOpencensusConfig;
 
@@ -54,6 +55,7 @@ namespace Microsoft.LocalForwarder.Library
 
             this.ocToAiInstrumentationKey = config.OpenCensusToApplicationInsights_InstrumentationKey;
             this.liveMetricsStreamInstrumentationKey = config.ApplicationInsights_LiveMetricsStreamInstrumentationKey;
+            this.liveMetricsStreamAuthenticationApiKey = config.ApplicationInsights_LiveMetricsStreamAuthenticationApiKey;
             this.opencensusPeers = new OpenCensusClientCache<string, Node>();
             this.DefaultOpencensusConfig = new TraceConfig
                 {
@@ -71,21 +73,32 @@ namespace Microsoft.LocalForwarder.Library
                 var activeConfiguration = TelemetryConfiguration.Active;
                 activeConfiguration.InstrumentationKey = this.liveMetricsStreamInstrumentationKey;
 
+                var channel = new ServerTelemetryChannel();
+                channel.Initialize(activeConfiguration);
+                activeConfiguration.TelemetryChannel = channel;
+
+                var builder = activeConfiguration.DefaultTelemetrySink.TelemetryProcessorChainBuilder;
+
                 QuickPulseTelemetryProcessor processor = null;
+                builder.Use((next) =>
+                {
+                    processor = new QuickPulseTelemetryProcessor(next);
+                    return processor;
+                });
 
-                activeConfiguration.TelemetryProcessorChainBuilder
-                    .Use((next) =>
-                    {
-                        processor = new QuickPulseTelemetryProcessor(next);
-                        return processor;
-                    })
-                    .Build();
+                if (config.ApplicationInsights_AdaptiveSampling_Enabled == true)
+                {
+                    builder.UseAdaptiveSampling(config.ApplicationInsights_AdaptiveSampling_MaxOtherItemsPerSecond ?? 5, excludedTypes: "Event");
+                    builder.UseAdaptiveSampling(config.ApplicationInsights_AdaptiveSampling_MaxEventsPerSecond ?? 5, includedTypes: "Event");
+                }
 
-                var quickPulseModule = new QuickPulseTelemetryModule();
+                builder.Build();
+
+                var quickPulseModule = new QuickPulseTelemetryModule() { AuthenticationApiKey = this.liveMetricsStreamAuthenticationApiKey };
                 quickPulseModule.Initialize(activeConfiguration);
                 quickPulseModule.RegisterTelemetryProcessor(processor);
 
-                this.telemetryClient = new TelemetryClient();
+                this.telemetryClient = new TelemetryClient(activeConfiguration);
             }
             catch (Exception e)
             {
@@ -98,9 +111,9 @@ namespace Microsoft.LocalForwarder.Library
 
             try
             {
-                if (this.config.ApplicationInsightsInput_Enabled)
+                if (this.config.ApplicationInsightsInput_Enabled == true && this.config.ApplicationInsightsInput_Port.HasValue)
                 {
-                    this.gRpcAiInput = new GrpcAiInput(this.config.ApplicationInsightsInput_Host, this.config.ApplicationInsightsInput_Port);
+                    this.gRpcAiInput = new GrpcAiInput(this.config.ApplicationInsightsInput_Host, this.config.ApplicationInsightsInput_Port.Value);
 
                     Diagnostics.LogInfo(
                         FormattableString.Invariant($"We will listen for AI data on {this.config.ApplicationInsightsInput_Host}:{this.config.ApplicationInsightsInput_Port}"));
@@ -122,9 +135,9 @@ namespace Microsoft.LocalForwarder.Library
 
             try
             {
-                if (this.config.OpenCensusInput_Enabled)
+                if (this.config.OpenCensusInput_Enabled == true && this.config.OpenCensusInput_Port.HasValue)
                 {
-                    this.gRpcOpenCensusInput = new GrpcOpenCensusInput(this.config.OpenCensusInput_Host, this.config.OpenCensusInput_Port);
+                    this.gRpcOpenCensusInput = new GrpcOpenCensusInput(this.config.OpenCensusInput_Host, this.config.OpenCensusInput_Port.Value);
 
                     Diagnostics.LogInfo(
                         FormattableString.Invariant($"We will listen for OpenCensus data on {this.config.OpenCensusInput_Host}:{this.config.OpenCensusInput_Port}"));

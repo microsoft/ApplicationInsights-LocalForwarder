@@ -24,7 +24,10 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
                     defaultConfig = reader.ReadToEnd();
                 }
             }
-            Environment.SetEnvironmentVariable("APPINSIGHTS_INSTRUMENTATIONKEY", null);
+
+            Environment.SetEnvironmentVariable("APPINSIGHTS_INSTRUMENTATIONKEY", null, EnvironmentVariableTarget.Process);
+            Environment.SetEnvironmentVariable("APPINSIGHTS_ADAPTIVESAMPLINGEVENTSLIMIT", "23", EnvironmentVariableTarget.Process);
+            Environment.SetEnvironmentVariable("APPINSIGHTS_ADAPTIVESAMPLINGNONEVENTSLIMIT", "25", EnvironmentVariableTarget.Process);
 
             // ACT
             var config = new Configuration(defaultConfig);
@@ -40,6 +43,14 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
 
             Assert.AreEqual("%APPINSIGHTS_INSTRUMENTATIONKEY%", config.OpenCensusToApplicationInsights_InstrumentationKey);
             Assert.AreEqual("%APPINSIGHTS_INSTRUMENTATIONKEY%", config.ApplicationInsights_LiveMetricsStreamInstrumentationKey);
+            Assert.AreEqual("%APPINSIGHTS_LIVEMETRICSSTREAMAUTHENTICATIONAPIKEY%", config.ApplicationInsights_LiveMetricsStreamAuthenticationApiKey);
+            Assert.AreEqual(true, config.ApplicationInsights_AdaptiveSampling_Enabled);
+            Assert.AreEqual(23, config.ApplicationInsights_AdaptiveSampling_MaxEventsPerSecond);
+            Assert.AreEqual(25, config.ApplicationInsights_AdaptiveSampling_MaxOtherItemsPerSecond);
+
+            Environment.SetEnvironmentVariable("APPINSIGHTS_INSTRUMENTATIONKEY", null, EnvironmentVariableTarget.Process);
+            Environment.SetEnvironmentVariable("APPINSIGHTS_ADAPTIVESAMPLINGEVENTSLIMIT", null, EnvironmentVariableTarget.Process);
+            Environment.SetEnvironmentVariable("APPINSIGHTS_ADAPTIVESAMPLINGNONEVENTSLIMIT", null, EnvironmentVariableTarget.Process);
         }
 
         [TestMethod]

@@ -53,7 +53,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             Assert.AreEqual("lf_java:2.1.2", result.Context.GetInternalContext().SdkVersion);
 
             // sampling fields
-            Assert.AreEqual(25, (result as ISupportSampling).SamplingPercentage);
+            Assert.IsNull((result as ISupportSampling).SamplingPercentage);
         }
 
         [TestMethod]
@@ -95,7 +95,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             Assert.AreEqual("lf_java:2.1.2", result.Context.GetInternalContext().SdkVersion);
 
             // sampling fields
-            Assert.AreEqual(25, (result as ISupportSampling).SamplingPercentage);
+            Assert.IsNull((result as ISupportSampling).SamplingPercentage);
         }
 
         [TestMethod]
@@ -445,7 +445,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             Assert.AreEqual("lf_java:2.1.2", result.Context.GetInternalContext().SdkVersion);
 
             // sampling fields
-            Assert.AreEqual(25, (result as ISupportSampling).SamplingPercentage);
+            Assert.IsNull((result as ISupportSampling).SamplingPercentage);
         }
 
         [TestMethod]
@@ -497,7 +497,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             Assert.AreEqual("lf_java:2.1.2", result.Context.GetInternalContext().SdkVersion);
 
             // sampling fields
-            Assert.AreEqual(25, (result as ISupportSampling).SamplingPercentage);
+            Assert.IsNull((result as ISupportSampling).SamplingPercentage);
         }
 
         [TestMethod]
@@ -592,7 +592,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             Assert.AreEqual("lf_java:2.1.2", result.Context.GetInternalContext().SdkVersion);
 
             // sampling fields
-            Assert.AreEqual(25, (result as ISupportSampling).SamplingPercentage);
+            Assert.IsNull((result as ISupportSampling).SamplingPercentage);
         }
 
         [TestMethod]
@@ -642,7 +642,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             Assert.AreEqual("lf_java:2.1.2", result.Context.GetInternalContext().SdkVersion);
 
             // sampling fields
-            Assert.AreEqual(25, (result as ISupportSampling).SamplingPercentage);
+            Assert.IsNull((result as ISupportSampling).SamplingPercentage);
         }
 
         [TestMethod]
