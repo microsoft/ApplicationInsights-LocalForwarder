@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+  local-forwarder:
+    environment:
+      APPINSIGHTS_INSTRUMENTATIONKEY: "${APPINSIGHTS_INSTRUMENTATIONKEY}"
+    build: 
+      context: ./local-forwarder
+  go-app:
+    environment: 
+      OCAGENT_TRACE_EXPORTER_ENDPOINT: local-forwarder:55678
+      SERVICE_NAME: go-app
+    build: 
+      context: ./go-app
+    ports:
+      - "8001:50030"
+  python-app:
+    environment: 
+      OCAGENT_TRACE_EXPORTER_ENDPOINT: local-forwarder:55678  
+      SERVICE_NAME: python-app
+    build: 
+      context: ./python-app
+    ports:
+      - "8002:8000"
