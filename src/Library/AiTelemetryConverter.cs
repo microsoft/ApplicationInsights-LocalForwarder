@@ -86,7 +86,6 @@
 
         public static ExceptionTelemetry ConvertExceptionToSdkApi(Telemetry inputTelemetry)
         {
-            //!!! make sure we're onboarded onto a release version of AI SDK
             var item = inputTelemetry.Exception;
 
             var result = new ExceptionTelemetry(
