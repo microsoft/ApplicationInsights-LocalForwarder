@@ -126,7 +126,7 @@ Traces are written out to the file system next to the executable that runs Local
 # Distributed tracing with OpenCensus
 
 OpenCensus is a vendor-agnostic single distribution of libraries to provide metrics collection and tracing for your services. OpenCensus for Python and Go allows to export data to LocalForwarder (and support for Java is on the way).
-You may find more information on how to configure it on https://docs.microsoft.com/en-us/azure/application-insights/open-census-python and https://docs.microsoft.com/en-us/azure/application-insights/open-census-go.
+You may find more information on how to configure it on https://docs.microsoft.com/en-us/azure/application-insights/opencensus-python and https://docs.microsoft.com/en-us/azure/application-insights/opencensus-go.
 
 Please check out the full example demonstrating OpenCensus instrumentation for golang and python web server applications in this repo: https://github.com/Microsoft/ApplicationInsights-LocalForwarder/blob/master/examples/opencensus
 
