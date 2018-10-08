@@ -76,7 +76,9 @@
             if (lockTaken)
             {
                 // ok to lose the message in an unlikely case that lockTaken is false
-                logger.Log(logLevel, message);
+                //logger.Log(logLevel, message);
+                //!!!
+                Console.WriteLine(message);
 
                 spinLock.Exit();
             }
@@ -94,7 +96,7 @@
 
         public static void LogInfo(string message)
         {
-            Diagnostics.Log(message, LogLevel.Info);
+            Diagnostics.Log(message, LogLevel.Error);
         }
 
         public static void LogWarn(string message)
@@ -106,6 +108,5 @@
         {
             Diagnostics.Log(message, LogLevel.Error);
         }
-
     }
 }

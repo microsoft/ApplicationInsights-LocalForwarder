@@ -1,5 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <!--<Import Project="$(MSBuildSDKsPath)\Microsoft.NET.Sdk\Sdk\Sdk.props" />-->
+  
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.1</TargetFramework>
@@ -16,12 +18,17 @@
     <DelaySign>false</DelaySign>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <!--<TrimUnusedDependencies>true</TrimUnusedDependencies>-->
+  </PropertyGroup>
+
   <ItemGroup>
+    <PackageReference Include="ILLink.Tasks" Version="0.1.5-preview-1841731" />
     <PackageReference Include="MicroBuild.Core" Version="0.3.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.LocalForwarder.Library" Version="1.0.50-alpha" />
+    <PackageReference Include="Microsoft.LocalForwarder.Library" Version="1.0.53-alpha" />
   </ItemGroup>
 
   <ItemGroup>
@@ -35,4 +42,11 @@
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
   </Target>
 
+  <!--<ItemGroup>
+    <RdXmlFile Include="rd.xml" />
+  </ItemGroup>-->
+  
+  <!--<Import Project="$(MSBuildSDKsPath)\Microsoft.NET.Sdk\Sdk\Sdk.targets" />
+  <Import Project="$(IlcPath)\build\Microsoft.NETCore.Native.targets" />-->
+  
 </Project>

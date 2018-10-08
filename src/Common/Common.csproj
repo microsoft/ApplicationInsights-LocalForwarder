@@ -1,5 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <!--<Import Project="$(MSBuildSDKsPath)\Microsoft.NET.Sdk\Sdk\Sdk.props" />-->
+  
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
@@ -11,6 +13,10 @@
     <SignAssembly>true</SignAssembly>
     <DelaySign>false</DelaySign>
     <AssemblyOriginatorKeyFile>LocalForwarderStrongNameKey.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!--<TrimUnusedDependencies>true</TrimUnusedDependencies>-->
   </PropertyGroup>
 
   <ItemGroup>
@@ -28,6 +34,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="ILLink.Tasks" Version="0.1.4-preview-906439" />
     <PackageReference Include="MicroBuild.Core" Version="0.3.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
@@ -36,5 +43,8 @@
   </ItemGroup>
 
   <Import Project="..\Signing.targets" />
+
+  <!--<Import Project="$(MSBuildSDKsPath)\Microsoft.NET.Sdk\Sdk\Sdk.targets" />-->
+  <!--<Import Project="$(IlcPath)\build\Microsoft.NETCore.Native.targets" />-->
 
 </Project>

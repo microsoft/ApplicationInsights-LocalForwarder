@@ -1,7 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <!--<Import Project="$(MSBuildSDKsPath)\Microsoft.NET.Sdk\Sdk\Sdk.props" />-->
+  
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!--<TrimUnusedDependencies>true</TrimUnusedDependencies>-->
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,7 +18,9 @@
     <PackageReference Include="Google.Protobuf" Version="3.6.0" />
     <PackageReference Include="Google.Protobuf.Tools" Version="3.6.0" />
     <PackageReference Include="Grpc" Version="1.13.1" />
+    <PackageReference Include="Grpc.Core" Version="1.13.1" />
     <PackageReference Include="Grpc.Tools" Version="1.13.1" />
+    <PackageReference Include="ILLink.Tasks" Version="0.1.4-preview-906439" />
     <PackageReference Include="MicroBuild.Core" Version="0.3.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
@@ -36,5 +44,8 @@
   </PropertyGroup>
 
   <Import Project="..\Signing.targets" />
+
+  <!--<Import Project="$(MSBuildSDKsPath)\Microsoft.NET.Sdk\Sdk\Sdk.targets" />-->
+  <!--<Import Project="$(IlcPath)\build\Microsoft.NETCore.Native.targets" />-->
   
 </Project>

@@ -67,6 +67,29 @@
   <PropertyGroup>
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
   </PropertyGroup>
+  <PropertyGroup>
+    <TrimUnusedDependencies>true</TrimUnusedDependencies>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Google.Protobuf, Version=3.6.0.0, Culture=neutral, PublicKeyToken=a7d26565bac4d604, processorArchitecture=MSIL">
       <HintPath>..\packages\Google.Protobuf.3.6.0\lib\net45\Google.Protobuf.dll</HintPath>
@@ -99,10 +122,10 @@
       <HintPath>..\packages\Microsoft.Extensions.Primitives.2.0.0\lib\netstandard2.0\Microsoft.Extensions.Primitives.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.LocalForwarder.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=19fdd7284a676c0d, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.LocalForwarder.Library.1.0.50-alpha\lib\netstandard\Microsoft.LocalForwarder.Common.dll</HintPath>
+      <HintPath>..\packages\Microsoft.LocalForwarder.Library.1.0.52-alpha\lib\netstandard\Microsoft.LocalForwarder.Common.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.LocalForwarder.Library, Version=1.0.0.0, Culture=neutral, PublicKeyToken=19fdd7284a676c0d, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.LocalForwarder.Library.1.0.50-alpha\lib\netstandard\Microsoft.LocalForwarder.Library.dll</HintPath>
+      <HintPath>..\packages\Microsoft.LocalForwarder.Library.1.0.52-alpha\lib\netstandard\Microsoft.LocalForwarder.Library.dll</HintPath>
     </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\packages\NLog.4.5.7\lib\net45\NLog.dll</HintPath>
