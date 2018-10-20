@@ -22,3 +22,11 @@ services:
       context: ./python-app
     ports:
       - "8002:8000"
+  aspnetcore-app:
+    environment:
+      APPINSIGHTS_INSTRUMENTATIONKEY: "${APPINSIGHTS_INSTRUMENTATIONKEY}"
+      WEBSITE_HOSTNAME: aspnetcore-app
+    build: 
+      context: ./aspnetcore-app
+    ports:
+      - "8003:80"
