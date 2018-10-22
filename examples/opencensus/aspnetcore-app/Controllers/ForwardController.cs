@@ -8,7 +8,7 @@ namespace W3CService.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ForwardController: ControllerBase
+    public class ForwardController : ControllerBase
     {
         private readonly HttpClient httpClient;
         public ForwardController(HttpClient httpclient)
@@ -20,7 +20,7 @@ namespace W3CService.Controllers
         {
             if (url != null)
             {
-                HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, url)
+                HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, url)
                 {
                     Content = new StringContent(JsonConvert.SerializeObject(arguments), Encoding.UTF8, "application/json")
                 };

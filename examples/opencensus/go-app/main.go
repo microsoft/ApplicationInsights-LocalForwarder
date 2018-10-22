@@ -42,7 +42,7 @@ func main() {
 
 	http.HandleFunc("/call", func(w http.ResponseWriter, req *http.Request) {
 
-		var jsonStr = []byte(`[ { "url": "http://blank.org", "arguments": [] } ]`)
+		var jsonStr = []byte(`[ { "url": "https://acmefrontend.azurewebsites.net/api/buywidget", "arguments": [] } ]`)
 		newReq, _ := http.NewRequest("POST", "http://aspnetcore-app/api/forward", bytes.NewBuffer(jsonStr))
 		newReq.Header.Set("Content-Type", "application/json")
 
