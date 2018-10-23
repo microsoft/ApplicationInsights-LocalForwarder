@@ -19,9 +19,22 @@ setlocal
 @rem enter this directory
 cd /d %~dp0
 
-set PROTOC=%UserProfile%\.nuget\packages\Google.Protobuf.Tools\3.6.0\tools\windows_x64\protoc.exe
-set PLUGIN=%UserProfile%\.nuget\packages\Grpc.Tools\1.14.1\tools\windows_x64\grpc_csharp_plugin.exe
+@rem CHANGE THIS TO YOUR LOCAL ENLISTMENT OF https://github.com/census-instrumentation/opencensus-proto
+set PROTODIR=D:\Git\opencensus-proto\src
 
-%PROTOC% -I=.\ --csharp_out=..\code --csharp_opt=file_extension=.g.cs --grpc_out=..\code --plugin=protoc-gen-grpc=%PLUGIN% --proto_path=..\..\include .\opencensus\proto\trace\v1\trace.proto .\opencensus\proto\trace\v1\trace_config.proto .\opencensus\proto\agent\common\v1\common.proto .\opencensus\proto\agent\trace\v1\trace_service.proto
+@rem CHANGE THIS TO THE APPROPRIATE VERSION OF Google.Protobuf.Tools NuGet package present on your machine
+set PROTOCDIR=%UserProfile%\.nuget\packages\Google.Protobuf.Tools\3.6.0\tools\
+set PROTOC=%PROTOCDIR%\windows_x64\protoc.exe
+
+@rem CHANGE THIS TO THE APPROPRIATE VERSION OF Grpc.Tools NuGet package present on your machine
+set PLUGIN=%UserProfile%\.nuget\packages\Grpc.Tools\1.13.1\tools\windows_x64\grpc_csharp_plugin.exe
+
+@echo Generating protobuf messages...
+%PROTOC% -I=%PROTODIR%\opencensus\proto --proto_path=%PROTOCDIR% --proto_path=%PROTODIR% --csharp_out=..\code --csharp_opt=file_extension=.g.cs  %PROTODIR%\opencensus\proto\trace\v1\trace.proto %PROTODIR%\opencensus\proto\trace\v1\trace_config.proto %PROTODIR%\opencensus\proto\agent\common\v1\common.proto %PROTODIR%\opencensus\proto\metrics\v1\metrics.proto 
+
+@echo Generating GRPC services...
+%PROTOC% -I=%PROTODIR%\opencensus\proto --proto_path=%PROTOCDIR% --proto_path=%PROTODIR% --csharp_out=..\code --csharp_opt=file_extension=.g.cs --grpc_out=..\code --plugin=protoc-gen-grpc=%PLUGIN% %PROTODIR%\opencensus\proto\agent\trace\v1\trace_service.proto %PROTODIR%\opencensus\proto\agent\metrics\v1\metrics_service.proto
+
+
 
 endlocal
