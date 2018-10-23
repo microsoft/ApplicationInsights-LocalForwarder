@@ -19,6 +19,9 @@ setlocal
 @rem enter this directory
 cd /d %~dp0
 
+@rem Last generated from the following commit hash in https://github.com/census-instrumentation/opencensus-proto:
+@rem bbcfad0758ee076a159f49b47f814e05cd045fca
+
 @rem CHANGE THIS TO YOUR LOCAL ENLISTMENT OF https://github.com/census-instrumentation/opencensus-proto
 set PROTODIR=D:\Git\opencensus-proto\src
 
@@ -35,6 +38,6 @@ set PLUGIN=%UserProfile%\.nuget\packages\Grpc.Tools\1.13.1\tools\windows_x64\grp
 @echo Generating GRPC services...
 %PROTOC% -I=%PROTODIR%\opencensus\proto --proto_path=%PROTOCDIR% --proto_path=%PROTODIR% --csharp_out=..\code --csharp_opt=file_extension=.g.cs --grpc_out=..\code --plugin=protoc-gen-grpc=%PLUGIN% %PROTODIR%\opencensus\proto\agent\trace\v1\trace_service.proto %PROTODIR%\opencensus\proto\agent\metrics\v1\metrics_service.proto
 
-
+@echo Don't forget to update the commit hash when regenerating the sources and commiting them
 
 endlocal
