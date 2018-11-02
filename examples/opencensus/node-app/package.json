@@ -2,11 +2,17 @@
   "name": "node-app",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
+  "main": "app/app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node app.js"
+    "start": "node app/app.js"
   },
   "author": "dnduffy;osvaldorosado",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "@opencensus/exporter-ocagent": "0.0.6",
+    "@opencensus/instrumentation-http": "0.0.6",
+    "@opencensus/nodejs": "0.0.6",
+    "@opencensus/propagation-tracecontext": "0.0.6"
+  }
 }

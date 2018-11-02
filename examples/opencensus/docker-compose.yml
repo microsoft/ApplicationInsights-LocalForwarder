@@ -24,7 +24,7 @@ services:
       - "8002:8000"
   node-app:
     environment:
-      OCAGENT_TRACE_EXPORTER_ENDPOINT: local-forwarder:55678
+      OCAGENT_TRACE_EXPORTER_ENDPOINT: grpc://local-forwarder:55678
       SERVICE_NAME: node-app
       NODE_ENV: production
     build:
