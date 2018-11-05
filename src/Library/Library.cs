@@ -251,7 +251,7 @@ namespace Microsoft.LocalForwarder.Library
         /// Processes an incoming telemetry batch for AI channel.
         /// </summary>
         /// <remarks>This method may be called from multiple threads concurrently.</remarks>
-        private void OnAiBatchReceived(TelemetryBatch batch, ServerCallContext callContext)
+        private AiResponse OnAiBatchReceived(TelemetryBatch batch, ServerCallContext callContext)
         {
             try
             {
@@ -332,6 +332,8 @@ namespace Microsoft.LocalForwarder.Library
                     FormattableString.Invariant(
                         $"Could not process an incoming AI telemetry batch. {e.ToString()}"));
             }
+
+            return new AiResponse();
         }
 
         /// <summary>
@@ -373,7 +375,7 @@ namespace Microsoft.LocalForwarder.Library
         /// Processes an incoming telemetry batch for OpenCensus channel.
         /// </summary>
         /// <remarks>This method may be called from multiple threads concurrently.</remarks>
-        private void OnOcBatchReceived(ExportTraceServiceRequest batch, ServerCallContext callContext)
+        private ExportTraceServiceResponse OnOcBatchReceived(ExportTraceServiceRequest batch, ServerCallContext callContext)
         {
             try
             {
@@ -406,6 +408,8 @@ namespace Microsoft.LocalForwarder.Library
                     FormattableString.Invariant(
                         $"Could not process an incoming OpenCensus telemetry batch. {e.ToString()}"));
             }
+
+            return new ExportTraceServiceResponse();
         }
 
         private async Task TraceStatsWorker()

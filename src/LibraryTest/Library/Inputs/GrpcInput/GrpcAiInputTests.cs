@@ -78,6 +78,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library.Inputs.GrpcInput
                 {
                     batchesReceived++;
                     receivedBatch = telemetryBatch;
+                    return new AiResponse();
                 },
                 null);
             Assert.IsTrue(SpinWait.SpinUntil(() => input.IsRunning, GrpcAiInputTests.DefaultTimeout));
@@ -94,6 +95,8 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library.Inputs.GrpcInput
             Common.AssertIsTrueEventually(
                 () => input.GetStats().BatchesReceived == 1 && batchesReceived == 1 &&
                       receivedBatch.Items.Single().Event.Name == "Event1", GrpcAiInputTests.DefaultTimeout);
+            Common.AssertIsTrueEventually(() => input.GetStats().BatchesResponsesSent == 1);
+
 
             input.Stop();
             Assert.IsTrue(SpinWait.SpinUntil(() => !input.IsRunning, GrpcAiInputTests.DefaultTimeout));
@@ -113,6 +116,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library.Inputs.GrpcInput
                 {
                     Interlocked.Increment(ref batchesReceived);
                     receivedBatch = telemetryBatch;
+                    return new AiResponse();
                 },
                 null);
             Assert.IsTrue(SpinWait.SpinUntil(() => input.IsRunning, GrpcAiInputTests.DefaultTimeout));
@@ -131,6 +135,9 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library.Inputs.GrpcInput
             // ASSERT
             Common.AssertIsTrueEventually(
                 () => input.GetStats().BatchesReceived == 1000 && batchesReceived == 1000, GrpcAiInputTests.DefaultTimeout);
+
+            Common.AssertIsTrueEventually(
+                () => input.GetStats().BatchesResponsesSent == 1000, GrpcAiInputTests.DefaultTimeout);
 
             input.Stop();
             Assert.IsTrue(SpinWait.SpinUntil(() => !input.IsRunning, GrpcAiInputTests.DefaultTimeout));
@@ -151,6 +158,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library.Inputs.GrpcInput
                 {
                     batchesReceived++;
                     receivedBatch = telemetryBatch;
+                    return new AiResponse();
                 },
                 null);
 
@@ -174,6 +182,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library.Inputs.GrpcInput
             Common.AssertIsTrueEventually(
                 () => !input.IsRunning && input.GetStats().BatchesReceived == 1 && batchesReceived == 1 &&
                       receivedBatch.Items.Single().Event.Name == "Event1", GrpcAiInputTests.DefaultTimeout);
+            Common.AssertIsTrueEventually(() => input.GetStats().BatchesResponsesSent == 1);
         }
 
         [TestMethod]
@@ -191,6 +200,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library.Inputs.GrpcInput
                 {
                     batchesReceived++;
                     receivedBatch = telemetryBatch;
+                    return new AiResponse();
                 },
                 null);
 
@@ -219,6 +229,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library.Inputs.GrpcInput
                 {
                     batchesReceived++;
                     receivedBatch = telemetryBatch;
+                    return new AiResponse();
                 },
                 null);
 
@@ -232,6 +243,8 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library.Inputs.GrpcInput
             Common.AssertIsTrueEventually(
                 () => input.IsRunning && input.GetStats().BatchesReceived == 1 && batchesReceived == 2 &&
                       receivedBatch.Items.Single().Event.Name == "Event2", GrpcAiInputTests.DefaultTimeout);
+
+            Common.AssertIsTrueEventually(() => input.GetStats().BatchesResponsesSent == 1);
         }
 
         [TestMethod]
@@ -266,6 +279,8 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library.Inputs.GrpcInput
             Common.AssertIsTrueEventually(
                 () => input.IsRunning && input.GetStats().BatchesReceived == 0 && input.GetStats().BatchesFailed == 2,
                 GrpcAiInputTests.DefaultTimeout);
+
+            Assert.AreEqual(0, input.GetStats().BatchesResponsesSent);
         }
     }
 }
