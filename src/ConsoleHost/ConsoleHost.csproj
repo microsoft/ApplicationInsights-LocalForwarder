@@ -21,10 +21,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Library\Library.csproj" />
+    <PackageReference Include="Microsoft.LocalForwarder.Library" Version="1.0.60-alpha" />
   </ItemGroup>
 
   <ItemGroup>
