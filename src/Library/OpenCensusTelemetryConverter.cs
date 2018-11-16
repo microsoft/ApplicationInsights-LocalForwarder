@@ -140,7 +140,7 @@
             InitializeOperationTelemetry(request, span, peerInfo);
             SetTracestate(span.Tracestate, request);
 
-            request.ResponseCode = span.Status?.Message;
+            request.ResponseCode = span.Status?.Code.ToString();
 
             string host = null, method = null, path = null, route = null, url = null;
             int port = -1;
@@ -193,6 +193,10 @@
                             if (attribute.Value.BoolValue)
                             {
                                 request.Success = false;
+                                if (string.IsNullOrEmpty(request.ResponseCode))
+                                {
+                                    request.ResponseCode = "-1";
+                                }
                             }
                             break;
                         default:

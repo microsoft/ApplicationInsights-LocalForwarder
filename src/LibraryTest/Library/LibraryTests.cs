@@ -794,24 +794,27 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             lib.Run();
 
             // ACT
-            var writer = new GrpcWriter(true, portAI);
-            await writer.Write(telemetryBatch).ConfigureAwait(false);
+            using (var writer = new GrpcWriter(true, portAI))
+            {
+                await writer.Write(telemetryBatch).ConfigureAwait(false);
 
-            // ASSERT
-            Common.AssertIsTrueEventually(() => sentItems.Count == 8);
+                // ASSERT
+                Common.AssertIsTrueEventually(() => sentItems.Count == 8);
 
-            lib.Stop();
+                lib.Stop();
 
-            Assert.AreEqual("Event1", (sentItems.Skip(0).First() as EventTelemetry).Name);
-            Assert.AreEqual("Message1", (sentItems.Skip(1).First() as TraceTelemetry).Message);
-            Assert.AreEqual("Metric1", (sentItems.Skip(2).First() as MetricTelemetry).Name);
-            Assert.AreEqual(1, (sentItems.Skip(2).First() as MetricTelemetry).Value);
-            Assert.AreEqual("Exception1", (sentItems.Skip(3).First() as ExceptionTelemetry).ProblemId);
-            Assert.AreEqual("Exception1", (sentItems.Skip(3).First() as ExceptionTelemetry).ExceptionDetailsInfoList.Single().Message);
-            Assert.AreEqual("Dependency1", (sentItems.Skip(4).First() as DependencyTelemetry).Name);
-            Assert.AreEqual("Availability1", (sentItems.Skip(5).First() as AvailabilityTelemetry).Name);
-            Assert.AreEqual("PageView1", (sentItems.Skip(6).First() as PageViewTelemetry).Id);
-            Assert.AreEqual("Request1", (sentItems.Skip(7).First() as RequestTelemetry).Name);
+                Assert.AreEqual("Event1", (sentItems.Skip(0).First() as EventTelemetry).Name);
+                Assert.AreEqual("Message1", (sentItems.Skip(1).First() as TraceTelemetry).Message);
+                Assert.AreEqual("Metric1", (sentItems.Skip(2).First() as MetricTelemetry).Name);
+                Assert.AreEqual(1, (sentItems.Skip(2).First() as MetricTelemetry).Value);
+                Assert.AreEqual("Exception1", (sentItems.Skip(3).First() as ExceptionTelemetry).ProblemId);
+                Assert.AreEqual("Exception1",
+                    (sentItems.Skip(3).First() as ExceptionTelemetry).ExceptionDetailsInfoList.Single().Message);
+                Assert.AreEqual("Dependency1", (sentItems.Skip(4).First() as DependencyTelemetry).Name);
+                Assert.AreEqual("Availability1", (sentItems.Skip(5).First() as AvailabilityTelemetry).Name);
+                Assert.AreEqual("PageView1", (sentItems.Skip(6).First() as PageViewTelemetry).Id);
+                Assert.AreEqual("Request1", (sentItems.Skip(7).First() as RequestTelemetry).Name);
+            }
         }
 
         [TestMethod]
@@ -858,16 +861,18 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             lib.Run();
 
             // ACT
-            var writer = new GrpcWriter(false, portOC);
-            await writer.Write(telemetryBatch).ConfigureAwait(false);
+            using (var writer = new GrpcWriter(false, portOC))
+            {
+                await writer.Write(telemetryBatch).ConfigureAwait(false);
 
-            // ASSERT
-            Common.AssertIsTrueEventually(() => sentItems.Count == 2);
+                // ASSERT
+                Common.AssertIsTrueEventually(() => sentItems.Count == 2);
 
-            lib.Stop();
+                lib.Stop();
 
-            Assert.AreEqual("Span1", (sentItems.Skip(0).First() as RequestTelemetry).Name);
-            Assert.AreEqual("Span2", (sentItems.Skip(1).First() as DependencyTelemetry).Name);
+                Assert.AreEqual("Span1", (sentItems.Skip(0).First() as RequestTelemetry).Name);
+                Assert.AreEqual("Span2", (sentItems.Skip(1).First() as DependencyTelemetry).Name);
+            }
         }
 
         [TestMethod]
@@ -928,34 +933,44 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             lib.Run();
 
             // ACT
-            var writer = new GrpcWriter(true, portAI);
-            await writer.Write(telemetryBatchAI).ConfigureAwait(false);
+            using (var writer1 = new GrpcWriter(true, portAI))
+            {
+                await writer1.Write(telemetryBatchAI).ConfigureAwait(false);
 
-            writer = new GrpcWriter(false, portOC);
-            await writer.Write(telemetryBatchOC).ConfigureAwait(false);
+                using (var writer2 = new GrpcWriter(false, portOC))
+                {
+                    await writer2.Write(telemetryBatchOC).ConfigureAwait(false);
 
-            // ASSERT
-            Common.AssertIsTrueEventually(() => sentItems.Count == 10);
+                    // ASSERT
+                    Common.AssertIsTrueEventually(() => sentItems.Count == 10);
 
-            await Task.Delay(TimeSpan.FromSeconds(1)).ConfigureAwait(false);
+                    await Task.Delay(TimeSpan.FromSeconds(1)).ConfigureAwait(false);
 
-            lib.Stop();
+                    lib.Stop();
 
-            Diagnostics.Flush(TimeSpan.FromSeconds(5));
+                    Diagnostics.Flush(TimeSpan.FromSeconds(5));
 
-            // close the file
-            Common.SwitchLoggerToDifferentFile();
+                    // close the file
+                    Common.SwitchLoggerToDifferentFile();
 
-            string logs = await File.ReadAllTextAsync(logFileName).ConfigureAwait(false);
+                    string logs = await File.ReadAllTextAsync(logFileName).ConfigureAwait(false);
 
-            Assert.IsTrue(logs.Contains("|INFO|AI input: [ConnectionCount: 0, BatchesReceived: 0, BatchesFailed: 0, BatchesResponses: 0, ConfigsReceived: 0, ConfigsFailed: 0, ConfigsResponses: 0]"));
-            Assert.IsTrue(logs.Contains("|INFO|OpenCensus input: [ConnectionCount: 0, BatchesReceived: 0, BatchesFailed: 0, BatchesResponses: 0, ConfigsReceived: 0, ConfigsFailed: 0, ConfigsResponses: 0]"));
+                    Assert.IsTrue(logs.Contains(
+                        "|INFO|AI input: [ConnectionCount: 0, BatchesReceived: 0, BatchesFailed: 0, BatchesResponses: 0, ConfigsReceived: 0, ConfigsFailed: 0, ConfigsResponses: 0]"));
+                    Assert.IsTrue(logs.Contains(
+                        "|INFO|OpenCensus input: [ConnectionCount: 0, BatchesReceived: 0, BatchesFailed: 0, BatchesResponses: 0, ConfigsReceived: 0, ConfigsFailed: 0, ConfigsResponses: 0]"));
 
-            Assert.IsTrue(logs.Contains("|INFO|AI input: [ConnectionCount: 0, BatchesReceived: 1, BatchesFailed: 0, BatchesResponses: 1, ConfigsReceived: 0, ConfigsFailed: 0, ConfigsResponses: 0]"));
-            Assert.IsTrue(logs.Contains("|INFO|OpenCensus input: [ConnectionCount: 0, BatchesReceived: 1, BatchesFailed: 0, BatchesResponses: 1, ConfigsReceived: 0, ConfigsFailed: 0, ConfigsResponses: 0]"));
+                    Assert.IsTrue(logs.Contains(
+                        "|INFO|AI input: [ConnectionCount: 0, BatchesReceived: 1, BatchesFailed: 0, BatchesResponses: 1, ConfigsReceived: 0, ConfigsFailed: 0, ConfigsResponses: 0]"));
+                    Assert.IsTrue(logs.Contains(
+                        "|INFO|OpenCensus input: [ConnectionCount: 0, BatchesReceived: 1, BatchesFailed: 0, BatchesResponses: 1, ConfigsReceived: 0, ConfigsFailed: 0, ConfigsResponses: 0]"));
 
-            Assert.IsFalse(logs.Contains("|INFO|AI input: [ConnectionCount: 0, BatchesReceived: 2, BatchesFailed, ConfigsReceived: 0, ConfigsFailed: 0]"));
-            Assert.IsFalse(logs.Contains("|INFO|OpenCensus input: [ConnectionCount: 0, BatchesReceived: 2, BatchesFailed, ConfigsReceived: 0, ConfigsFailed: 0]"));
+                    Assert.IsFalse(logs.Contains(
+                        "|INFO|AI input: [ConnectionCount: 0, BatchesReceived: 2, BatchesFailed, ConfigsReceived: 0, ConfigsFailed: 0]"));
+                    Assert.IsFalse(logs.Contains(
+                        "|INFO|OpenCensus input: [ConnectionCount: 0, BatchesReceived: 2, BatchesFailed, ConfigsReceived: 0, ConfigsFailed: 0]"));
+                }
+            }
         }
     }
 }

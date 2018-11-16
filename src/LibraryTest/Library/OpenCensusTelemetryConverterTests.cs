@@ -46,6 +46,15 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             this.client = new TelemetryClient(this.configuration);
         }
 
+        [TestCleanup]
+        public void Clenaup()
+        {
+            this.channel.Dispose();
+            while (this.sentItems.TryDequeue(out _))
+            {
+            }
+        }
+
         [TestMethod]
         public void OpenCensusTelemetryConverterTests_TracksRequest()
         {
@@ -146,7 +155,7 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
 
             Assert.IsTrue(request.Success.HasValue);
             Assert.IsTrue(request.Success.Value);
-            Assert.IsTrue(string.IsNullOrEmpty(request.ResponseCode));
+            Assert.AreEqual("0", request.ResponseCode);
         }
 
         [TestMethod]
@@ -164,7 +173,8 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
 
             Assert.IsTrue(request.Success.HasValue);
             Assert.IsTrue(request.Success.Value);
-            Assert.AreEqual("all good", request.ResponseCode);
+            Assert.AreEqual("0", request.ResponseCode);
+            Assert.AreEqual("all good", request.Properties["statusDescription"]);
         }
 
         [TestMethod]
@@ -182,7 +192,8 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
 
             Assert.IsTrue(request.Success.HasValue);
             Assert.IsFalse(request.Success.Value);
-            Assert.AreEqual("all bad", request.ResponseCode);
+            Assert.AreEqual("1", request.ResponseCode);
+            Assert.AreEqual("all bad", request.Properties["statusDescription"]);
         }
 
         [TestMethod]
@@ -1062,7 +1073,6 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
 
             var dependency = this.sentItems.OfType<DependencyTelemetry>().Single();
             Assert.IsNull(dependency.Data);
-            Assert.IsNull(dependency.Name);
             Assert.IsNull(dependency.Target);
             Assert.AreEqual("Http", dependency.Type);
             Assert.AreEqual("200", dependency.ResultCode);
