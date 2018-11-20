@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace Microsoft.LocalForwarder.LibraryTest.Library.Inputs.GrpcInput
 {
     using LocalForwarder.Library.Inputs.GrpcInput;
@@ -14,6 +12,13 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library.Inputs.GrpcInput
     public class GrpcAiInputTests
     {
         private static readonly TimeSpan DefaultTimeout = TimeSpan.FromSeconds(5);
+        private Action cleanup;
+
+        [TestCleanup]
+        public void Cleanup()
+        {
+            cleanup?.Invoke();
+        }
 
         [TestMethod]
         public async Task GrpcAiInputTests_StartsAndStops()
@@ -125,10 +130,20 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library.Inputs.GrpcInput
             TelemetryBatch batch = new TelemetryBatch();
             batch.Items.Add(new Telemetry() { Event = new Event() { Name = "Event1" } });
 
-            Parallel.For(0, 1000, new ParallelOptions() {MaxDegreeOfParallelism = 1000}, async i =>
+            var grpcWriters = new GrpcWriter[1000];
+
+            this.cleanup = () =>
             {
-                var grpcWriter = new GrpcWriter(true, port);
-                await grpcWriter.Write(batch).ConfigureAwait(false);
+                foreach (var writer in grpcWriters)
+                {
+                    writer.Dispose();
+                }
+            };
+
+            Parallel.For(0, grpcWriters.Length, new ParallelOptions() {MaxDegreeOfParallelism = 1000}, async i =>
+            {
+                grpcWriters[i] = new GrpcWriter(true, port);
+                await grpcWriters[i].Write(batch).ConfigureAwait(false);
             });
 
             // ASSERT

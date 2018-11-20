@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace Microsoft.LocalForwarder.LibraryTest.Library.Inputs.GrpcInput
 {
     using LocalForwarder.Library.Inputs.GrpcInput;
@@ -25,41 +23,52 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library.Inputs.GrpcInput
             }
         };
 
+        private GrpcOpenCensusInput input;
+        private Action cleanup;
+
+        [TestCleanup]
+        public void Cleanup()
+        {
+            if (this.input.IsRunning)
+            {
+                this.input.Stop();
+                Assert.IsTrue(SpinWait.SpinUntil(() => !this.input.IsRunning, GrpcOpenCensusInputTests.DefaultTimeout));
+            }
+
+            this.cleanup?.Invoke();
+        }
+
         [TestMethod]
         public void GrpcOpenCensusInputTests_StartsAndStops()
         {
             // ARRANGE
             int port = GetPort();
-            var input = new GrpcOpenCensusInput("localhost", port);
+            this.input = new GrpcOpenCensusInput("localhost", port);
 
             // ACT
-            input.Start(null, null);
+            this.input.Start(null, null);
 
             Assert.IsTrue(SpinWait.SpinUntil(() => input.IsRunning, GrpcOpenCensusInputTests.DefaultTimeout));
 
-            input.Stop();
+            this.input.Stop();
 
             Assert.IsTrue(SpinWait.SpinUntil(() => !input.IsRunning, GrpcOpenCensusInputTests.DefaultTimeout));
-
-            // ASSERT
         }
 
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
-        public async Task GrpcOpenCensusInputTests_CantStartWhileRunning()
+        public void GrpcOpenCensusInputTests_CantStartWhileRunning()
         {
             // ARRANGE
             int port = GetPort();
-            var input = new GrpcOpenCensusInput("localhost", port);
+            this.input = new GrpcOpenCensusInput("localhost", port);
 
-            input.Start(null, null);
+            this.input.Start(null, null);
 
             Assert.IsTrue(SpinWait.SpinUntil(() => input.IsRunning, GrpcOpenCensusInputTests.DefaultTimeout));
 
             // ACT
-            input.Start(null, null);
-
-            // ASSERT
+            this.input.Start(null, null);
         }
 
         [TestMethod]
@@ -68,12 +77,10 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library.Inputs.GrpcInput
         {
             // ARRANGE
             int port = GetPort();
-            var input = new GrpcOpenCensusInput("localhost", port);
-            
-            // ACT
-            input.Stop();
+            this.input = new GrpcOpenCensusInput("localhost", port);
 
-            // ASSERT
+            // ACT
+            this.input.Stop();
         }
 
         [TestMethod]
@@ -84,8 +91,8 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library.Inputs.GrpcInput
             ExportTraceServiceRequest receivedBatch = null;
 
             int port = GetPort();
-            var input = new GrpcOpenCensusInput("localhost", port);
-            input.Start(
+            this.input = new GrpcOpenCensusInput("localhost", port);
+            this.input.Start(
                 (telemetryBatch, callContext) =>
                 {
                     batchesReceived++;
@@ -106,9 +113,6 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library.Inputs.GrpcInput
                 Common.AssertIsTrueEventually(
                     () => input.GetStats().BatchesReceived == 1 && batchesReceived == 1 &&
                           receivedBatch.Spans.Single().Name.Value == "Event1", GrpcOpenCensusInputTests.DefaultTimeout);
-
-                input.Stop();
-                Assert.IsTrue(SpinWait.SpinUntil(() => !input.IsRunning, GrpcOpenCensusInputTests.DefaultTimeout));
             }
         }
 
@@ -120,8 +124,8 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library.Inputs.GrpcInput
             ExportTraceServiceRequest receivedBatch = null;
 
             int port = GetPort();
-            var input = new GrpcOpenCensusInput("localhost", port);
-            input.Start(
+            this.input = new GrpcOpenCensusInput("localhost", port);
+            this.input.Start(
                 (telemetryBatch, callContext) =>
                 {
                     batchesReceived++;
@@ -145,9 +149,6 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library.Inputs.GrpcInput
                           receivedBatch.Node.Identifier.Pid == 2 &&
                           receivedBatch.Spans.Single().Name.Value == "Event1",
                     GrpcOpenCensusInputTests.DefaultTimeout);
-
-                input.Stop();
-                Assert.IsTrue(SpinWait.SpinUntil(() => !input.IsRunning, GrpcOpenCensusInputTests.DefaultTimeout));
             }
         }
 
@@ -159,8 +160,8 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library.Inputs.GrpcInput
             CurrentLibraryConfig receivedConfigRequest = null;
 
             int port = GetPort();
-            var input = new GrpcOpenCensusInput("localhost", port);
-            input.Start(
+            this.input = new GrpcOpenCensusInput("localhost", port);
+            this.input.Start(
                 (telemetryBatch, callContext) => {},
                 (configRequest, callContext) =>
                 {
@@ -186,9 +187,6 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library.Inputs.GrpcInput
                     () => input.GetStats().ConfigsReceived == 1 && configsReceived == 1 &&
                           receivedConfigRequest.Config.RateLimitingSampler.Qps == 1,
                     GrpcOpenCensusInputTests.DefaultTimeout);
-
-                input.Stop();
-                Assert.IsTrue(SpinWait.SpinUntil(() => !input.IsRunning, GrpcOpenCensusInputTests.DefaultTimeout));
             }
         }
 
@@ -200,8 +198,8 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library.Inputs.GrpcInput
             CurrentLibraryConfig receivedConfigRequest = null;
 
             int port = GetPort();
-            var input = new GrpcOpenCensusInput("localhost", port);
-            input.Start(
+            this.input = new GrpcOpenCensusInput("localhost", port);
+            this.input.Start(
                 (telemetryBatch, callContext) => { },
                 (configRequest, callContext) =>
                 {
@@ -229,9 +227,6 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library.Inputs.GrpcInput
                           receivedConfigRequest.Node.Identifier.Pid == 2 &&
                           receivedConfigRequest.Config.RateLimitingSampler.Qps == 1,
                     GrpcOpenCensusInputTests.DefaultTimeout);
-
-                input.Stop();
-                Assert.IsTrue(SpinWait.SpinUntil(() => !input.IsRunning, GrpcOpenCensusInputTests.DefaultTimeout));
             }
         }
 
@@ -243,8 +238,8 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library.Inputs.GrpcInput
             ExportTraceServiceRequest receivedBatch = null;
             
             int port = GetPort();
-            var input = new GrpcOpenCensusInput("localhost", port);
-            input.Start(
+            this.input = new GrpcOpenCensusInput("localhost", port);
+            this.input.Start(
                 (exportSpanRequest, callContext) =>
                 {
                     Interlocked.Increment(ref batchesReceived);
@@ -257,18 +252,25 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library.Inputs.GrpcInput
             ExportTraceServiceRequest batch = new ExportTraceServiceRequest();
             batch.Spans.Add(new Span() {Name = new TruncatableString() {Value = "Event1"}});
 
+            var grpcWriters = new GrpcWriter[1000];
+
+            this.cleanup = () =>
+            {
+                foreach (var writer in grpcWriters)
+                {
+                    writer.Dispose();
+                }
+            };
+
             Parallel.For(0, 1000, new ParallelOptions() {MaxDegreeOfParallelism = 1000}, async i =>
             {
-                var grpcWriter = new GrpcWriter(false, port);
-                await grpcWriter.Write(batch).ConfigureAwait(false);
+                grpcWriters[i] = new GrpcWriter(false, port);
+                await grpcWriters[i].Write(batch).ConfigureAwait(false);
             });
 
             // ASSERT
             Common.AssertIsTrueEventually(
                 () => input.GetStats().BatchesReceived == 1000 && batchesReceived == 1000, GrpcOpenCensusInputTests.DefaultTimeout);
-
-            input.Stop();
-            Assert.IsTrue(SpinWait.SpinUntil(() => !input.IsRunning, GrpcOpenCensusInputTests.DefaultTimeout));
         }
 
         [TestMethod]
@@ -279,9 +281,9 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library.Inputs.GrpcInput
             ExportTraceServiceRequest receivedBatch = null;
 
             int port = GetPort();
-            var input = new GrpcOpenCensusInput("localhost", port);
+            this.input = new GrpcOpenCensusInput("localhost", port);
 
-            input.Start(
+            this.input.Start(
                 (exportSpanRequest, callContext) =>
                 {
                     batchesReceived++;
@@ -320,9 +322,9 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library.Inputs.GrpcInput
             ExportTraceServiceRequest receivedBatch = null;
 
             int port = GetPort();
-            var input = new GrpcOpenCensusInput("localhost", port);
+            this.input = new GrpcOpenCensusInput("localhost", port);
 
-            input.Start(
+            this.input.Start(
                 (exportSpanRequest, callContext) =>
                 {
                     batchesReceived++;
@@ -355,7 +357,6 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library.Inputs.GrpcInput
                     {
                         batchesReceived++;
                         receivedBatch = exportSpanRequest;
-                        return new ExportTraceServiceResponse();
                     },
                     (configRequest, callContext) => ConfigResponse);
 
@@ -379,9 +380,9 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library.Inputs.GrpcInput
         {
             // ARRANGE
             int port = GetPort();
-            var input = new GrpcOpenCensusInput("localhost", port);
+            this.input = new GrpcOpenCensusInput("localhost", port);
 
-            input.Start((exportSpanRequest, callContext) => throw new InvalidOperationException(), (configRequest, callContext) => ConfigResponse);
+            this.input.Start((exportSpanRequest, callContext) => throw new InvalidOperationException(), (configRequest, callContext) => ConfigResponse);
 
             Assert.IsTrue(SpinWait.SpinUntil(() => input.IsRunning, GrpcOpenCensusInputTests.DefaultTimeout));
 
@@ -416,9 +417,9 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library.Inputs.GrpcInput
         {
             // ARRANGE
             int port = GetPort();
-            var input = new GrpcOpenCensusInput("localhost", port);
+            this.input = new GrpcOpenCensusInput("localhost", port);
 
-            input.Start((exportSpanRequest, callContext) => { }, (cr, cc) => throw new InvalidOperationException());
+            this.input.Start((exportSpanRequest, callContext) => { }, (cr, cc) => throw new InvalidOperationException());
 
             Assert.IsTrue(SpinWait.SpinUntil(() => input.IsRunning, GrpcOpenCensusInputTests.DefaultTimeout));
 
