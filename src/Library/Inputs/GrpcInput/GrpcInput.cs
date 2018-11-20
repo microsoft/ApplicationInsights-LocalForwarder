@@ -11,13 +11,13 @@
     /// <summary>
     /// gRpc-based input
     /// </summary>
-    class GrpcInput<TTelemetryBatch, TResponse> where TResponse : class
+    class GrpcInput<TTelemetryBatch, TResponse>
     {
         private readonly GrpcAiServer aiServer = null;
         private readonly GrpcOpenCensusServer openCensusServer = null;
 
         private CancellationTokenSource cts;
-        private Func<TTelemetryBatch, ServerCallContext, TResponse> onBatchReceived;
+        private Action<TTelemetryBatch, ServerCallContext> onBatchReceived;
         private Func<CurrentLibraryConfig, ServerCallContext, UpdatedLibraryConfig> onConfigReceived;
         private Server server;
         private InputStats stats;
@@ -60,7 +60,7 @@
         }
 
         public void Start(
-            Func<TTelemetryBatch, ServerCallContext, TResponse> onBatchReceived,
+            Action<TTelemetryBatch, ServerCallContext> onBatchReceived,
             Func<CurrentLibraryConfig, ServerCallContext, UpdatedLibraryConfig> onConfigReceived)
         {
             if (this.IsRunning)
@@ -132,15 +132,13 @@
 
                     try
                     {
-                        TResponse response = this.onBatchReceived?.Invoke(batch, context);
-                        Interlocked.Increment(ref this.stats.BatchesReceived);
+                        this.onBatchReceived?.Invoke(batch, context);
 
-                        await responseStream.WriteAsync(response).ConfigureAwait(false);
-                        Interlocked.Increment(ref this.stats.BatchesResponsesSent);
+                        Interlocked.Increment(ref this.stats.BatchesReceived);
                     }
                     catch (System.Exception e)
                     {
-                        // unexpected exception occurred while processing the batch
+                        // unexpected exception occured while processing the batch
                         Interlocked.Increment(ref this.stats.BatchesFailed);
 
                         Diagnostics.LogError(FormattableString.Invariant($"Unknown exception while processing a batch received through the gRpc input. {e.ToString()}"));
@@ -154,7 +152,7 @@
             }
             catch (System.Exception e)
             {
-                // unexpected exception occurred
+                // unexpected exception occured
                 Diagnostics.LogError(FormattableString.Invariant($"Unknown exception while reading from gRpc stream. {e.ToString()}"));
 
                 this.Stop();
@@ -179,14 +177,13 @@
                     try
                     {
                         var configResponse = this.onConfigReceived(configRequest, context);
-                        Interlocked.Increment(ref this.stats.ConfigsReceived);
-
                         if (configRequest.Config == null || !configRequest.Config.Equals(configResponse.Config))
                         {
                             await responseStream.WriteAsync(configResponse)
                                 .ConfigureAwait(false);
-                            Interlocked.Increment(ref this.stats.ConfigResponsesSent);
                         }
+
+                        Interlocked.Increment(ref this.stats.ConfigsReceived);
                     }
                     catch (System.Exception e)
                     {
