@@ -2,11 +2,12 @@ namespace Microsoft.LocalForwarder.LibraryTest
 {
     using Grpc.Core;
     using LocalForwarder.Library.Inputs.Contracts;
+    using Microsoft.LocalForwarder.Common;
     using Opencensus.Proto.Agent.Trace.V1;
     using System;
     using System.Threading.Tasks;
 
-    public class GrpcWriter
+    public class GrpcWriter : IDisposable
     {
         private readonly bool aiMode;
 
@@ -14,6 +15,9 @@ namespace Microsoft.LocalForwarder.LibraryTest
         readonly AsyncDuplexStreamingCall<ExportTraceServiceRequest, ExportTraceServiceResponse> openCensusExportStreamingCall;
         readonly AsyncDuplexStreamingCall<CurrentLibraryConfig, UpdatedLibraryConfig> openCensusConfigStreamingCall;
         private int port;
+        private readonly Channel channel;
+        private readonly AITelemetryService.AITelemetryServiceClient aiClient;
+        private readonly TraceService.TraceServiceClient ocClient;
 
         public GrpcWriter(bool aiMode, int port)
         {
@@ -22,19 +26,19 @@ namespace Microsoft.LocalForwarder.LibraryTest
 
             try
             {
-                var channel = new Channel($"127.0.0.1:{this.port}", ChannelCredentials.Insecure);
+                this.channel = new Channel($"127.0.0.1:{this.port}", ChannelCredentials.Insecure);
 
                 if (aiMode)
                 {
-                    var client = new AITelemetryService.AITelemetryServiceClient(channel);
-                    this.aiStreamingCall = client.SendTelemetryBatch();
+                    this.aiClient = new AITelemetryService.AITelemetryServiceClient(channel);
+                    this.aiStreamingCall = this.aiClient.SendTelemetryBatch();
                 }
                 else
                 {
                     // OpenCensus
-                    var client = new TraceService.TraceServiceClient(channel);
-                    this.openCensusExportStreamingCall = client.Export();
-                    this.openCensusConfigStreamingCall = client.Config();
+                    this.ocClient = new TraceService.TraceServiceClient(channel);
+                    this.openCensusExportStreamingCall = this.ocClient.Export();
+                    this.openCensusConfigStreamingCall = this.ocClient.Config();
                 }
             }
             catch (System.Exception e)
@@ -95,6 +99,22 @@ namespace Microsoft.LocalForwarder.LibraryTest
             {
                 throw new InvalidOperationException(
                     FormattableString.Invariant($"Error sending a message via gRpc. {e.ToString()}"));
+            }
+        }
+
+        public void Dispose()
+        {
+            this.aiStreamingCall?.Dispose();
+            this.openCensusExportStreamingCall?.Dispose();
+            this.openCensusConfigStreamingCall?.Dispose();
+
+            try
+            {
+                this.channel.ShutdownAsync().Wait(TimeSpan.FromSeconds(5));
+            }
+            catch (System.Exception e)
+            {
+                Diagnostics.LogError(FormattableString.Invariant($"Could not stop the gRPC writer's channel. {e.ToString()}"));
             }
         }
     }

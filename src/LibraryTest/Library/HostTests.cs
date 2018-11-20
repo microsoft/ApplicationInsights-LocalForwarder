@@ -70,16 +70,18 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
                 }
             };
 
-            var writer = new GrpcWriter(false, portOC);
-            await writer.Write(telemetryBatch).ConfigureAwait(false);
-            await writer.Write(configRequest).ConfigureAwait(false);
+            using (var writer = new GrpcWriter(false, portOC))
+            {
+                await writer.Write(telemetryBatch).ConfigureAwait(false);
+                await writer.Write(configRequest).ConfigureAwait(false);
 
-            Common.AssertIsTrueEventually(() => sentItems.Count == 3);
+                Common.AssertIsTrueEventually(() => sentItems.Count == 3);
 
-            // ASSERT
-            Assert.AreEqual("tests", (sentItems.Skip(0).First() as EventTelemetry).Context.Cloud.RoleName);
-            Assert.AreEqual("Span1", (sentItems.Skip(1).First() as RequestTelemetry).Name);
-            Assert.AreEqual("Span2", (sentItems.Skip(2).First() as DependencyTelemetry).Name);
+                // ASSERT
+                Assert.AreEqual("tests", (sentItems.Skip(0).First() as EventTelemetry).Context.Cloud.RoleName);
+                Assert.AreEqual("Span1", (sentItems.Skip(1).First() as RequestTelemetry).Name);
+                Assert.AreEqual("Span2", (sentItems.Skip(2).First() as DependencyTelemetry).Name);
+            }
         }
 
         [TestMethod]
@@ -123,10 +125,12 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             telemetryBatch.Spans.Add(new Span() { Name = new TruncatableString() { Value = "Span2" }, Kind = Span.Types.SpanKind.Client });
 
             // ASSERT
-            var writer = new GrpcWriter(false, portOC);
-            await writer.Write(telemetryBatch).ConfigureAwait(false);
+            using (var writer = new GrpcWriter(false, portOC))
+            {
+                await writer.Write(telemetryBatch).ConfigureAwait(false);
 
-            Assert.Fail();
+                Assert.Fail();
+            }
         }
 
         [TestMethod]
@@ -189,13 +193,15 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library
             telemetryBatch.Spans.Add(new Span() { Name = new TruncatableString() { Value = "Span1" }, Kind = Span.Types.SpanKind.Server });
             telemetryBatch.Spans.Add(new Span() { Name = new TruncatableString() { Value = "Span2" }, Kind = Span.Types.SpanKind.Client });
 
-            var writer = new GrpcWriter(false, portOC);
-            await writer.Write(telemetryBatch).ConfigureAwait(false);
+            using (var writer = new GrpcWriter(false, portOC))
+            {
+                await writer.Write(telemetryBatch).ConfigureAwait(false);
 
-            Common.AssertIsTrueEventually(() => sentItems.Count == 2);
-            
-            Assert.AreEqual("Span1", (sentItems.Skip(0).First() as RequestTelemetry).Name);
-            Assert.AreEqual("Span2", (sentItems.Skip(1).First() as DependencyTelemetry).Name);
+                Common.AssertIsTrueEventually(() => sentItems.Count == 2);
+
+                Assert.AreEqual("Span1", (sentItems.Skip(0).First() as RequestTelemetry).Name);
+                Assert.AreEqual("Span2", (sentItems.Skip(1).First() as DependencyTelemetry).Name);
+            }
         }
     }
 }

@@ -12,6 +12,13 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library.Inputs.GrpcInput
     public class GrpcAiInputTests
     {
         private static readonly TimeSpan DefaultTimeout = TimeSpan.FromSeconds(5);
+        private Action cleanup;
+
+        [TestCleanup]
+        public void Cleanup()
+        {
+            cleanup?.Invoke();
+        }
 
         [TestMethod]
         public async Task GrpcAiInputTests_StartsAndStops()
@@ -82,25 +89,27 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library.Inputs.GrpcInput
                 null);
             Assert.IsTrue(SpinWait.SpinUntil(() => input.IsRunning, GrpcAiInputTests.DefaultTimeout));
 
-            var grpcWriter = new GrpcWriter(true, port);
+            using (var grpcWriter = new GrpcWriter(true, port))
+            {
 
-            // ACT
-            TelemetryBatch batch = new TelemetryBatch();
-            batch.Items.Add(new Telemetry() {Event = new Event() {Name = "Event1"}});
+                // ACT
+                TelemetryBatch batch = new TelemetryBatch();
+                batch.Items.Add(new Telemetry() {Event = new Event() {Name = "Event1"}});
 
-            await grpcWriter.Write(batch).ConfigureAwait(false);
+                await grpcWriter.Write(batch).ConfigureAwait(false);
 
-            // ASSERT
-            Common.AssertIsTrueEventually(
-                () => input.GetStats().BatchesReceived == 1 && batchesReceived == 1 &&
-                      receivedBatch.Items.Single().Event.Name == "Event1", GrpcAiInputTests.DefaultTimeout);
+                // ASSERT
+                Common.AssertIsTrueEventually(
+                    () => input.GetStats().BatchesReceived == 1 && batchesReceived == 1 &&
+                          receivedBatch.Items.Single().Event.Name == "Event1", GrpcAiInputTests.DefaultTimeout);
 
-            input.Stop();
-            Assert.IsTrue(SpinWait.SpinUntil(() => !input.IsRunning, GrpcAiInputTests.DefaultTimeout));
+                input.Stop();
+                Assert.IsTrue(SpinWait.SpinUntil(() => !input.IsRunning, GrpcAiInputTests.DefaultTimeout));
+            }
         }
 
         [TestMethod]
-        public async Task GrpcAiInputTests_ReceivesDataFromMultipleClients()
+        public void GrpcAiInputTests_ReceivesDataFromMultipleClients()
         {
             // ARRANGE
             int batchesReceived = 0;
@@ -121,11 +130,20 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library.Inputs.GrpcInput
             TelemetryBatch batch = new TelemetryBatch();
             batch.Items.Add(new Telemetry() { Event = new Event() { Name = "Event1" } });
 
-            Parallel.For(0, 1000, new ParallelOptions() {MaxDegreeOfParallelism = 1000}, async i =>
-            {
-                var grpcWriter = new GrpcWriter(true, port);
+            var grpcWriters = new GrpcWriter[1000];
 
-                await grpcWriter.Write(batch).ConfigureAwait(false);
+            this.cleanup = () =>
+            {
+                foreach (var writer in grpcWriters)
+                {
+                    writer.Dispose();
+                }
+            };
+
+            Parallel.For(0, grpcWriters.Length, new ParallelOptions() {MaxDegreeOfParallelism = 1000}, async i =>
+            {
+                grpcWriters[i] = new GrpcWriter(true, port);
+                await grpcWriters[i].Write(batch).ConfigureAwait(false);
             });
 
             // ASSERT
@@ -156,24 +174,26 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library.Inputs.GrpcInput
 
             Assert.IsTrue(SpinWait.SpinUntil(() => input.IsRunning, GrpcAiInputTests.DefaultTimeout));
 
-            var grpcWriter = new GrpcWriter(true, port);
+            using (var grpcWriter = new GrpcWriter(true, port))
+            {
 
-            TelemetryBatch batch = new TelemetryBatch();
-            batch.Items.Add(new Telemetry() {Event = new Event() {Name = "Event1"}});
+                TelemetryBatch batch = new TelemetryBatch();
+                batch.Items.Add(new Telemetry() {Event = new Event() {Name = "Event1"}});
 
-            await grpcWriter.Write(batch).ConfigureAwait(false);
+                await grpcWriter.Write(batch).ConfigureAwait(false);
 
-            Common.AssertIsTrueEventually(
-                () => input.GetStats().BatchesReceived == 1 && batchesReceived == 1 &&
-                      receivedBatch.Items.Single().Event.Name == "Event1", GrpcAiInputTests.DefaultTimeout);
+                Common.AssertIsTrueEventually(
+                    () => input.GetStats().BatchesReceived == 1 && batchesReceived == 1 &&
+                          receivedBatch.Items.Single().Event.Name == "Event1", GrpcAiInputTests.DefaultTimeout);
 
-            // ACT
-            input.Stop();
-            
-            // ASSERT
-            Common.AssertIsTrueEventually(
-                () => !input.IsRunning && input.GetStats().BatchesReceived == 1 && batchesReceived == 1 &&
-                      receivedBatch.Items.Single().Event.Name == "Event1", GrpcAiInputTests.DefaultTimeout);
+                // ACT
+                input.Stop();
+
+                // ASSERT
+                Common.AssertIsTrueEventually(
+                    () => !input.IsRunning && input.GetStats().BatchesReceived == 1 && batchesReceived == 1 &&
+                          receivedBatch.Items.Single().Event.Name == "Event1", GrpcAiInputTests.DefaultTimeout);
+            }
         }
 
         [TestMethod]
@@ -196,42 +216,45 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library.Inputs.GrpcInput
 
             Assert.IsTrue(SpinWait.SpinUntil(() => input.IsRunning, GrpcAiInputTests.DefaultTimeout));
 
-            var grpcWriter = new GrpcWriter(true, port);
-
             TelemetryBatch batch = new TelemetryBatch();
-            batch.Items.Add(new Telemetry() {Event = new Event() {Name = "Event1"}});
+            batch.Items.Add(new Telemetry() { Event = new Event() { Name = "Event1" } });
 
-            await grpcWriter.Write(batch).ConfigureAwait(false);
+            using (var grpcWriter = new GrpcWriter(true, port))
+            {
+                await grpcWriter.Write(batch).ConfigureAwait(false);
 
-            Common.AssertIsTrueEventually(
-                () => input.GetStats().BatchesReceived == 1 && batchesReceived == 1 &&
-                      receivedBatch.Items.Single().Event.Name == "Event1", GrpcAiInputTests.DefaultTimeout);
+                Common.AssertIsTrueEventually(
+                    () => input.GetStats().BatchesReceived == 1 && batchesReceived == 1 &&
+                          receivedBatch.Items.Single().Event.Name == "Event1", GrpcAiInputTests.DefaultTimeout);
 
-            // ACT
-            input.Stop();
+                // ACT
+                input.Stop();
 
-            Common.AssertIsTrueEventually(
-                () => !input.IsRunning && input.GetStats().BatchesReceived == 1 && batchesReceived == 1 &&
-                      receivedBatch.Items.Single().Event.Name == "Event1", GrpcAiInputTests.DefaultTimeout);
+                Common.AssertIsTrueEventually(
+                    () => !input.IsRunning && input.GetStats().BatchesReceived == 1 && batchesReceived == 1 &&
+                          receivedBatch.Items.Single().Event.Name == "Event1", GrpcAiInputTests.DefaultTimeout);
 
-            input.Start(
-                (telemetryBatch, callContext) =>
-                {
-                    batchesReceived++;
-                    receivedBatch = telemetryBatch;
-                },
-                null);
+                input.Start(
+                    (telemetryBatch, callContext) =>
+                    {
+                        batchesReceived++;
+                        receivedBatch = telemetryBatch;
+                    },
+                    null);
 
-            Assert.IsTrue(SpinWait.SpinUntil(() => input.IsRunning, GrpcAiInputTests.DefaultTimeout));
+                Assert.IsTrue(SpinWait.SpinUntil(() => input.IsRunning, GrpcAiInputTests.DefaultTimeout));
+            }
 
-            grpcWriter = new GrpcWriter(true, port);
-            batch.Items.Single().Event.Name = "Event2";
-            await grpcWriter.Write(batch).ConfigureAwait(false);
+            using (var grpcWriter = new GrpcWriter(true, port))
+            {
+                batch.Items.Single().Event.Name = "Event2";
+                await grpcWriter.Write(batch).ConfigureAwait(false);
 
-            // ASSERT
-            Common.AssertIsTrueEventually(
-                () => input.IsRunning && input.GetStats().BatchesReceived == 1 && batchesReceived == 2 &&
-                      receivedBatch.Items.Single().Event.Name == "Event2", GrpcAiInputTests.DefaultTimeout);
+                // ASSERT
+                Common.AssertIsTrueEventually(
+                    () => input.IsRunning && input.GetStats().BatchesReceived == 1 && batchesReceived == 2 &&
+                          receivedBatch.Items.Single().Event.Name == "Event2", GrpcAiInputTests.DefaultTimeout);
+            }
         }
 
         [TestMethod]
@@ -245,27 +268,30 @@ namespace Microsoft.LocalForwarder.LibraryTest.Library.Inputs.GrpcInput
 
             Assert.IsTrue(SpinWait.SpinUntil(() => input.IsRunning, GrpcAiInputTests.DefaultTimeout));
 
-            var grpcWriter = new GrpcWriter(true, port);
+            using (var grpcWriter = new GrpcWriter(true, port))
+            {
+                TelemetryBatch batch = new TelemetryBatch();
+                batch.Items.Add(new Telemetry() {Event = new Event {Name = "Event1"}});
 
-            TelemetryBatch batch = new TelemetryBatch();
-            batch.Items.Add(new Telemetry() {Event = new Event {Name = "Event1"}});
+                // ACT
+                await grpcWriter.Write(batch).ConfigureAwait(false);
 
-            // ACT
-            await grpcWriter.Write(batch).ConfigureAwait(false);
+                // ASSERT
 
-            // ASSERT
+                // must have handled the exception by logging it
+                // should still be able to process items
+                Common.AssertIsTrueEventually(
+                    () => input.IsRunning && input.GetStats().BatchesReceived == 0 &&
+                          input.GetStats().BatchesFailed == 1,
+                    GrpcAiInputTests.DefaultTimeout);
 
-            // must have handled the exception by logging it
-            // should still be able to process items
-            Common.AssertIsTrueEventually(
-                () => input.IsRunning && input.GetStats().BatchesReceived == 0 && input.GetStats().BatchesFailed == 1,
-                GrpcAiInputTests.DefaultTimeout);
+                await grpcWriter.Write(batch).ConfigureAwait(false);
 
-            await grpcWriter.Write(batch).ConfigureAwait(false);
-
-            Common.AssertIsTrueEventually(
-                () => input.IsRunning && input.GetStats().BatchesReceived == 0 && input.GetStats().BatchesFailed == 2,
-                GrpcAiInputTests.DefaultTimeout);
+                Common.AssertIsTrueEventually(
+                    () => input.IsRunning && input.GetStats().BatchesReceived == 0 &&
+                          input.GetStats().BatchesFailed == 2,
+                    GrpcAiInputTests.DefaultTimeout);
+            }
         }
     }
 }
